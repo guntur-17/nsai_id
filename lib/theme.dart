@@ -43,6 +43,8 @@ TextStyle whiteTextStyle = GoogleFonts.poppins(color: whiteColor);
 
 TextStyle whiteRobotoTextStyle = GoogleFonts.roboto(color: whiteColor);
 
+TextStyle whiteInterTextStyle = GoogleFonts.inter(color: whiteColor);
+
 TextStyle darkTextStyle = GoogleFonts.poppins(color: darkBlueColor);
 
 TextStyle greyTextStyle = GoogleFonts.poppins(color: greyColor);
