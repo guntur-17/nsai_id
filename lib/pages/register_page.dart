@@ -4,14 +4,14 @@ import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
 import 'package:relative_scale/relative_scale.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   TextEditingController usernameController = TextEditingController(text: '');
 
   TextEditingController passwordController = TextEditingController(text: '');
@@ -50,37 +50,79 @@ class _LoginPageState extends State<LoginPage> {
           );
         }
 
-        Widget username() {
-          return Focus(
-            onFocusChange: (hasFocus) {
-              // When you focus on input email, you need to notify the color change into the widget.
-              setState(() => hasFocus ? primaryBlue : grey40);
-            },
-            child: TextFormField(
-              focusNode: myFocusNode,
-              controller: usernameController,
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
-                labelText: 'Email',
-                labelStyle:
-                    TextStyle(color: myFocusNode.hasFocus ? primaryBlue : grey),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(
-                    color: primaryBlue,
+        Widget nama() {
+          return Padding(
+            padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+            child: Focus(
+              onFocusChange: (hasFocus) {
+                // When you focus on input email, you need to notify the color change into the widget.
+                setState(() => hasFocus ? primaryBlue : grey40);
+              },
+              child: TextFormField(
+                focusNode: myFocusNode,
+                controller: usernameController,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 2.0, horizontal: 10.0),
+                  labelText: 'Email',
+                  labelStyle: TextStyle(
+                      color: myFocusNode.hasFocus ? primaryBlue : grey),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(
+                      color: primaryBlue,
+                    ),
                   ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(
-                    color: grey40,
-                    width: 2.0,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(
+                      color: grey40,
+                      width: 2.0,
+                    ),
                   ),
-                ),
 
-                // errorText: 'Error message',
-                border: const OutlineInputBorder(),
+                  // errorText: 'Error message',
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ),
+          );
+        }
+
+        Widget nomor() {
+          return Padding(
+            padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+            child: Focus(
+              onFocusChange: (hasFocus) {
+                // When you focus on input email, you need to notify the color change into the widget.
+                setState(() => hasFocus ? primaryBlue : grey40);
+              },
+              child: TextFormField(
+                focusNode: myFocusNode,
+                controller: usernameController,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 2.0, horizontal: 10.0),
+                  labelText: 'Email',
+                  labelStyle: TextStyle(
+                      color: myFocusNode.hasFocus ? primaryBlue : grey),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(
+                      color: primaryBlue,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(
+                      color: grey40,
+                      width: 2.0,
+                    ),
+                  ),
+
+                  // errorText: 'Error message',
+                  border: const OutlineInputBorder(),
+                ),
               ),
             ),
           );
@@ -171,10 +213,8 @@ class _LoginPageState extends State<LoginPage> {
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: Column(
                   children: [
-                    username(),
-                    const SizedBox(
-                      height: 12,
-                    ),
+                    nama(),
+                    nomor(),
                     password(),
                     Align(
                       alignment: Alignment.centerLeft,
