@@ -6,7 +6,7 @@ import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../theme.dart';
-import 'login_page.dart';
+import 'prelogin_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -24,7 +24,8 @@ class _SplashPageState extends State<SplashPage> {
     Timer(
       const Duration(seconds: 2),
       () => Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (BuildContext context) => const LoginPage()),
+        MaterialPageRoute(
+            builder: (BuildContext context) => const PreloginPage()),
       ),
     );
 
@@ -35,12 +36,26 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return RelativeBuilder(builder: (context, height, width, sy, sx) {
       return Scaffold(
-        backgroundColor: blueColor,
-        body: Center(
-          child: Image.asset(
-            "assets/logo.png",
-            width: sx(200),
-            height: sy(200),
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/bg.png'), fit: BoxFit.cover)),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Image.asset(
+                  "assets/logo.png",
+                  width: sx(200),
+                  height: sy(200),
+                ),
+                Image.asset(
+                  "assets/logo2.png",
+                  width: sx(135),
+                  height: sy(135),
+                ),
+              ],
+            ),
           ),
         ),
       );
