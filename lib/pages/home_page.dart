@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../theme.dart';
 
@@ -13,7 +14,37 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Widget header() {
-      return Expanded(flex: 2, child: Container());
+      return Expanded(
+          flex: 2,
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Image.asset(
+                        'assets/logo_inv.png',
+                        height: 95,
+                        width: 200,
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        Text('User',
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 20, fontWeight: reguler)),
+                        Text('Address',
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 12, fontWeight: reguler))
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
+          ));
     }
 
     Widget body() {
