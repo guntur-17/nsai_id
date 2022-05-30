@@ -61,7 +61,7 @@ class PreloginPage extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 12.0),
                           child: Text(
                             'Log In',
-                            style: whiteTextStyle.copyWith(
+                            style: whiteRobotoTextStyle.copyWith(
                                 fontSize: 26, fontWeight: bold),
                           ),
                         ),
@@ -95,7 +95,7 @@ class PreloginPage extends StatelessWidget {
                               padding: const EdgeInsets.only(top: 12.0),
                               child: Text(
                                 'Register',
-                                style: whiteTextStyle.copyWith(
+                                style: whiteRobotoTextStyle.copyWith(
                                     fontSize: 26, fontWeight: bold),
                               ),
                             ),
