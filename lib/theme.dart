@@ -27,6 +27,7 @@ Color trueBlack = const Color(0xFF000000);
 
 Color blueShadow = const Color(0xff79AAF3);
 Color borderOrange = const Color(0xffFF902A);
+Color orangeYellow = const Color(0xffF4B940);
 
 Color borderPink = const Color(0xffFF6A88);
 Color redColor = const Color(0xffC64949);
@@ -54,6 +55,9 @@ TextStyle greenTextStyle = GoogleFonts.poppins(color: greenColor);
 TextStyle redTextStyle = GoogleFonts.poppins(color: redColor);
 
 TextStyle trueBlackInterTextStyle = GoogleFonts.inter(color: trueBlack);
+
+TextStyle trueBlackRobotTextStyle = GoogleFonts.roboto(color: trueBlack);
+
 
 TextStyle blueBrightInterTextStyle = GoogleFonts.inter(color: blueBrightColor);
 

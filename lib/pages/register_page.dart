@@ -1,20 +1,30 @@
+import 'package:dropdown_button2/custom_dropdown_button2.dart';
+import 'package:dropdown_plus/dropdown_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
 import 'package:relative_scale/relative_scale.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  RegisterPage({Key? key}) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  TextEditingController usernameController = TextEditingController(text: '');
+  TextEditingController nameController = TextEditingController(text: '');
 
   TextEditingController passwordController = TextEditingController(text: '');
+
+  TextEditingController nomerController = TextEditingController(text: '');
+
+  DropdownEditingController<String>? areaController =
+      DropdownEditingController(value: null);
+
+  TextEditingController emailController = TextEditingController(text: '');
 
   bool hiddenPassword = true;
 
@@ -27,102 +37,265 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   FocusNode myFocusNode = FocusNode();
-
   FocusNode myFocusNode2 = FocusNode();
+  FocusNode myFocusNode3 = FocusNode();
+  FocusNode myFocusNode4 = FocusNode();
+  FocusNode myFocusNode5 = FocusNode();
+
+  String? selectedValue;
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+
+    final List<Map<String, dynamic>> _roles = [
+      {"name": "Super Admin", "desc": "Having full access rights", "role": 1},
+      {
+        "name": "Admin",
+        "desc": "Having full access rights of a Organization",
+        "role": 2
+      },
+      {
+        "name": "Manager",
+        "desc": "Having Magenent access rights of a Organization",
+        "role": 3
+      },
+      {
+        "name": "Technician",
+        "desc": "Having Technician Support access rights",
+        "role": 4
+      },
+      {
+        "name": "Customer Support",
+        "desc": "Having Customer Support access rights",
+        "role": 5
+      },
+      {"name": "User", "desc": "Having End User access rights", "role": 6},
+    ];
+
+    var _area = [
+      "Jakarta",
+      "Bekasi",
+      "Depok",
+    ];
+
+    // final List<String> roles = _roles;
+
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
         Widget logo() {
           return Padding(
             padding: const EdgeInsets.only(top: 27, bottom: 20),
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.25,
+              // width: MediaQuery.of(context).size.width * 0.9,
+              // height: MediaQuery.of(context).size.height * 0.25,
               child: Image.asset(
                 "assets/login_logo.png",
-                width: sx(330),
-                height: sx(250),
+                width: sx(180),
+                height: sx(140),
                 // fit: BoxFit.fitWidth,
               ),
             ),
           );
         }
 
-        Widget nama() {
-          return Padding(
-            padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
-            child: Focus(
-              onFocusChange: (hasFocus) {
-                // When you focus on input email, you need to notify the color change into the widget.
-                setState(() => hasFocus ? primaryBlue : grey40);
-              },
-              child: TextFormField(
-                focusNode: myFocusNode,
-                controller: usernameController,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 2.0, horizontal: 10.0),
-                  labelText: 'Email',
-                  labelStyle: TextStyle(
-                      color: myFocusNode.hasFocus ? primaryBlue : grey),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide(
-                      color: primaryBlue,
-                    ),
+        Widget name() {
+          return Focus(
+            onFocusChange: (hasFocus) {
+              // When you focus on input email, you need to notify the color change into the widget.
+              setState(() => hasFocus ? primaryBlue : grey40);
+            },
+            child: TextFormField(
+              // scrollPadding: EdgeInsets.only(
+              //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
+              focusNode: myFocusNode,
+              controller: nameController,
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+                labelText: 'nama',
+                labelStyle:
+                    TextStyle(color: myFocusNode.hasFocus ? primaryBlue : grey),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(
+                    color: primaryBlue,
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide(
-                      color: grey40,
-                      width: 2.0,
-                    ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(
+                    color: grey40,
+                    width: 2.0,
                   ),
+                ),
 
-                  // errorText: 'Error message',
-                  border: const OutlineInputBorder(),
+                // errorText: 'Error message',
+                border: const OutlineInputBorder(),
+              ),
+            ),
+          );
+        }
+
+        Widget nomer() {
+          return Focus(
+            onFocusChange: (hasFocus2) {
+              // When you focus on input email, you need to notify the color change into the widget.
+              setState(() => hasFocus2 ? primaryBlue : grey40);
+            },
+            child: TextFormField(
+              // scrollPadding: EdgeInsets.only(
+              //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
+              focusNode: myFocusNode2,
+              controller: nomerController,
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+                labelText: 'Nomer',
+                labelStyle: TextStyle(
+                    color: myFocusNode2.hasFocus ? primaryBlue : grey),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(
+                    color: primaryBlue,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(
+                    color: grey40,
+                    width: 2.0,
+                  ),
+                ),
+
+                // errorText: 'Error message',
+                border: const OutlineInputBorder(),
+              ),
+            ),
+          );
+        }
+
+        Widget area() {
+          return Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: DropdownFormField<Map<String, dynamic>>(
+                // controller: areaController,
+                // autoFocus: true,
+                // dropdownHeight: 500,
+                onEmptyActionPressed: () async {},
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    suffixIcon: Icon(Icons.arrow_drop_down),
+                    labelText: "Area"),
+                onSaved: (dynamic str) {},
+                onChanged: (dynamic str) {},
+                validator: (dynamic str) {},
+                displayItemFn: (dynamic item) => Text(
+                  (item ?? {})['name'] ?? '',
+                  style: TextStyle(fontSize: 16),
+                ),
+                findFn: (dynamic str) async => _roles,
+                selectedFn: (dynamic item1, dynamic item2) {
+                  if (item1 != null && item2 != null) {
+                    return item1['name'] == item2['name'];
+                  }
+                  return false;
+                },
+                filterFn: (dynamic item, str) =>
+                    item['name'].toLowerCase().indexOf(str.toLowerCase()) >= 0,
+                dropdownItemFn: (dynamic item, int position, bool focused,
+                        bool selected, Function() onTap) =>
+                    ListTile(
+                  title: Text(item['name']),
+                  subtitle: Text(
+                    item['desc'] ?? '',
+                  ),
+                  tileColor: focused
+                      ? Color.fromARGB(20, 0, 0, 0)
+                      : Colors.transparent,
+                  onTap: onTap,
                 ),
               ),
             ),
           );
         }
 
-        Widget nomor() {
-          return Padding(
-            padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
-            child: Focus(
-              onFocusChange: (hasFocus) {
-                // When you focus on input email, you need to notify the color change into the widget.
-                setState(() => hasFocus ? primaryBlue : grey40);
-              },
-              child: TextFormField(
-                focusNode: myFocusNode,
-                controller: usernameController,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 2.0, horizontal: 10.0),
-                  labelText: 'Email',
-                  labelStyle: TextStyle(
-                      color: myFocusNode.hasFocus ? primaryBlue : grey),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide(
-                      color: primaryBlue,
+        Widget area2() {
+          return Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: Focus(
+                onFocusChange: (hasFocus3) {
+                  // When you focus on input email, you need to notify the color change into the widget.
+                  setState(() => hasFocus3 ? primaryBlue : grey40);
+                },
+                child: TextDropdownFormField(
+                  controller: areaController,
+                  options: _area,
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+                    labelText: 'Area',
+                    labelStyle: TextStyle(
+                        color: myFocusNode3.hasFocus ? primaryBlue : grey),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                        color: primaryBlue,
+                      ),
                     ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide(
-                      color: grey40,
-                      width: 2.0,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                        color: grey40,
+                        width: 2.0,
+                      ),
                     ),
+                    // errorText: 'Error message',
+                    border: const OutlineInputBorder(),
                   ),
-
-                  // errorText: 'Error message',
-                  border: const OutlineInputBorder(),
+                  dropdownHeight: 120,
                 ),
+              ),
+            ),
+          );
+        }
+
+        Widget email() {
+          return Focus(
+            onFocusChange: (hasFocus4) {
+              // When you focus on input email, you need to notify the color change into the widget.
+              setState(() => hasFocus4 ? primaryBlue : grey40);
+            },
+            child: TextFormField(
+              // scrollPadding: EdgeInsets.only(
+              //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
+              focusNode: myFocusNode4,
+              controller: emailController,
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+                labelText: 'Email',
+                labelStyle: TextStyle(
+                    color: myFocusNode4.hasFocus ? primaryBlue : grey),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(
+                    color: primaryBlue,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(
+                    color: grey40,
+                    width: 2.0,
+                  ),
+                ),
+
+                // errorText: 'Error message',
+                border: const OutlineInputBorder(),
               ),
             ),
           );
@@ -130,13 +303,15 @@ class _RegisterPageState extends State<RegisterPage> {
 
         Widget password() {
           return Focus(
-            onFocusChange: (hasFocus2) {
+            onFocusChange: (hasFocus5) {
               // When you focus on input email, you need to notify the color change into the widget.
-              setState(() => hasFocus2 ? primaryBlue : grey40);
+              setState(() => hasFocus5 ? primaryBlue : grey40);
             },
             child: TextFormField(
+              // scrollPadding: EdgeInsets.only(
+              //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
               // initialValue: 'Input text',
-              focusNode: myFocusNode2,
+              focusNode: myFocusNode5,
               controller: passwordController,
               obscureText: hiddenPassword,
               decoration: InputDecoration(
@@ -144,7 +319,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
                 labelText: 'password',
                 labelStyle: TextStyle(
-                    color: myFocusNode2.hasFocus ? primaryBlue : grey),
+                    color: myFocusNode5.hasFocus ? primaryBlue : grey),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide(
@@ -172,38 +347,6 @@ class _RegisterPageState extends State<RegisterPage> {
           );
         }
 
-        Widget check() {
-          return LabeledCheckbox(
-            // shape: ,
-            contentPadding: EdgeInsets.all(0),
-            label: "ingatkan saya",
-            // controlAffinity: ListTileControlAffinity.leading,
-            activeColor: primaryBlue,
-            value: isChecked,
-            onTap: (bool? value) {
-              setState(() {
-                isChecked = value!;
-              });
-            },
-            fontSize: 16,
-            gap: 0,
-          );
-        }
-
-        Widget forgotPassword() {
-          return InkWell(
-            onTap: () => {},
-            child: Text(
-              'Lupa Password?',
-              style: primaryBlueInterTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          );
-        }
-
         Widget input() {
           return RelativeBuilder(builder: (context, height, width, sy, sx) {
             return Padding(
@@ -213,16 +356,32 @@ class _RegisterPageState extends State<RegisterPage> {
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: Column(
                   children: [
-                    nama(),
-                    nomor(),
-                    password(),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [check(), forgotPassword()],
-                      ),
+                    name(),
+                    const SizedBox(
+                      height: 12,
                     ),
+                    nomer(),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    // area(),
+                    area2(),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    email(),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    password(),
+                    // const SizedBox(
+                    //   height: 12,
+                    // ),
+                    // username(),
+                    // const SizedBox(
+                    //   height: 12,
+                    // ),
+                    // username(),
                   ],
                 ),
               ),
@@ -231,37 +390,63 @@ class _RegisterPageState extends State<RegisterPage> {
         }
 
         Widget button() {
-          return InkWell(
-            child: Center(
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (BuildContext context) => StockListPage()));
-                },
-                child: Container(
-                  width: 315,
-                  height: 57,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: primaryBlue,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Log In',
-                        style: whiteInterTextStyle.copyWith(
-                            fontSize: 16, fontWeight: medium),
-                      )
-                    ],
-                  ),
+          return Center(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: primaryBlue),
+              onPressed: () {
+                // Navigator.of(context).push(MaterialPageRoute(
+                //     builder: (BuildContext context) => StockListPage()));
+              },
+              child: Container(
+                width: 315,
+                height: 57,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  // color: primaryBlue,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Log In',
+                      style: whiteInterTextStyle.copyWith(
+                          fontSize: 16, fontWeight: medium),
+                    )
+                  ],
                 ),
               ),
             ),
           );
         }
 
-        Widget signup() {
+        Widget disable() {
+          return Center(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: primaryBlue),
+              onPressed: null,
+              child: Container(
+                width: 315,
+                height: 57,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  // color: primaryBlue,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Log In',
+                      style: whiteInterTextStyle.copyWith(
+                          fontSize: 16, fontWeight: medium),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        Widget signin() {
           return Padding(
             padding: const EdgeInsets.only(top: 20, bottom: 20),
             child: Center(
@@ -269,14 +454,17 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Tidak memiliki akun ? ",
+                    "Sudah memiliki akun ? ",
                     style: trueBlackTextStyle.copyWith(
                         fontSize: 16, fontWeight: light),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => RegisterPage()));
+                    },
                     child: Text(
-                      "Register",
+                      "Log In",
                       style: primaryBlueInterTextStyle.copyWith(
                           fontSize: 16, fontWeight: medium),
                     ),
@@ -289,8 +477,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
         Widget body() {
           return Expanded(
+            flex: 8,
             child: Container(
-              width: double.infinity,
+              // height: MediaQuery.of(context).size.height,
+              // width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -299,15 +489,62 @@ class _RegisterPageState extends State<RegisterPage> {
                   topRight: Radius.circular(30.0),
                 ),
               ),
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              child: SingleChildScrollView(
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    logo(),
+                    input(),
+                    if (nameController.text.isEmpty ||
+                        passwordController.text.isEmpty ||
+                        nomerController.text.isEmpty ||
+                        emailController.text.isEmpty ||
+                        areaController!.value!.isEmpty) ...[
+                      disable()
+                    ] else ...[
+                      button()
+                    ],
+
+                    signin(),
+                    // check(),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        Widget header() {
+          return Expanded(
+            flex: 1,
+            child: Container(
+              color: orangeYellow,
+              child: Row(
+                // mainAxisAlignment: ,
                 children: [
-                  logo(),
-                  input(),
-                  button(),
-                  signup(),
-                  // check(),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: whiteColor,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Register.',
+                    style: whiteRobotoTextStyle.copyWith(
+                      fontWeight: extraBold,
+                      fontSize: 30,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -315,50 +552,21 @@ class _RegisterPageState extends State<RegisterPage> {
         }
 
         return SafeArea(
-          child: SafeArea(
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(80.0),
+          child: Scaffold(
+            // resizeToAvoidBottomInset: false,
+            backgroundColor: orangeYellow,
+            body: GestureDetector(
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                // constraints: BoxConstraints(
+                //     maxHeight: MediaQuery.of(context).size.height),
                 child: Column(
-                  children: [
-                    AppBar(
-                      toolbarHeight: 80,
-                      leading: Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.arrow_back_ios_new,
-                              color: whiteColor,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ],
-                      ),
-                      iconTheme: IconThemeData(color: Colors.black),
-                      centerTitle: false,
-                      backgroundColor: blueBrightColor,
-                      bottomOpacity: 0.0,
-                      elevation: 0.0,
-                      title: Text(
-                        'Log In.',
-                        style: whiteRobotoTextStyle.copyWith(
-                          fontWeight: extraBold,
-                          fontSize: 30,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              backgroundColor: blueBrightColor,
-              body: GestureDetector(
-                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // crossAxisAlignment: CrossAxisAlignment.stretch,
+                  // mainAxisSize: MainAxisSize.min,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    header(),
                     body(),
                   ],
                 ),

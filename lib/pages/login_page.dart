@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nsai_id/pages/attendance_page.dart';
+import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
@@ -32,6 +34,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
         Widget logo() {
@@ -57,6 +61,8 @@ class _LoginPageState extends State<LoginPage> {
               setState(() => hasFocus ? primaryBlue : grey40);
             },
             child: TextFormField(
+              // scrollPadding: EdgeInsets.only(
+              //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
               focusNode: myFocusNode,
               controller: usernameController,
               decoration: InputDecoration(
@@ -93,6 +99,8 @@ class _LoginPageState extends State<LoginPage> {
               setState(() => hasFocus2 ? primaryBlue : grey40);
             },
             child: TextFormField(
+              // scrollPadding: EdgeInsets.only(
+              //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
               // initialValue: 'Input text',
               focusNode: myFocusNode2,
               controller: passwordController,
@@ -191,30 +199,56 @@ class _LoginPageState extends State<LoginPage> {
         }
 
         Widget button() {
-          return InkWell(
-            child: Center(
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (BuildContext context) => StockListPage()));
-                },
-                child: Container(
-                  width: 315,
-                  height: 57,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: primaryBlue,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Log In',
-                        style: whiteInterTextStyle.copyWith(
-                            fontSize: 16, fontWeight: medium),
-                      )
-                    ],
-                  ),
+          return Center(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: primaryBlue),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => AttendancePage()));
+              },
+              child: Container(
+                width: 315,
+                height: 57,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  // color: primaryBlue,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Log In',
+                      style: whiteInterTextStyle.copyWith(
+                          fontSize: 16, fontWeight: medium),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        Widget disable() {
+          return Center(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: primaryBlue),
+              onPressed: null,
+              child: Container(
+                width: 315,
+                height: 57,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  // color: primaryBlue,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Log In',
+                      style: whiteInterTextStyle.copyWith(
+                          fontSize: 16, fontWeight: medium),
+                    )
+                  ],
                 ),
               ),
             ),
@@ -234,7 +268,10 @@ class _LoginPageState extends State<LoginPage> {
                         fontSize: 16, fontWeight: light),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => RegisterPage()));
+                    },
                     child: Text(
                       "Register",
                       style: primaryBlueInterTextStyle.copyWith(
@@ -249,8 +286,10 @@ class _LoginPageState extends State<LoginPage> {
 
         Widget body() {
           return Expanded(
+            flex: 8,
             child: Container(
-              width: double.infinity,
+              // height: MediaQuery.of(context).size.height,
+              // width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -265,7 +304,13 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   logo(),
                   input(),
-                  button(),
+                  if (usernameController.text.isEmpty ||
+                      passwordController.text.isEmpty) ...[
+                    disable()
+                  ] else ...[
+                    button()
+                  ],
+
                   signup(),
                   // check(),
                 ],
@@ -274,53 +319,63 @@ class _LoginPageState extends State<LoginPage> {
           );
         }
 
-        return SafeArea(
-          child: SafeArea(
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(80.0),
-                child: Column(
-                  children: [
-                    AppBar(
-                      toolbarHeight: 80,
-                      leading: Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.arrow_back_ios_new,
-                              color: whiteColor,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ],
-                      ),
-                      iconTheme: IconThemeData(color: Colors.black),
-                      centerTitle: false,
-                      backgroundColor: blueBrightColor,
-                      bottomOpacity: 0.0,
-                      elevation: 0.0,
-                      title: Text(
-                        'Log In.',
-                        style: whiteRobotoTextStyle.copyWith(
-                          fontWeight: extraBold,
-                          fontSize: 30,
-                        ),
-                      ),
+        Widget header() {
+          return Expanded(
+            flex: 1,
+            child: Container(
+              // color: blueBrightColor,
+              child: Row(
+                // mainAxisAlignment: ,
+                children: [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: whiteColor,
                     ),
-                  ],
-                ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Log In.',
+                    style: whiteRobotoTextStyle.copyWith(
+                      fontWeight: extraBold,
+                      fontSize: 30,
+                    ),
+                  ),
+                ],
               ),
-              backgroundColor: blueBrightColor,
-              body: GestureDetector(
+            ),
+          );
+        }
+
+        return SafeArea(
+          child: Scaffold(
+            // resizeToAvoidBottomInset: false,
+            backgroundColor: blueBrightColor,
+            body: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: GestureDetector(
                 onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    body(),
-                  ],
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.965,
+                  // constraints: BoxConstraints(
+                  //     maxHeight: MediaQuery.of(context).size.height),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    // mainAxisSize: MainAxisSize.min,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      header(),
+                      body(),
+                    ],
+                  ),
                 ),
               ),
             ),
