@@ -11,7 +11,7 @@ Color skyblueColor = const Color(0xff79AAF3);
 Color guideBlueColor = const Color(0xff567AA6);
 Color guideCardColor = const Color(0xff7392BA);
 Color blueBlurColor = const Color(0xffC3D5E4);
-Color blueBrightColor = const Color(0xff4980FF);
+Color blueBrightColor = const Color(0xff3D90E3);
 Color primaryBlue = const Color(0xFF0354A6);
 
 Color blackColor = const Color(0xff686868);
@@ -30,6 +30,7 @@ Color borderOrange = const Color(0xffFF902A);
 
 Color borderPink = const Color(0xffFF6A88);
 Color redColor = const Color(0xffC64949);
+Color brightRedColor = const Color(0xffF44242);
 
 Color yellowColor = const Color(0xffFFEEC4);
 
@@ -58,6 +59,12 @@ TextStyle trueBlackInterTextStyle = GoogleFonts.inter(color: trueBlack);
 TextStyle blueBrightInterTextStyle = GoogleFonts.inter(color: blueBrightColor);
 
 TextStyle primaryBlueInterTextStyle = GoogleFonts.inter(color: primaryBlue);
+
+TextStyle trueBlackRobotoTextStyle = GoogleFonts.roboto(color: trueBlack);
+
+TextStyle redRobotoTextStyle = GoogleFonts.roboto(color: brightRedColor);
+
+TextStyle blueRobotoTextStyle = GoogleFonts.roboto(color: blueBrightColor);
 
 FontWeight light = FontWeight.w300;
 FontWeight reguler = FontWeight.w400;
