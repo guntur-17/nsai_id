@@ -8,14 +8,14 @@ import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
 import 'package:relative_scale/relative_scale.dart';
 
-class AttendancePage extends StatefulWidget {
-  AttendancePage({Key? key}) : super(key: key);
+class VisitPage extends StatefulWidget {
+  VisitPage({Key? key}) : super(key: key);
 
   @override
-  State<AttendancePage> createState() => _AttendancePageState();
+  State<VisitPage> createState() => _VisitPageState();
 }
 
-class _AttendancePageState extends State<AttendancePage> {
+class _VisitPageState extends State<VisitPage> {
   TextEditingController jumlahController = TextEditingController(text: '');
   TextEditingController totalController = TextEditingController(text: '123556');
 
@@ -907,7 +907,7 @@ class _AttendancePageState extends State<AttendancePage> {
                   child: Container(
                     decoration: const BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage('assets/bgatt.png'),
+                            image: AssetImage('assets/bgvisit.png'),
                             fit: BoxFit.cover)),
                     // height: MediaQuery.of(context).size.height,
                     // constraints: BoxConstraints(

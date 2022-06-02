@@ -26,6 +26,9 @@ class _MyAppState extends State<MyApp> {
         MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashPage(),
+      theme: ThemeData(
+        disabledColor: Colors.blue,
+      ),
     );
     // );
   }
