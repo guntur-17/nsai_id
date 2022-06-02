@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nsai_id/pages/faq_page.dart';
+import 'package:nsai_id/widget/home_menu.dart';
 
 import '../theme.dart';
 
@@ -561,127 +563,18 @@ class _HomePageState extends State<HomePage> {
                             ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 80,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xff101828).withOpacity(0.1),
-                                    spreadRadius: -4,
-                                    blurRadius: 16,
-                                    offset: Offset(
-                                        0, 12), // changes position of shadow
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(14.0),
-                                child: Column(
-                                  children: [
-                                    Image.asset('assets/check.png',
-                                        width: 36, height: 36),
-                                    Text('Absensi',
-                                        style: trueBlackRobotoTextStyle
-                                            .copyWith(fontSize: 12))
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: 80,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xff101828).withOpacity(0.1),
-                                    spreadRadius: -4,
-                                    blurRadius: 16,
-                                    offset: Offset(
-                                        0, 12), // changes position of shadow
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(14.0),
-                                child: Column(
-                                  children: [
-                                    Image.asset('assets/pin.png',
-                                        width: 36, height: 36),
-                                    Text('Visit',
-                                        style: trueBlackRobotoTextStyle
-                                            .copyWith(fontSize: 12))
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: 80,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xff101828).withOpacity(0.1),
-                                    spreadRadius: -4,
-                                    blurRadius: 16,
-                                    offset: Offset(
-                                        0, 12), // changes position of shadow
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(14.0),
-                                child: Column(
-                                  children: [
-                                    Image.asset('assets/chart.png',
-                                        width: 36, height: 36),
-                                    Text('Transaksi',
-                                        style: trueBlackRobotoTextStyle
-                                            .copyWith(fontSize: 12))
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: 80,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xff101828).withOpacity(0.1),
-                                    spreadRadius: -4,
-                                    blurRadius: 16,
-                                    offset: Offset(
-                                        0, 12), // changes position of shadow
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(14.0),
-                                child: Column(
-                                  children: [
-                                    Image.asset('assets/faq.png',
-                                        width: 36, height: 36),
-                                    Text('FAQ',
-                                        style: trueBlackRobotoTextStyle
-                                            .copyWith(fontSize: 12))
-                                  ],
-                                ),
-                              ),
-                            ),
+                          children: const [
+                            HomeMenu(
+                                title: 'Absensi', imgpath: 'assets/check.png'),
+                            HomeMenu(title: 'Visit', imgpath: 'assets/pin.png'),
+                            HomeMenu(
+                                title: 'Transaksi',
+                                imgpath: 'assets/chart.png'),
+                            HomeMenu(
+                              title: 'FAQ',
+                              imgpath: 'assets/faq.png',
+                              route: FaqPage(),
+                            )
                           ],
                         ),
                       ),
