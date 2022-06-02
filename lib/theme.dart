@@ -59,10 +59,11 @@ TextStyle trueBlackInterTextStyle = GoogleFonts.inter(color: trueBlack);
 
 TextStyle trueBlackRobotTextStyle = GoogleFonts.roboto(color: trueBlack);
 
-
 TextStyle blueBrightInterTextStyle = GoogleFonts.inter(color: blueBrightColor);
 
 TextStyle primaryBlueInterTextStyle = GoogleFonts.inter(color: primaryBlue);
+
+TextStyle greyRobotoTextStyle = GoogleFonts.inter(color: greyColor);
 
 TextStyle trueBlackRobotoTextStyle = GoogleFonts.roboto(color: trueBlack);
 
