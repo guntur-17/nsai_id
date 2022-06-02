@@ -1,7 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nsai_id/pages/attendance_page.dart';
 import 'package:nsai_id/pages/faq_page.dart';
+import 'package:nsai_id/pages/visit_page.dart';
 import 'package:nsai_id/widget/home_menu.dart';
 
 import '../theme.dart';
@@ -563,10 +565,17 @@ class _HomePageState extends State<HomePage> {
                             ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: const [
+                          children: [
                             HomeMenu(
-                                title: 'Absensi', imgpath: 'assets/check.png'),
-                            HomeMenu(title: 'Visit', imgpath: 'assets/pin.png'),
+                              title: 'Absensi',
+                              imgpath: 'assets/check.png',
+                              route: AttendancePage(),
+                            ),
+                            HomeMenu(
+                              title: 'Visit',
+                              imgpath: 'assets/pin.png',
+                              route: VisitPage(),
+                            ),
                             HomeMenu(
                                 title: 'Transaksi',
                                 imgpath: 'assets/chart.png'),

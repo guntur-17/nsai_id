@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nsai_id/pages/attendance_page.dart';
+import 'package:nsai_id/pages/home_page.dart';
 import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/theme.dart';
@@ -204,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
               style: ElevatedButton.styleFrom(primary: primaryBlue),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => AttendancePage()));
+                    builder: (BuildContext context) => HomePage()));
               },
               child: Container(
                 width: 315,

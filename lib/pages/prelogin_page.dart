@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nsai_id/pages/home_page.dart';
 import 'package:nsai_id/pages/login_page.dart';
+import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:relative_scale/relative_scale.dart';
 
@@ -78,7 +79,7 @@ class PreloginPage extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => HomePage())));
+                              builder: ((context) => RegisterPage())));
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width,
