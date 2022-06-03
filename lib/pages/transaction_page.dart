@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nsai_id/pages/home_page.dart';
+import 'package:nsai_id/pages/transaction_report_page.dart';
 
 import '../theme.dart';
 
@@ -298,7 +299,7 @@ class _TransactionPageState extends State<TransactionPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: ((context) => HomePage())));
+                                    builder: ((context) => ReportPage())));
                           },
                           child: Container(
                             height: 40,
