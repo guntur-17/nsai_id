@@ -1,3 +1,4 @@
+import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:lazy_data_table/lazy_data_table.dart';
 
@@ -8,6 +9,9 @@ class ReportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _verticalScrollController = ScrollController();
+    final _horizontalScrollController = ScrollController();
+
     Widget body() {
       return Expanded(
         child: Stack(
@@ -53,104 +57,119 @@ class ReportPage extends StatelessWidget {
                       ),
                       Container(
                         height: MediaQuery.of(context).size.height * 0.4,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: DataTable(
-                              border: TableBorder.all(
-                                width: 1.0,
-                                color: grey,
-                              ),
-                              headingRowColor: MaterialStateColor.resolveWith(
-                                  (states) => Color(0xff005FBE)),
-                              // dataRowColor:
-                              //     MaterialStateProperty.resolveWith<Color?>(
-                              //         (Set<MaterialState> states) {
-                              //   if (states.contains(MaterialState.selected)) {
-                              //     return Theme.of(context)
-                              //         .colorScheme
-                              //         .primary
-                              //         .withOpacity(0.08);
-                              //   }
-                              //   return null; // Use the default value.
-                              // }),
-                              columns: <DataColumn>[
-                                DataColumn(
-                                  label: Text(
-                                    "Nama \nBarang",
-                                    style: whiteInterTextStyle.copyWith(
-                                        fontWeight: medium, fontSize: 16),
-                                    textAlign: TextAlign.center,
+                        child: AdaptiveScrollbar(
+                          underColor: Colors.blueGrey.withOpacity(0.3),
+                          sliderDefaultColor: Colors.grey.withOpacity(0.7),
+                          sliderActiveColor: Colors.grey,
+                          controller: _verticalScrollController,
+                          child: AdaptiveScrollbar(
+                            position: ScrollbarPosition.bottom,
+                            underColor: Colors.blueGrey.withOpacity(0.3),
+                            sliderDefaultColor: Colors.grey.withOpacity(0.7),
+                            controller: _horizontalScrollController,
+                            sliderActiveColor: Colors.grey,
+                            child: SingleChildScrollView(
+                              controller: _verticalScrollController,
+                              scrollDirection: Axis.vertical,
+                              child: SingleChildScrollView(
+                                controller: _horizontalScrollController,
+                                scrollDirection: Axis.horizontal,
+                                child: DataTable(
+                                  border: TableBorder.all(
+                                    width: 1.0,
+                                    color: grey,
                                   ),
-                                ),
-                                DataColumn(
-                                    label: Text(
-                                  "Jenis \nBarang",
-                                  style: whiteInterTextStyle.copyWith(
-                                      fontWeight: medium, fontSize: 16),
-                                  textAlign: TextAlign.center,
-                                )),
-                                DataColumn(
-                                    label: Text(
-                                  "Satuan \nBarang",
-                                  style: whiteInterTextStyle.copyWith(
-                                      fontWeight: medium, fontSize: 16),
-                                  textAlign: TextAlign.center,
-                                )),
-                                DataColumn(
-                                    label: Text(
-                                  "Jumlah \nBarang",
-                                  style: whiteInterTextStyle.copyWith(
-                                      fontWeight: medium, fontSize: 16),
-                                  textAlign: TextAlign.center,
-                                )),
-                                DataColumn(
-                                    label: Text(
-                                  "Satuan Harga",
-                                  style: whiteInterTextStyle.copyWith(
-                                      fontWeight: medium, fontSize: 16),
-                                  textAlign: TextAlign.center,
-                                )),
-                              ],
-                              rows: List<DataRow>.generate(
-                                10,
-                                (index) => DataRow(
-                                  color:
-                                      MaterialStateProperty.resolveWith<Color?>(
-                                          (Set<MaterialState> states) {
-                                    if (index.isEven) {
-                                      return Color(0xffF4F4F5);
-                                    }
-                                    return null; // Use the default value.
-                                  }),
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        'CV. Berkah',
+                                  headingRowColor:
+                                      MaterialStateColor.resolveWith(
+                                          (states) => Color(0xff005FBE)),
+                                  // dataRowColor:
+                                  //     MaterialStateProperty.resolveWith<Color?>(
+                                  //         (Set<MaterialState> states) {
+                                  //   if (states.contains(MaterialState.selected)) {
+                                  //     return Theme.of(context)
+                                  //         .colorScheme
+                                  //         .primary
+                                  //         .withOpacity(0.08);
+                                  //   }
+                                  //   return null; // Use the default value.
+                                  // }),
+                                  columns: <DataColumn>[
+                                    DataColumn(
+                                      label: Text(
+                                        "Nama \nBarang",
+                                        style: whiteInterTextStyle.copyWith(
+                                            fontWeight: medium, fontSize: 16),
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
-                                    DataCell(
-                                      Text(
-                                        'Permen',
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        'Karton',
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        '100',
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        'Rp 10.000',
-                                      ),
-                                    ),
+                                    DataColumn(
+                                        label: Text(
+                                      "Jenis \nBarang",
+                                      style: whiteInterTextStyle.copyWith(
+                                          fontWeight: medium, fontSize: 16),
+                                      textAlign: TextAlign.center,
+                                    )),
+                                    DataColumn(
+                                        label: Text(
+                                      "Satuan \nBarang",
+                                      style: whiteInterTextStyle.copyWith(
+                                          fontWeight: medium, fontSize: 16),
+                                      textAlign: TextAlign.center,
+                                    )),
+                                    DataColumn(
+                                        label: Text(
+                                      "Jumlah \nBarang",
+                                      style: whiteInterTextStyle.copyWith(
+                                          fontWeight: medium, fontSize: 16),
+                                      textAlign: TextAlign.center,
+                                    )),
+                                    DataColumn(
+                                        label: Text(
+                                      "Satuan Harga",
+                                      style: whiteInterTextStyle.copyWith(
+                                          fontWeight: medium, fontSize: 16),
+                                      textAlign: TextAlign.center,
+                                    )),
                                   ],
+                                  rows: List<DataRow>.generate(
+                                    10,
+                                    (index) => DataRow(
+                                      color: MaterialStateProperty.resolveWith<
+                                          Color?>((Set<MaterialState> states) {
+                                        if (index.isEven) {
+                                          return Color(0xffF4F4F5);
+                                        }
+                                        return null; // Use the default value.
+                                      }),
+                                      cells: [
+                                        DataCell(
+                                          Text(
+                                            'CV. Berkah',
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Text(
+                                            'Permen',
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Text(
+                                            'Karton',
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Text(
+                                            '100',
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Text(
+                                            'Rp 10.000',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
