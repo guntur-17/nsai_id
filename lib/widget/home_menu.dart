@@ -6,7 +6,8 @@ class HomeMenu extends StatelessWidget {
   final String? title;
   final String? imgpath;
   final route;
-  const HomeMenu({Key? key, this.title, this.imgpath, this.route})
+  final ontap;
+  const HomeMenu({Key? key, this.title, this.imgpath, this.route, this.ontap})
       : super(key: key);
 
   @override
@@ -15,6 +16,7 @@ class HomeMenu extends StatelessWidget {
       onTap: () {
         Navigator.push(
             context, MaterialPageRoute(builder: ((context) => route)));
+        ontap;
       },
       child: Container(
         height: 80,

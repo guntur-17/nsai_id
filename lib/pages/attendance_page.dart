@@ -1,11 +1,18 @@
+import 'dart:ffi';
+
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_plus/dropdown_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
+import 'package:nsai_id/widget/loading_widget.dart';
 import 'package:relative_scale/relative_scale.dart';
 
 class AttendancePage extends StatefulWidget {
@@ -19,13 +26,12 @@ class _AttendancePageState extends State<AttendancePage> {
   TextEditingController jumlahController = TextEditingController(text: '');
   TextEditingController totalController = TextEditingController(text: '123556');
 
+  String currentAddress = 'My Address';
+  Position? currentposition;
+
   bool isLoading = false;
 
   bool isChecked = false;
-
-  void iniState() {
-    setState(() {});
-  }
 
   String? _dropDownValue;
 
@@ -35,6 +41,66 @@ class _AttendancePageState extends State<AttendancePage> {
   String? selectedDistributor;
   String? selectedProduct;
   String? selectedSatuan;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // _determinePosition();
+    _handlefunction();
+
+    // setState(() {});
+  }
+
+  Future _handlefunction() async {
+    setState(() {
+      isLoading = true;
+    });
+    _determinePosition();
+  }
+
+  Future<Position?> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Fluttertoast.showToast(msg: 'Please Keep your location on.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Fluttertoast.showToast(msg: 'Location Permission is denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      Fluttertoast.showToast(msg: 'Permission is denied Forever');
+    }
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      Placemark place = placemarks[0];
+      setState(
+        () {
+          currentposition = position;
+          currentAddress =
+              " ${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea} ${place.postalCode}";
+          Loader.hide();
+          isLoading = false;
+        },
+      );
+
+      return currentposition;
+    } catch (e) {
+      print(e);
+      isLoading = false;
+    }
+  }
 
   final List<String> items = [
     'Item1',
@@ -604,7 +670,6 @@ class _AttendancePageState extends State<AttendancePage> {
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-                  width: MediaQuery.of(context).size.width * 0.3,
                   // height: 36,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -614,14 +679,14 @@ class _AttendancePageState extends State<AttendancePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.check_circle_outline,
+                        Icons.file_download_outlined,
                         color: blueBrightColor,
                       ),
                       SizedBox(
                         width: 10,
                       ),
                       Text(
-                        'Save',
+                        'Download Transaksi Saya',
                         style: whiteInterTextStyle.copyWith(
                             fontSize: 16,
                             fontWeight: medium,
@@ -768,7 +833,7 @@ class _AttendancePageState extends State<AttendancePage> {
               child: Column(
                 children: [
                   Text(
-                    "09:00 - 18:00",
+                    "09:00 - 18:00" + currentAddress,
                     style: trueBlackRobotTextStyle.copyWith(
                       fontWeight: semiBold,
                       fontSize: 24,
@@ -811,6 +876,8 @@ class _AttendancePageState extends State<AttendancePage> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: redColor),
                         onPressed: () {
+                          _determinePosition();
+
                           // Navigator.of(context).push(MaterialPageRoute(
                           //     builder: (BuildContext context) => StockListPage()));
                         },
@@ -883,7 +950,7 @@ class _AttendancePageState extends State<AttendancePage> {
                     // color: whiteColor,
                     height: MediaQuery.of(context).size.height * 0.18,
                     width: MediaQuery.of(context).size.width * 0.9,
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    // padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -899,32 +966,35 @@ class _AttendancePageState extends State<AttendancePage> {
           child: Scaffold(
             // resizeToAvoidBottomInset: false,
             // backgroundColor: orangeYellow,
-            body: CustomScrollView(slivers: [
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: GestureDetector(
-                  onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('assets/bgatt.png'),
-                            fit: BoxFit.cover)),
-                    // height: MediaQuery.of(context).size.height,
-                    // constraints: BoxConstraints(
-                    //     maxHeight: MediaQuery.of(context).size.height),
-                    child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.stretch,
-                      // mainAxisSize: MainAxisSize.min,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        header(),
-                        body(),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ]),
+            body: isLoading
+                ? Loading()
+                : CustomScrollView(slivers: [
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: GestureDetector(
+                        onTap: () =>
+                            FocusManager.instance.primaryFocus?.unfocus(),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage('assets/bgatt.png'),
+                                  fit: BoxFit.cover)),
+                          // height: MediaQuery.of(context).size.height,
+                          // constraints: BoxConstraints(
+                          //     maxHeight: MediaQuery.of(context).size.height),
+                          child: Column(
+                            // crossAxisAlignment: CrossAxisAlignment.stretch,
+                            // mainAxisSize: MainAxisSize.min,
+                            // crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              header(),
+                              body(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ]),
           ),
         );
       },

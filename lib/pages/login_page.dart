@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:nsai_id/pages/attendance_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
 import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
+import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../providers/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -37,6 +42,62 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    Route route = MaterialPageRoute(builder: (context) => const HomePage());
+
+    handleLogin() async {
+      WidgetsFlutterBinding.ensureInitialized();
+      // setState(() {
+      //   isLoading = true;
+      // });
+      Loader.show(
+        context,
+        isSafeAreaOverlay: false,
+        // isBottomBarOverlay: false,
+        // overlayFromBottom: 80,
+        overlayColor: Colors.black26,
+        progressIndicator: CircularProgressIndicator(
+          color: blueBrightColor,
+        ),
+        themeData: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.fromSwatch().copyWith(secondary: whiteColor),
+        ),
+      );
+
+      if (await authProvider.login(
+          username: usernameController.text,
+          password: passwordController.text)) {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        prefs.setString('token', authProvider.user.access_token as String);
+
+        var token = prefs.getString('token');
+        // await Provider.of<VisitingAllProvider>(context, listen: false)
+        //     .getAllVisit(token);
+        // await Provider.of<AttedanceProvider>(context, listen: false)
+        //     .getAttendances(token);
+        Navigator.pushReplacement(context, route);
+        Loader.hide();
+      } else {
+        Loader.hide();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: redColor,
+            content: const Text(
+              'Anda Gagal Login',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }
+      // setState(() {
+      //   isLoading = false;
+      // });
+      //perubahan
+    }
+
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
         Widget logo() {
@@ -204,8 +265,7 @@ class _LoginPageState extends State<LoginPage> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(primary: primaryBlue),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => HomePage()));
+                handleLogin();
               },
               child: Container(
                 width: 315,

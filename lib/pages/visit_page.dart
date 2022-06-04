@@ -1,6 +1,7 @@
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_plus/dropdown_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
@@ -32,11 +33,23 @@ class _VisitPageState extends State<VisitPage> {
   FocusNode myFocusNode = FocusNode();
   FocusNode myFocusNode2 = FocusNode();
 
-  String? selectedDistributor;
+  String? selectedcategory;
+  String? selectedNamacategory;
   String? selectedProduct;
   String? selectedSatuan;
 
-  final List<String> items = [
+  final List<String> categories = [
+    'Item1',
+    'Item2',
+    'Item3',
+    'Item4',
+    'Item5',
+    'Item6',
+    'Item7',
+    'Item8',
+  ];
+
+  final List<String> nama_categories = [
     'Item1',
     'Item2',
     'Item3',
@@ -98,7 +111,7 @@ class _VisitPageState extends State<VisitPage> {
         //   );
         // }
 
-        Widget distributor() {
+        Widget kategoriOutlet() {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Column(
@@ -106,7 +119,7 @@ class _VisitPageState extends State<VisitPage> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Distributor",
+                    "Kategori Outlet",
                     style: trueBlackInterTextStyle.copyWith(
                       fontSize: 16,
                       fontWeight: medium,
@@ -123,7 +136,7 @@ class _VisitPageState extends State<VisitPage> {
                       children: [
                         Expanded(
                           child: Text(
-                            'Select Item',
+                            'pilih',
                             style: trueBlackInterTextStyle.copyWith(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -134,11 +147,11 @@ class _VisitPageState extends State<VisitPage> {
                         ),
                       ],
                     ),
-                    items: items
-                        .map((item) => DropdownMenuItem<String>(
-                              value: item,
+                    items: categories
+                        .map((category) => DropdownMenuItem<String>(
+                              value: category,
                               child: Text(
-                                item,
+                                category,
                                 style: trueBlackInterTextStyle.copyWith(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -147,10 +160,103 @@ class _VisitPageState extends State<VisitPage> {
                               ),
                             ))
                         .toList(),
-                    value: selectedDistributor,
+                    value: selectedcategory,
                     onChanged: (value) {
                       setState(() {
-                        selectedDistributor = value as String;
+                        selectedcategory = value as String;
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                    ),
+                    iconSize: 14,
+                    // iconEnabledColor: Colors.yellow,
+                    // iconDisabledColor: Colors.grey,
+                    buttonHeight: 50,
+                    buttonWidth: MediaQuery.of(context).size.width * 0.9,
+                    buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+                    buttonDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: Colors.black26,
+                      ),
+                      // color: Colors.redAccent,
+                    ),
+                    // buttonElevation: 2,
+                    itemHeight: 40,
+                    itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                    dropdownMaxHeight: 200,
+                    dropdownWidth: MediaQuery.of(context).size.width * 0.9,
+                    dropdownPadding: null,
+                    dropdownDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      // color: Colors.redAccent,
+                    ),
+                    dropdownElevation: 8,
+                    scrollbarRadius: const Radius.circular(40),
+                    scrollbarThickness: 6,
+                    scrollbarAlwaysShow: false,
+                    offset: const Offset(0, 0),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        Widget namaOutlet() {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Nama Outlet",
+                    style: trueBlackInterTextStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: medium,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 6,
+                ),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton2(
+                    isExpanded: true,
+                    hint: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'pilih',
+                            style: trueBlackInterTextStyle.copyWith(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              // color: Colors.yellow,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    items: nama_categories
+                        .map((nama_category) => DropdownMenuItem<String>(
+                              value: nama_category,
+                              child: Text(
+                                nama_category,
+                                style: trueBlackInterTextStyle.copyWith(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ))
+                        .toList(),
+                    value: selectedNamacategory,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedNamacategory = value as String;
                       });
                     },
                     icon: const Icon(
@@ -481,6 +587,74 @@ class _VisitPageState extends State<VisitPage> {
           );
         }
 
+        Widget takePhoto() {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Ambil Gambar Toko",
+                      style: trueBlackInterTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: medium,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: whiteColor,
+                            side: BorderSide(
+                              width: 1.0,
+                              color: blueBrightColor,
+                            )),
+                        onPressed: () {
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (BuildContext context) => StockListPage()));
+                        },
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          // height: 36,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            // color: primaryBlue,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.camera_alt_outlined,
+                                color: blueBrightColor,
+                              ),
+                              Text(
+                                'Ambil Gambar',
+                                style: whiteInterTextStyle.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: medium,
+                                    color: blueBrightColor),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
         Widget input() {
           return RelativeBuilder(builder: (context, height, width, sy, sx) {
             return Padding(
@@ -490,11 +664,12 @@ class _VisitPageState extends State<VisitPage> {
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: Column(
                   children: [
-                    distributor(),
+                    kategoriOutlet(),
                     produk(),
                     jumlah(),
                     satuan(),
                     total(),
+                    takePhoto(),
                   ],
                 ),
               ),
@@ -604,7 +779,7 @@ class _VisitPageState extends State<VisitPage> {
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  // width: MediaQuery.of(context).size.width,
                   // height: 36,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -614,14 +789,14 @@ class _VisitPageState extends State<VisitPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.check_circle_outline,
+                        Icons.file_download_outlined,
                         color: blueBrightColor,
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
                       Text(
-                        'Save',
+                        'Download Transaksi Saya',
                         style: whiteInterTextStyle.copyWith(
                             fontSize: 16,
                             fontWeight: medium,
@@ -630,101 +805,6 @@ class _VisitPageState extends State<VisitPage> {
                     ],
                   ),
                 ),
-              ),
-            ),
-          );
-        }
-
-        Widget ssj() {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Sudah Siap Jualan?",
-                      style: trueBlackInterTextStyle.copyWith(
-                        fontSize: 16,
-                        fontWeight: medium,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 6,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: primaryBlue),
-                        onPressed: () {
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (BuildContext context) => StockListPage()));
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.3,
-
-                          // height: 36,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            // color: primaryBlue,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Ya',
-                                style: whiteInterTextStyle.copyWith(
-                                    fontSize: 16, fontWeight: medium),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: whiteColor,
-                            side: BorderSide(
-                              width: 1.0,
-                              color: blueBrightColor,
-                            )),
-                        onPressed: () {
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (BuildContext context) => StockListPage()));
-                        },
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          // height: 36,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            // color: primaryBlue,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Tidak',
-                                style: whiteInterTextStyle.copyWith(
-                                    fontSize: 16,
-                                    fontWeight: medium,
-                                    color: blueBrightColor),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
               ),
             ),
           );
@@ -752,7 +832,6 @@ class _VisitPageState extends State<VisitPage> {
                   input(),
                   button(),
                   download(),
-                  ssj(),
                   // check(),
                 ],
               ),
@@ -883,7 +962,7 @@ class _VisitPageState extends State<VisitPage> {
                     // color: whiteColor,
                     height: MediaQuery.of(context).size.height * 0.18,
                     width: MediaQuery.of(context).size.width * 0.9,
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    // padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(8))),

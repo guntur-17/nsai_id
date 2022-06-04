@@ -1,10 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nsai_id/models/user_model.dart';
 import 'package:nsai_id/pages/attendance_page.dart';
 import 'package:nsai_id/pages/faq_page.dart';
 import 'package:nsai_id/pages/visit_page.dart';
+import 'package:nsai_id/providers/auth_provider.dart';
 import 'package:nsai_id/widget/home_menu.dart';
+import 'package:provider/provider.dart';
 
 import '../theme.dart';
 
@@ -99,6 +103,28 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    UserModel user = authProvider.user;
+
+    loader() async {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      Loader.show(
+        context,
+        isSafeAreaOverlay: false,
+        // isBottomBarOverlay: false,
+        // overlayFromBottom: 80,
+        overlayColor: Colors.black26,
+        progressIndicator: CircularProgressIndicator(
+          color: blueBrightColor,
+        ),
+        themeData: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.fromSwatch().copyWith(secondary: whiteColor),
+        ),
+      );
+    }
+
     Widget header() {
       return Expanded(
         flex: 9,
@@ -127,9 +153,13 @@ class _HomePageState extends State<HomePage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Malik Amiruddin',
-                              style: whiteRobotoTextStyle.copyWith(
-                                  fontSize: 20, fontWeight: semiBold)),
+                          Text(
+                            user.name!,
+                            style: whiteRobotoTextStyle.copyWith(
+                              fontSize: 20,
+                              fontWeight: semiBold,
+                            ),
+                          ),
                           Text('Jakarta',
                               style: whiteRobotoTextStyle.copyWith(
                                   fontSize: 12, fontWeight: reguler))
