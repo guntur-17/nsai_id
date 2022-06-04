@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nsai_id/models/user_model.dart';
 import 'package:nsai_id/pages/attendance_page.dart';
 import 'package:nsai_id/pages/faq_page.dart';
+import 'package:nsai_id/pages/transaction_page.dart';
 import 'package:nsai_id/pages/visit_page.dart';
 import 'package:nsai_id/providers/auth_provider.dart';
 import 'package:nsai_id/widget/home_menu.dart';
@@ -608,7 +609,8 @@ class _HomePageState extends State<HomePage> {
                             ),
                             HomeMenu(
                                 title: 'Transaksi',
-                                imgpath: 'assets/chart.png'),
+                                imgpath: 'assets/chart.png',
+                                route: TransactionPage()),
                             HomeMenu(
                               title: 'FAQ',
                               imgpath: 'assets/faq.png',
