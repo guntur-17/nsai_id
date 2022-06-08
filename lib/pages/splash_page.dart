@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:nsai_id/pages/faq_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
+import 'package:nsai_id/pages/login_page.dart';
+import 'package:nsai_id/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,19 +20,51 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  // Route route = MaterialPageRoute(builder: (context) => const HomePage());
+  Route route = MaterialPageRoute(builder: (context) => const HomePage());
   // bool isLoading = false;
 
   @override
   void initState() {
-    Timer(
-      const Duration(seconds: 2),
-      () => Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (BuildContext context) => PreloginPage()),
-      ),
-    );
+    validator();
 
     super.initState();
+  }
+
+  getUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString('token');
+    if (await Provider.of<AuthProvider>(context, listen: false)
+        .getUser(token: token)) {
+      Navigator.pushReplacement(context, route);
+    } else {
+      Timer(
+        const Duration(seconds: 2),
+        () => Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) => PreloginPage()),
+        ),
+      );
+    }
+    // Navigator.pushReplacement(context, route);
+  }
+
+  validator() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString('token');
+    if (token != null) {
+      setState(() {
+        print(token);
+        getUser();
+      });
+    } else {
+      Timer(
+        const Duration(seconds: 2),
+        () => Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) => PreloginPage()),
+        ),
+      );
+    }
   }
 
   @override

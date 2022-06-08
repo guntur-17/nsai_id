@@ -88,9 +88,10 @@ class _AttendancePageState extends State<AttendancePage> {
       setState(
         () {
           currentposition = position;
+
           currentAddress =
               " ${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea} ${place.postalCode}";
-          Loader.hide();
+          // Loader.hide();
           isLoading = false;
         },
       );
