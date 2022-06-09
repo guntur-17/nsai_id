@@ -834,7 +834,7 @@ class _AttendancePageState extends State<AttendancePage> {
               child: Column(
                 children: [
                   Text(
-                    "09:00 - 18:00" + currentAddress,
+                    "09:00 - 18:00",
                     style: trueBlackRobotTextStyle.copyWith(
                       fontWeight: semiBold,
                       fontSize: 24,

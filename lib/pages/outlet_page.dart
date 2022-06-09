@@ -7,10 +7,12 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nsai_id/models/shopDistance_model.dart';
 import 'package:nsai_id/models/shop_model.dart';
+import 'package:nsai_id/providers/shop_provider.dart';
 import 'package:nsai_id/services/shop_service.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/loading_widget.dart';
 import 'package:nsai_id/widget/shop_card.dart';
+import 'package:provider/provider.dart';
 
 import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +28,9 @@ class ShopListPage extends StatefulWidget {
 
 class _ShopListPageState extends State<ShopListPage> {
   List<ShopModel> shops = [];
-  List<ShopDistanceModel> shopsDistance = [];
+  List<Map<String, dynamic>> shopsDistance = [];
+  List<Map<String, dynamic>> _shopsDistance = [];
+
   String query = '';
   Timer? debouncer;
 
@@ -49,16 +53,6 @@ class _ShopListPageState extends State<ShopListPage> {
       isLoading = true;
     });
     _determinePosition();
-  }
-
-  Future shopListHandler() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    shopsDistance = (await ShopService().getShopsDistance(
-            token: token,
-            latUser: currentposition!.latitude,
-            longUser: currentposition!.longitude))
-        .cast<ShopDistanceModel>();
   }
 
   // Future init() async {
@@ -103,8 +97,6 @@ class _ShopListPageState extends State<ShopListPage> {
               " ${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea} ${place.postalCode}";
           // Loader.hide();
           shopListHandler();
-
-          isLoading = false;
         },
       );
 
@@ -114,6 +106,28 @@ class _ShopListPageState extends State<ShopListPage> {
       isLoading = false;
       return null;
     }
+  }
+
+  Future shopListHandler() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    // shopsDistance = (await ShopService().getShopsDistance(
+    //         token: token,
+    //         latUser: currentposition!.latitude,
+    //         longUser: currentposition!.longitude))
+    //     .cast<ShopDistanceModel>();
+
+    shopsDistance = (await ShopService().getShopsDistance(
+        token: token,
+        latUser: currentposition!.latitude,
+        longUser: currentposition!.longitude));
+
+    setState(() {
+      _shopsDistance = shopsDistance;
+      isLoading = false;
+    });
+
+    print(shopsDistance);
   }
 
   @override
@@ -135,26 +149,23 @@ class _ShopListPageState extends State<ShopListPage> {
 
   @override
   Widget build(BuildContext context) {
+    // ShopProvider shopProvider = Provider.of<ShopProvider>(context);
+    // List list = shopProvider.shopdistance.toList();
+    // print(list);
     Widget card() {
-      return SizedBox(
-        width: MediaQuery.of(context).size.width * 0.95,
-        child: SingleChildScrollView(
-          child: Center(
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              width: MediaQuery.of(context).size.width * 0.90,
-              child: ListView.builder(
-                itemCount: shops.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final shop = shopsDistance[index];
-
-                  return ShopCard(shop: shop);
-                },
-              ),
-            ),
-          ),
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.90,
+        child: ListView.builder(
+          itemCount: shopsDistance.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final shop = _shopsDistance[index];
+            // ignore: avoid_print
+            print(shop);
+            // setState(() {});
+            return ShopCard(shop);
+          },
         ),
       );
     }
@@ -189,12 +200,14 @@ class _ShopListPageState extends State<ShopListPage> {
         body: isLoading
             ? Loading()
             : SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    // buildSearch(),
-                    // isLoading ? const LoadingDefault() :
-                    card(),
-                  ],
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      // buildSearch(),
+                      // isLoading ? const LoadingDefault() :
+                      card(),
+                    ],
+                  ),
                 ),
               ),
       ),
@@ -220,62 +233,62 @@ class _ShopListPageState extends State<ShopListPage> {
         });
       });
 
-  Widget cardShop({ShopModel? shop}) => RelativeBuilder(
-        builder: (context, height, width, sy, sx) {
-          return InkWell(
-            onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) =>
-              //         CameraPages(shop!.id, shop.name, widget.addressUser),
-              //   ),
-              // );
-            },
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 15),
-              width: MediaQuery.of(context).size.width - 60,
-              height: sy(40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Image.asset(
-                  //   'assets/toko.png',
-                  //   width: sy(40),
-                  //   height: sy(40),
-                  // ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.6,
-                            child: Text(
-                              shop!.name,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.left,
-                              style: trueBlackTextStyle.copyWith(
-                                  fontSize: 18, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  // Image.asset(
-                  //   'assets/rightButton.png',
-                  //   width: sx(20),
-                  //   height: sx(20),
-                  // ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
+  // Widget cardShop({ShopModel? shop}) => RelativeBuilder(
+  //       builder: (context, height, width, sy, sx) {
+  //         return InkWell(
+  //           onTap: () {
+  //             // Navigator.push(
+  //             //   context,
+  //             //   MaterialPageRoute(
+  //             //     builder: (context) =>
+  //             //         CameraPages(shop!.id, shop.name, widget.addressUser),
+  //             //   ),
+  //             // );
+  //           },
+  //           child: Container(
+  //             margin: const EdgeInsets.only(bottom: 15),
+  //             width: MediaQuery.of(context).size.width - 60,
+  //             height: sy(40),
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 // Image.asset(
+  //                 //   'assets/toko.png',
+  //                 //   width: sy(40),
+  //                 //   height: sy(40),
+  //                 // ),
+  //                 const SizedBox(
+  //                   width: 16,
+  //                 ),
+  //                 Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                   children: [
+  //                     Row(
+  //                       children: [
+  //                         SizedBox(
+  //                           width: MediaQuery.of(context).size.width * 0.6,
+  //                           child: Text(
+  //                             shop!.name,
+  //                             overflow: TextOverflow.ellipsis,
+  //                             textAlign: TextAlign.left,
+  //                             style: trueBlackTextStyle.copyWith(
+  //                                 fontSize: 18, fontWeight: FontWeight.w500),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     )
+  //                   ],
+  //                 ),
+  //                 // Image.asset(
+  //                 //   'assets/rightButton.png',
+  //                 //   width: sx(20),
+  //                 //   height: sx(20),
+  //                 // ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     );
 }
