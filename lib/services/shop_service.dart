@@ -75,7 +75,7 @@ class ShopService {
     if (response.statusCode == 200) {
       List data = json.decode(response.body)['data']['shop'];
       List<ShopModel> shops = [];
-      List<ShopDistanceModel> shopDistance = [];
+      // List<ShopDistanceModel> shopDistance = [];
       List<Map<String, dynamic>> locationListWithDistance = [];
 
       // data.map((json) => ShopModel.fromJson(json)).where((shop) {
@@ -116,18 +116,20 @@ class ShopService {
         locationListWithDistance.add({'shop': item, 'distance': radius});
       }
 
-      print(locationListWithDistance);
+      // print(locationListWithDistance);
       locationListWithDistance.sort((a, b) {
         double d1 = a['distance'];
         double d2 = b['distance'];
-        if (d1 > d2)
+        if (d1 > d2) {
           return 1;
-        else if (d1 < d2)
+        } else if (d1 < d2) {
           return -1;
-        else
+        } else {
           return 0;
+        }
       });
 
+      // locationListWithDistance(shopDistance);
       // List<ShopDistanceModel> shopDistance = locationListWithDistance.toList();
 
       return locationListWithDistance;

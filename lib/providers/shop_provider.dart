@@ -9,13 +9,13 @@ import '../services/shop_service.dart';
 class ShopProvider with ChangeNotifier {
   List<ShopModel> _shops = [];
   List<ShopModel> get shops => _shops;
-  List<ShopDistanceModel> _shopdistance = [];
-  List<ShopDistanceModel> get shopdistance => _shopdistance = [];
+  // List<ShopDistanceModel> _shopdistance = [];
+  // List<ShopDistanceModel> get shopdistance => _shopdistance = [];
 
-  set shopdistance(List<ShopDistanceModel> shopdistance) {
-    _shopdistance = shopdistance;
-    notifyListeners();
-  }
+  // set shopdistance(List<ShopDistanceModel> shopdistance) {
+  //   _shopdistance = shopdistance;
+  //   notifyListeners();
+  // }
 
   set shops(List<ShopModel> shops) {
     _shops = shops;
@@ -33,4 +33,19 @@ class ShopProvider with ChangeNotifier {
       return false;
     }
   }
+
+  // Future<List<Map<String, dynamic>>?> getShopDistance(
+  //     String? token, double latUser, double longuser) async {
+  //   try {
+  //     List<Map<String, dynamic>> shopdistance = await ShopService()
+  //         .getShopsDistance(token: token, latUser: latUser, longUser: longuser);
+  //     _shopdistance = shopdistance.cast<ShopDistanceModel>();
+  //     // print(_shops)
+  //     print(shopdistance);
+  //     return shopdistance;
+  //   } catch (e) {
+  //     print(e);
+  //     return null;
+  //   }
+  // }
 }
