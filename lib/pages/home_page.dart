@@ -4,12 +4,15 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nsai_id/models/user_model.dart';
 import 'package:nsai_id/pages/attendance_page.dart';
+import 'package:nsai_id/pages/distributor_page.dart';
 import 'package:nsai_id/pages/faq_page.dart';
 import 'package:nsai_id/pages/outlet_page.dart';
 import 'package:nsai_id/pages/transaction_page.dart';
 import 'package:nsai_id/pages/visit_page.dart';
+
 import 'package:nsai_id/providers/auth_provider.dart';
-import 'package:nsai_id/providers/shop_provider.dart';
+import 'package:nsai_id/providers/distributor_provider.dart';
+import 'package:nsai_id/providers/outlet_provider.dart';
 import 'package:nsai_id/widget/home_menu.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,15 +29,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   initState() {
-    shopHandler();
+    // shopHandler();
+    distributorHandler();
+    // attendanceHandler();
     super.initState();
   }
 
-  shopHandler() async {
+  distributorHandler() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    await ShopProvider().getShops(token);
+    if (await DistributorProvider().getDistributors(token)) setState(() {});
   }
+
+  // shopHandler() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   var token = prefs.getString('token');
+  //   await OutletProvider().getShops(token);
+  // }
 
   List<Color> raisingGradient = [
     const Color(0xff23b6e6),
@@ -615,12 +626,13 @@ class _HomePageState extends State<HomePage> {
                             HomeMenu(
                               title: 'Absensi',
                               imgpath: 'assets/check.png',
-                              route: AttendancePage(),
+                              route: DistributorListPage(),
+                              // function: attendanceHandler(),
                             ),
                             HomeMenu(
                               title: 'Visit',
                               imgpath: 'assets/pin.png',
-                              route: ShopListPage(),
+                              route: OutletListPage(),
                             ),
                             HomeMenu(
                                 title: 'Transaksi',

@@ -4,14 +4,14 @@ import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:nsai_id/models/shopDistance_model.dart';
-import 'package:nsai_id/models/shop_model.dart';
+import 'package:nsai_id/models/outlet_model.dart';
 
-class ShopService {
+class OutletService {
   // var data = [];
   // List<ShopModel> shops = [];
   String baseUrl = 'http://decoy.sakataguna-dev.com/api';
 
-  Future<List<ShopModel>> getShops({String? token}) async {
+  Future<List<OutletModel>> getOutlets({String? token}) async {
     var url = Uri.parse('$baseUrl/user/show-shop');
     var headers = {
       'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ class ShopService {
 
     if (response.statusCode == 200) {
       List data = json.decode(response.body)['data']['shop'];
-      List<ShopModel> shops = [];
+      List<OutletModel> shops = [];
 
       // data.map((json) => ShopModel.fromJson(json)).where((shop) {
       //   final latShop = shop.lat;
@@ -50,7 +50,7 @@ class ShopService {
       // print(data);
 
       for (var item in data) {
-        shops.add(ShopModel.fromJson(item));
+        shops.add(OutletModel.fromJson(item));
       }
 
       return shops;
@@ -59,7 +59,7 @@ class ShopService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getShopsDistance(
+  Future<List<Map<String, dynamic>>> getOutletsDistance(
       {String? token, double? latUser, double? longUser}) async {
     var url = Uri.parse('$baseUrl/user/show-shop');
     var headers = {
@@ -74,7 +74,7 @@ class ShopService {
 
     if (response.statusCode == 200) {
       List data = json.decode(response.body)['data']['shop'];
-      List<ShopModel> shops = [];
+      List<OutletModel> shops = [];
       // List<ShopDistanceModel> shopDistance = [];
       List<Map<String, dynamic>> locationListWithDistance = [];
 
@@ -101,7 +101,7 @@ class ShopService {
       // print(data);
 
       for (var item in data) {
-        shops.add(ShopModel.fromJson(item));
+        shops.add(OutletModel.fromJson(item));
       }
 
       for (var item in shops) {

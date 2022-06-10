@@ -8,6 +8,8 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+
+import 'package:nsai_id/models/distributor_model.dart';
 import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/theme.dart';
@@ -16,7 +18,9 @@ import 'package:nsai_id/widget/loading_widget.dart';
 import 'package:relative_scale/relative_scale.dart';
 
 class AttendancePage extends StatefulWidget {
-  AttendancePage({Key? key}) : super(key: key);
+  DistributorModel distributor;
+
+  AttendancePage({required this.distributor, Key? key}) : super(key: key);
 
   @override
   State<AttendancePage> createState() => _AttendancePageState();
@@ -24,7 +28,9 @@ class AttendancePage extends StatefulWidget {
 
 class _AttendancePageState extends State<AttendancePage> {
   TextEditingController jumlahController = TextEditingController(text: '');
-  TextEditingController totalController = TextEditingController(text: '123556');
+  TextEditingController totalController = TextEditingController(text: '');
+
+  List<Map<String, dynamic>> test = [];
 
   String currentAddress = 'My Address';
   Position? currentposition;
@@ -372,6 +378,14 @@ class _AttendancePageState extends State<AttendancePage> {
                 TextFormField(
                   // scrollPadding: EdgeInsets.only(
                   //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
+                  onChanged: ((value) {
+                    String jumlah = jumlahController.text;
+                    int jumlah2 = int.parse(jumlah);
+                    print(jumlah2);
+                    selectedProduct != null || jumlahController.text != ''
+                        ? totalController.text = (jumlah2 * 2).toString()
+                        : '';
+                  }),
                   focusNode: myFocusNode,
                   controller: jumlahController,
                   decoration: InputDecoration(
@@ -557,10 +571,10 @@ class _AttendancePageState extends State<AttendancePage> {
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: Column(
                   children: [
-                    distributor(),
+                    // distributor(),
                     produk(),
                     jumlah(),
-                    satuan(),
+                    // satuan(),
                     total(),
                   ],
                 ),
@@ -574,40 +588,40 @@ class _AttendancePageState extends State<AttendancePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: primaryBlue),
-                  onPressed: () {
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //     builder: (BuildContext context) => StockListPage()));
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.3,
+                // ElevatedButton(
+                //   style: ElevatedButton.styleFrom(primary: primaryBlue),
+                //   onPressed: () {
+                //     // Navigator.of(context).push(MaterialPageRoute(
+                //     //     builder: (BuildContext context) => StockListPage()));
+                //   },
+                //   child: Container(
+                //     width: MediaQuery.of(context).size.width * 0.3,
 
-                    // height: 36,
-                    padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      // color: primaryBlue,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.check_circle_outline),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          'Calculate',
-                          style: whiteInterTextStyle.copyWith(
-                              fontSize: 16, fontWeight: medium),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 12,
-                ),
+                //     // height: 36,
+                //     padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                //     decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.circular(10),
+                //       // color: primaryBlue,
+                //     ),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         Icon(Icons.check_circle_outline),
+                //         SizedBox(
+                //           width: 10,
+                //         ),
+                //         Text(
+                //           'Calculate',
+                //           style: whiteInterTextStyle.copyWith(
+                //               fontSize: 16, fontWeight: medium),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   width: 12,
+                // ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       primary: whiteColor,
@@ -616,6 +630,18 @@ class _AttendancePageState extends State<AttendancePage> {
                         color: blueBrightColor,
                       )),
                   onPressed: () {
+                    test.add({
+                      // 'distributor': selectedDistributor,
+                      'produk': selectedProduct,
+                      'jumlah': jumlahController.text,
+                      'total': totalController.text,
+                    });
+                    setState(() {
+                      selectedProduct = null;
+                      jumlahController.text = '';
+                      totalController.text = '';
+                    });
+                    print(test);
                     // Navigator.of(context).push(MaterialPageRoute(
                     //     builder: (BuildContext context) => StockListPage()));
                   },
@@ -630,15 +656,15 @@ class _AttendancePageState extends State<AttendancePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.check_circle_outline,
-                          color: blueBrightColor,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
+                        // Icon(
+                        //   Icons.check_circle_outline,
+                        //   color: blueBrightColor,
+                        // ),
+                        // SizedBox(
+                        //   width: 10,
+                        // ),
                         Text(
-                          'Save',
+                          'Add',
                           style: whiteInterTextStyle.copyWith(
                               fontSize: 16,
                               fontWeight: medium,
@@ -863,7 +889,7 @@ class _AttendancePageState extends State<AttendancePage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Log In',
+                                'Check In',
                                 style: whiteInterTextStyle.copyWith(
                                     fontSize: 16, fontWeight: medium),
                               )
@@ -871,38 +897,38 @@ class _AttendancePageState extends State<AttendancePage> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: redColor),
-                        onPressed: () {
-                          _determinePosition();
+                      // SizedBox(
+                      //   width: 12,
+                      // ),
+                      // ElevatedButton(
+                      //   style: ElevatedButton.styleFrom(primary: redColor),
+                      //   onPressed: () {
+                      //     _determinePosition();
 
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (BuildContext context) => StockListPage()));
-                        },
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-                          // width: 137,
-                          // height: 36,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            // color: primaryBlue,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Log In',
-                                style: whiteInterTextStyle.copyWith(
-                                    fontSize: 16, fontWeight: medium),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      //     // Navigator.of(context).push(MaterialPageRoute(
+                      //     //     builder: (BuildContext context) => StockListPage()));
+                      //   },
+                      //   child: Container(
+                      //     padding:
+                      //         EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                      //     // width: 137,
+                      //     // height: 36,
+                      //     decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(10),
+                      //       // color: primaryBlue,
+                      //     ),
+                      //     child: Column(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         Text(
+                      //           'Log In',
+                      //           style: whiteInterTextStyle.copyWith(
+                      //               fontSize: 16, fontWeight: medium),
+                      //         )
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],
@@ -913,7 +939,7 @@ class _AttendancePageState extends State<AttendancePage> {
 
         Widget header() {
           return Expanded(
-            flex: 4,
+            flex: 5,
             child: Container(
               // color: orangeYellow,
               child: Column(
@@ -922,9 +948,9 @@ class _AttendancePageState extends State<AttendancePage> {
                   Row(
                     // mainAxisAlignment: ,
                     children: [
-                      SizedBox(
-                        width: 10,
-                      ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
                       IconButton(
                         icon: Icon(
                           Icons.arrow_back_ios_new,
@@ -980,13 +1006,7 @@ class _AttendancePageState extends State<AttendancePage> {
                               image: DecorationImage(
                                   image: AssetImage('assets/bgatt.png'),
                                   fit: BoxFit.cover)),
-                          // height: MediaQuery.of(context).size.height,
-                          // constraints: BoxConstraints(
-                          //     maxHeight: MediaQuery.of(context).size.height),
                           child: Column(
-                            // crossAxisAlignment: CrossAxisAlignment.stretch,
-                            // mainAxisSize: MainAxisSize.min,
-                            // crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               header(),
                               body(),

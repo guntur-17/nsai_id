@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:nsai_id/models/distributor_model.dart';
 import 'package:nsai_id/models/shopDistance_model.dart';
 import 'package:nsai_id/models/outlet_model.dart';
 import 'package:nsai_id/pages/attendance_page.dart';
@@ -7,10 +8,10 @@ import 'package:nsai_id/pages/transaction_page.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:relative_scale/relative_scale.dart';
 
-class ShopCard extends StatelessWidget {
-  final Map<String, dynamic> shop;
+class DistributorCard extends StatelessWidget {
+  final DistributorModel shop;
   final route;
-  const ShopCard(this.shop, this.route, {Key? key}) : super(key: key);
+  const DistributorCard(this.shop, this.route, {Key? key}) : super(key: key);
 
   // @override
   // State<ShopCard> createState() => _ShopCardState();
@@ -44,7 +45,7 @@ class ShopCard extends StatelessWidget {
                   width: 16,
                 ),
                 Text(
-                  shop['shop'].name.toString(),
+                  shop.user_id.toString(),
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.left,
                   style: trueBlackTextStyle.copyWith(

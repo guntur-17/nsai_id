@@ -33,14 +33,14 @@
 //   }
 // }
 
-class ShopModel {
+class OutletModel {
   final int id;
   final String name;
   final String address;
   final double lat;
   final double long;
 
-  ShopModel({
+  OutletModel({
     required this.id,
     required this.name,
     required this.address,
@@ -48,7 +48,7 @@ class ShopModel {
     required this.long,
   });
 
-  factory ShopModel.fromJson(Map<String, dynamic> json) => ShopModel(
+  factory OutletModel.fromJson(Map<String, dynamic> json) => OutletModel(
         id: json['id'],
         name: json['name'],
         address: json['address'],

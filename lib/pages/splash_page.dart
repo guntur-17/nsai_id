@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:nsai_id/pages/faq_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
 import 'package:nsai_id/pages/login_page.dart';
+
 import 'package:nsai_id/providers/auth_provider.dart';
+import 'package:nsai_id/providers/distributor_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,10 +32,10 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
   }
 
-  getUser() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+  getUser(token) async {
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var token = prefs.getString('token');
+    // var token = prefs.getString('token');
     if (await Provider.of<AuthProvider>(context, listen: false)
         .getUser(token: token)) {
       Navigator.pushReplacement(context, route);
@@ -45,7 +47,22 @@ class _SplashPageState extends State<SplashPage> {
         ),
       );
     }
+
     // Navigator.pushReplacement(context, route);
+  }
+
+  // getattendance(token) async {
+  //   // SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   // var token = prefs.getString('token');
+  //   await Provider.of<AttedanceProvider>(context, listen: false)
+  //       .getAttendances(token);
+  // }
+
+  distributorHandler(token) async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // var token = prefs.getString('token');
+    await Provider.of<DistributorProvider>(context, listen: false)
+        .getDistributors(token);
   }
 
   validator() async {
@@ -55,7 +72,9 @@ class _SplashPageState extends State<SplashPage> {
     if (token != null) {
       setState(() {
         print(token);
-        getUser();
+        getUser(token);
+        // getattendance(token);
+        distributorHandler(token);
       });
     } else {
       Timer(

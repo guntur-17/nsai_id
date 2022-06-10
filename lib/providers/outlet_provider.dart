@@ -2,13 +2,13 @@
 // import 'package:absen_lite/services/shop_service.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nsai_id/models/shopDistance_model.dart';
-import 'package:nsai_id/models/shop_model.dart';
+import 'package:nsai_id/models/outlet_model.dart';
 
-import '../services/shop_service.dart';
+import '../services/outlet_service.dart';
 
-class ShopProvider with ChangeNotifier {
-  List<ShopModel> _shops = [];
-  List<ShopModel> get shops => _shops;
+class OutletProvider with ChangeNotifier {
+  List<OutletModel> _outlets = [];
+  List<OutletModel> get outlets => _outlets;
   // List<ShopDistanceModel> _shopdistance = [];
   // List<ShopDistanceModel> get shopdistance => _shopdistance = [];
 
@@ -17,15 +17,16 @@ class ShopProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  set shops(List<ShopModel> shops) {
-    _shops = shops;
+  set shops(List<OutletModel> outlets) {
+    _outlets = outlets;
     notifyListeners();
   }
 
   Future<bool> getShops(String? token) async {
     try {
-      List<ShopModel> shops = await ShopService().getShops(token: token);
-      _shops = shops;
+      List<OutletModel> outlets =
+          await OutletService().getOutlets(token: token);
+      _outlets = outlets;
       // print(_shops);
       return true;
     } catch (e) {
