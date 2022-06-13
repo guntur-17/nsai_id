@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nsai_id/providers/auth_provider.dart';
-import 'package:nsai_id/providers/shop_provider.dart';
+import 'package:nsai_id/providers/distributor_provider.dart';
+import 'package:nsai_id/providers/outlet_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/splash_page.dart';
@@ -22,7 +23,9 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ChangeNotifierProvider(create: (context) => ShopProvider()),
+        ChangeNotifierProvider(create: (context) => OutletProvider()),
+        ChangeNotifierProvider(create: (context) => DistributorProvider()),
+        // ChangeNotifierProvider(create: (context) => AttedanceProvider()),
 
         // ChangeNotifierProvider(create: (context) => AuthProvider()),
       ],

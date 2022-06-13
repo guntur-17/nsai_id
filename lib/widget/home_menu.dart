@@ -7,13 +7,21 @@ class HomeMenu extends StatelessWidget {
   final String? imgpath;
   final route;
   final ontap;
-  const HomeMenu({Key? key, this.title, this.imgpath, this.route, this.ontap})
+  final function;
+  const HomeMenu(
+      {Key? key,
+      this.function,
+      this.title,
+      this.imgpath,
+      this.route,
+      this.ontap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        function;
         Navigator.push(
             context, MaterialPageRoute(builder: ((context) => route)));
         ontap;
