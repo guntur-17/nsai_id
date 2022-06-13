@@ -48,6 +48,8 @@ dependencies:
   scroll_app_bar: ^2.0.0
   shared_preferences: ^2.0.15
   syncfusion_flutter_pdf: ^20.1.59-beta
+  infinite_scroll_pagination: ^3.2.0
+  lazy_loading_list: ^1.0.1
 
 dev_dependencies:
   flutter_lints: ^1.0.0
