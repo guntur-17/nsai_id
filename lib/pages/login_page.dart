@@ -66,8 +66,7 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (await authProvider.login(
-          username: usernameController.text,
-          password: passwordController.text)) {
+          email: usernameController.text, password: passwordController.text)) {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
 
         prefs.setString('token', authProvider.user.access_token as String);

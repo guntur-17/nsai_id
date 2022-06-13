@@ -1,35 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:nsai_id/models/product_model.dart';
 import 'package:nsai_id/pages/guide_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
-import 'package:nsai_id/pages/prelogin_page.dart';
-import 'package:nsai_id/pages/test_print.dart';
+import 'package:nsai_id/pages/save_file_mobile.dart';
+import 'package:nsai_id/services/product_service.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/faq_menu.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
-import '../providers/auth_provider.dart';
-import 'transaction_report_page.dart';
+import '../widget/pdf-generator.dart';
 
-class FaqPage extends StatelessWidget {
-  const FaqPage({Key? key}) : super(key: key);
+class TestPrint extends StatefulWidget {
+  const TestPrint({Key? key}) : super(key: key);
+
+  @override
+  State<TestPrint> createState() => _TestPrintState();
+}
+
+class _TestPrintState extends State<TestPrint> {
+  late List<Product> _product;
+  // List<Doctor> _foundDoctor = [];
+
+  initState() {
+    // at the beginning, all users are shown
+    _product = allProduct;
+    // _foundDoctor = allDoctor;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
-    handleLogout() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var token = prefs.getString('token');
-      if (await authProvider.logout(token: token)) {
-        prefs.clear();
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => PreloginPage()),
-            (route) => false);
-      }
-    }
-
     Widget body() {
       return Expanded(
         child: Stack(
@@ -50,7 +51,7 @@ class FaqPage extends StatelessWidget {
               alignment: FractionalOffset.bottomCenter,
               child: Container(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.85,
+                height: MediaQuery.of(context).size.height * 0.8,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -62,34 +63,14 @@ class FaqPage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 24.0),
                   child: Column(
                     children: [
-                      FaqMenu('Tujuan', TestPrint()),
-                      FaqMenu('Manfaat', HomePage()),
-                      FaqMenu('Registrasi', HomePage()),
-                      FaqMenu('Lupa Password', HomePage()),
-                      FaqMenu('Penggunaan', GuidePage()),
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 32.0),
-                        child: InkWell(
-                          onTap: () {
-                            handleLogout();
-                          },
-                          child: Container(
-                            height: 40,
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF0354A6),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Log Out',
-                                style:
-                                    whiteInterTextStyle.copyWith(fontSize: 16),
-                              ),
-                            ),
-                          ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                          backgroundColor: Colors.lightBlue,
+                          onSurface: Colors.grey,
                         ),
+                        onPressed: () => generateInvoice(_product),
+                        child: const Text('Generate PDF'),
                       )
                     ],
                   ),

@@ -1,6 +1,5 @@
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:flutter/material.dart';
-import 'package:lazy_data_table/lazy_data_table.dart';
 
 import '../theme.dart';
 

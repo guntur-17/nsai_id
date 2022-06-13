@@ -27,29 +27,42 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   void initState() {
-    validator();
+    clear();
+    // validator();
 
     super.initState();
   }
 
-  getUser(token) async {
-    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+  clear() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
 
-    // var token = prefs.getString('token');
-    if (await Provider.of<AuthProvider>(context, listen: false)
-        .getUser(token: token)) {
-      Navigator.pushReplacement(context, route);
-    } else {
-      Timer(
-        const Duration(seconds: 2),
-        () => Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => PreloginPage()),
-        ),
-      );
-    }
-
-    // Navigator.pushReplacement(context, route);
+    Timer(
+      const Duration(seconds: 2),
+      () => Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (BuildContext context) => PreloginPage()),
+      ),
+    );
   }
+
+  // getUser(token) async {
+  //   // final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  //   // var token = prefs.getString('token');
+  //   if (await Provider.of<AuthProvider>(context, listen: false)
+  //       .getUser(token: token)) {
+  //     Navigator.pushReplacement(context, route);
+  //   } else {
+  //     Timer(
+  //       const Duration(seconds: 2),
+  //       () => Navigator.of(context).pushReplacement(
+  //         MaterialPageRoute(builder: (BuildContext context) => PreloginPage()),
+  //       ),
+  //     );
+  //   }
+
+  //   // Navigator.pushReplacement(context, route);
+  // }
 
   // getattendance(token) async {
   //   // SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -58,33 +71,33 @@ class _SplashPageState extends State<SplashPage> {
   //       .getAttendances(token);
   // }
 
-  distributorHandler(token) async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // var token = prefs.getString('token');
-    await Provider.of<DistributorProvider>(context, listen: false)
-        .getDistributors(token);
-  }
+  // distributorHandler(token) async {
+  //   // SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   // var token = prefs.getString('token');
+  //   await Provider.of<DistributorProvider>(context, listen: false)
+  //       .getDistributors(token);
+  // }
 
-  validator() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+  // validator() async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var token = prefs.getString('token');
-    if (token != null) {
-      setState(() {
-        print(token);
-        getUser(token);
-        // getattendance(token);
-        distributorHandler(token);
-      });
-    } else {
-      Timer(
-        const Duration(seconds: 2),
-        () => Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => PreloginPage()),
-        ),
-      );
-    }
-  }
+  //   var token = prefs.getString('token');
+  //   if (token != null) {
+  //     setState(() {
+  //       print(token);
+  //       getUser(token);
+  //       // getattendance(token);
+  //       distributorHandler(token);
+  //     });
+  //   } else {
+  //     Timer(
+  //       const Duration(seconds: 2),
+  //       () => Navigator.of(context).pushReplacement(
+  //         MaterialPageRoute(builder: (BuildContext context) => PreloginPage()),
+  //       ),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
