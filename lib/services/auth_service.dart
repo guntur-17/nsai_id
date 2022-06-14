@@ -100,7 +100,7 @@ class AuthService {
       // var token = prefs.setString('token', user.token as String);
       user.access_token = data['access_token'];
       // parseJwt(user.access_token!);
-      // print(parseJwt(user.access_token!));
+      print(parseJwt(user.access_token!));
       // print(_decodeJwt(user.access_token!));
       user.id = _decodeJwt(user.access_token!);
       // print(user.id);
@@ -162,21 +162,6 @@ class AuthService {
     }
   }
 
-  Map<String, dynamic> parseJwt(String token) {
-    final parts = token.split('.');
-    if (parts.length != 3) {
-      throw Exception('invalid token');
-    }
-
-    final payload = _decodeBase64(parts[1]);
-    final payloadMap = json.decode(payload);
-    if (payloadMap is! Map<String, dynamic>) {
-      throw Exception('invalid payload');
-    }
-
-    return payloadMap;
-  }
-
   String _decodeBase64(String str) {
     String output = str.replaceAll('-', '+').replaceAll('_', '/');
 
@@ -194,6 +179,21 @@ class AuthService {
     }
 
     return utf8.decode(base64Url.decode(output));
+  }
+
+  Map<String, dynamic> parseJwt(String token) {
+    final parts = token.split('.');
+    if (parts.length != 3) {
+      throw Exception('invalid token');
+    }
+
+    final payload = _decodeBase64(parts[1]);
+    final payloadMap = json.decode(payload);
+    if (payloadMap is! Map<String, dynamic>) {
+      throw Exception('invalid payload');
+    }
+
+    return payloadMap;
   }
 
   _decodeJwt(String token) {

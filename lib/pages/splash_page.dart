@@ -29,7 +29,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     // clear();
-    getregion();
+    // getregion();
     validator();
 
     super.initState();
@@ -97,6 +97,7 @@ class _SplashPageState extends State<SplashPage> {
         // distributorHandler(token);
       });
     } else {
+      getregion();
       Timer(
         const Duration(seconds: 2),
         () => Navigator.of(context).pushReplacement(

@@ -6,6 +6,8 @@ import 'package:nsai_id/models/user_model.dart';
 import 'package:nsai_id/pages/attendance_page.dart';
 import 'package:nsai_id/pages/distributor_page.dart';
 import 'package:nsai_id/pages/faq_page.dart';
+import 'package:nsai_id/pages/list_test_page.dart';
+import 'package:nsai_id/pages/list_test_page2.dart';
 import 'package:nsai_id/pages/outlet_page.dart';
 import 'package:nsai_id/pages/transaction_page.dart';
 import 'package:nsai_id/pages/visit_page.dart';
@@ -36,11 +38,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  distributorHandler() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    if (await DistributorProvider().getDistributors(token)) setState(() {});
-  }
+  // distributorHandler() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   var token = prefs.getString('token');
+  //   if (await DistributorProvider().getDistributors(token)) setState(() {});
+  // }
 
   getUser(token, id) async {
     print('token,id getter disini');
@@ -151,9 +153,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
 
     UserModel user = authProvider.user;
+    print(user.toString());
     print(user.full_name);
 
     loader() async {
@@ -654,7 +658,7 @@ class _HomePageState extends State<HomePage> {
                             HomeMenu(
                               title: 'Visit',
                               imgpath: 'assets/pin.png',
-                              route: OutletListPage(),
+                              route: OutletListPage3(),
                             ),
                             HomeMenu(
                                 title: 'Transaksi',

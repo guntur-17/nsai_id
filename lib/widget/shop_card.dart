@@ -35,7 +35,7 @@ class ShopCard extends StatelessWidget {
             );
           },
           child: Container(
-            height: sy(50),
+            height: sy(70),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [

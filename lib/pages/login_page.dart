@@ -34,6 +34,14 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {});
   }
 
+  // getUser(token, id) async {
+  //   print('token,id getter disini');
+  //   print(token);
+  //   print(id);
+  //   await Provider.of<AuthProvider>(context, listen: false)
+  //       .getUser(token: token, id: id);
+  // }
+
   FocusNode myFocusNode = FocusNode();
 
   FocusNode myFocusNode2 = FocusNode();
@@ -76,6 +84,9 @@ class _LoginPageState extends State<LoginPage> {
         var id = prefs.getString('id');
         print(token);
         print(id);
+        // getUser(token, id);
+        await Provider.of<AuthProvider>(context, listen: false)
+            .getUser(token: token, id: id);
         // await Provider.of<VisitingAllProvider>(context, listen: false)
         //     .getAllVisit(token);
         // await Provider.of<AttedanceProvider>(context, listen: false)
