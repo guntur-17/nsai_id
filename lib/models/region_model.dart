@@ -1,7 +1,5 @@
-import 'dart:ffi';
-
 class RegionModel {
-  int? id;
+  String? id;
   String? name;
 
   RegionModel({
@@ -14,8 +12,7 @@ class RegionModel {
     name = json['name'];
   }
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-      };
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name};
+  }
 }

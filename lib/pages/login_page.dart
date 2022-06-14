@@ -70,8 +70,12 @@ class _LoginPageState extends State<LoginPage> {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
 
         prefs.setString('token', authProvider.user.access_token as String);
+        prefs.setString('id', authProvider.user.id as String);
 
         var token = prefs.getString('token');
+        var id = prefs.getString('id');
+        print(token);
+        print(id);
         // await Provider.of<VisitingAllProvider>(context, listen: false)
         //     .getAllVisit(token);
         // await Provider.of<AttedanceProvider>(context, listen: false)

@@ -28,10 +28,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  initState() {
+  void initState() {
     // shopHandler();
-    distributorHandler();
+    // distributorHandler();
     // attendanceHandler();
+    parentHandler();
     super.initState();
   }
 
@@ -39,6 +40,26 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     if (await DistributorProvider().getDistributors(token)) setState(() {});
+  }
+
+  getUser(token, id) async {
+    print('token,id getter disini');
+    print(token);
+    print(id);
+    if (await Provider.of<AuthProvider>(context, listen: false)
+        .getUser(token: token, id: id)) {
+      setState(() {});
+    }
+  }
+
+  parentHandler() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var id = prefs.getString('id');
+    print('token,id home disini');
+    print(token);
+    print(id);
+    getUser(token, id);
   }
 
   // shopHandler() async {
@@ -133,6 +154,7 @@ class _HomePageState extends State<HomePage> {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     UserModel user = authProvider.user;
+    print(user.full_name);
 
     loader() async {
       WidgetsFlutterBinding.ensureInitialized();
@@ -181,8 +203,7 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            // user.name!,
-                            'tester',
+                            user.full_name!,
                             style: whiteRobotoTextStyle.copyWith(
                               fontSize: 20,
                               fontWeight: semiBold,

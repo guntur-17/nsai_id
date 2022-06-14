@@ -7,25 +7,25 @@ class RegionService {
   String baseUrl = 'http://nsa-backend.sakataguna-dev.com';
 
   Future<List<RegionModel>> getRegion() async {
+    // var token = await.getToken();
     var url = Uri.parse('$baseUrl/region');
 
-    var response = await http.post(url);
-
+    var response = await http.get(url);
+    print(response.statusCode);
     print(response.body);
 
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body)['data']['region'];
-      print(data);
+      List data = jsonDecode(response.body)['data']['region'];
       List<RegionModel> regions = [];
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // var token = prefs.setString('token', user.token as String);
-      for (var region in data) {
-        regions.add(RegionModel.fromJson(region));
+
+      for (var item in data) {
+        regions.add(RegionModel.fromJson(item));
       }
+      print(data);
 
       return regions;
     } else {
-      throw Exception('Gagal get region');
+      throw Exception('Gagal Get attendances');
     }
   }
 }

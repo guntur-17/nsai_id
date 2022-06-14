@@ -49,34 +49,37 @@
 // }
 
 class UserModel {
-  int? id;
+  String? id;
   String? id_card_number;
-  String? name;
+  String? full_name;
   String? email;
   String? password;
   String? region;
-  String? nickname;
+  String? role;
+  String? nick_name;
   String? access_token;
 
   UserModel({
     this.id,
     this.id_card_number,
-    this.name,
+    this.full_name,
     this.email,
     this.password,
     this.region,
-    this.nickname,
+    this.role,
+    this.nick_name,
     this.access_token,
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     id_card_number = json['id_card_number'];
-    name = json['name'];
+    full_name = json['full_name'];
     email = json['email'];
     password = json['password'];
     region = json['region'];
-    nickname = json['nickname'];
+    role = json['role'];
+    nick_name = json['nick_name'];
     access_token = json['access_token'];
   }
 
@@ -84,11 +87,12 @@ class UserModel {
     return {
       'id': id,
       'id_card_number': id_card_number,
-      'name': name,
+      'full_name': full_name,
       'email': email,
       'password': password,
       'region': region,
-      'nickname': nickname,
+      'role': role,
+      'nick_name': nick_name,
       'access_token': access_token,
     };
   }

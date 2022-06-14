@@ -1,10 +1,14 @@
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_plus/dropdown_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:nsai_id/models/region_model.dart';
 import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
+import 'package:nsai_id/providers/region_provider.dart';
+import 'package:nsai_id/services/region_service.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
+import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -15,6 +19,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  // List<RegionModel> regions = [];
+  // List<RegionModel> _regions = [];
   TextEditingController nameController = TextEditingController(text: '');
 
   TextEditingController passwordController = TextEditingController(text: '');
@@ -31,9 +37,9 @@ class _RegisterPageState extends State<RegisterPage> {
   bool isLoading = false;
 
   bool isChecked = false;
-
+  @override
   void iniState() {
-    setState(() {});
+    super.initState();
   }
 
   FocusNode myFocusNode = FocusNode();
@@ -49,36 +55,20 @@ class _RegisterPageState extends State<RegisterPage> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
-    final List<Map<String, dynamic>> _roles = [
-      {"name": "Super Admin", "desc": "Having full access rights", "role": 1},
-      {
-        "name": "Admin",
-        "desc": "Having full access rights of a Organization",
-        "role": 2
-      },
-      {
-        "name": "Manager",
-        "desc": "Having Magenent access rights of a Organization",
-        "role": 3
-      },
-      {
-        "name": "Technician",
-        "desc": "Having Technician Support access rights",
-        "role": 4
-      },
-      {
-        "name": "Customer Support",
-        "desc": "Having Customer Support access rights",
-        "role": 5
-      },
-      {"name": "User", "desc": "Having End User access rights", "role": 6},
-    ];
+    RegionProvider regionProvider =
+        Provider.of<RegionProvider>(context, listen: false);
 
-    var _area = [
-      "Jakarta",
-      "Bekasi",
-      "Depok",
-    ];
+    // List distributor = distributorProvider.distributors.toList();
+    List<RegionModel> regions = regionProvider.regions;
+
+    List<String> _area = [];
+
+    for (var region in regions) {
+      _area.add(region.name!);
+      print(region.name);
+    }
+
+    print(_area);
 
     // final List<String> roles = _roles;
 
@@ -171,52 +161,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 // errorText: 'Error message',
                 border: const OutlineInputBorder(),
-              ),
-            ),
-          );
-        }
-
-        Widget area() {
-          return Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: DropdownFormField<Map<String, dynamic>>(
-                // controller: areaController,
-                // autoFocus: true,
-                // dropdownHeight: 500,
-                onEmptyActionPressed: () async {},
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.arrow_drop_down),
-                    labelText: "Area"),
-                onSaved: (dynamic str) {},
-                onChanged: (dynamic str) {},
-                validator: (dynamic str) {},
-                displayItemFn: (dynamic item) => Text(
-                  (item ?? {})['name'] ?? '',
-                  style: TextStyle(fontSize: 16),
-                ),
-                findFn: (dynamic str) async => _roles,
-                selectedFn: (dynamic item1, dynamic item2) {
-                  if (item1 != null && item2 != null) {
-                    return item1['name'] == item2['name'];
-                  }
-                  return false;
-                },
-                filterFn: (dynamic item, str) =>
-                    item['name'].toLowerCase().indexOf(str.toLowerCase()) >= 0,
-                dropdownItemFn: (dynamic item, int position, bool focused,
-                        bool selected, Function() onTap) =>
-                    ListTile(
-                  title: Text(item['name']),
-                  subtitle: Text(
-                    item['desc'] ?? '',
-                  ),
-                  tileColor: focused
-                      ? Color.fromARGB(20, 0, 0, 0)
-                      : Colors.transparent,
-                  onTap: onTap,
-                ),
               ),
             ),
           );

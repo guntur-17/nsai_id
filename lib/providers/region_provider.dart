@@ -16,12 +16,12 @@ class RegionProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  set attendances(List<RegionModel> regions) {
+  set regions(List<RegionModel> regions) {
     _regions = regions;
     notifyListeners();
   }
 
-  Future<bool> getAttendances() async {
+  Future<bool> getRegion() async {
     try {
       List<RegionModel> regions = await RegionService().getRegion();
       _regions = regions;

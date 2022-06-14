@@ -98,7 +98,12 @@ class AuthService {
       UserModel user = UserModel.fromJson(data);
       // SharedPreferences prefs = await SharedPreferences.getInstance();
       // var token = prefs.setString('token', user.token as String);
-      user.access_token = 'Bearer ' + data['access_token'];
+      user.access_token = data['access_token'];
+      // parseJwt(user.access_token!);
+      // print(parseJwt(user.access_token!));
+      // print(_decodeJwt(user.access_token!));
+      user.id = _decodeJwt(user.access_token!);
+      // print(user.id);
 
       return user;
     } else {
@@ -127,8 +132,9 @@ class AuthService {
 
   Future<UserModel> getUser(
     String? token,
+    String? id,
   ) async {
-    var url = Uri.parse('$baseUrl/user');
+    var url = Uri.parse('$baseUrl/user/$id');
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': token as String
@@ -141,13 +147,59 @@ class AuthService {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)['data'];
-      UserModel user = UserModel.fromJson(data['user']);
-      user.access_token = 'Bearer ' + token;
-      // print(user.access_token);
+      // print('data here');
+      // print(data);
+      UserModel user = UserModel.fromJson(data);
+      // print('user here');
+      // print(user);
+      user.access_token = token;
+      // print(user.full_name);
+      // print('border');
 
       return user;
     } else {
       throw Exception('Gagal getuser');
     }
+  }
+
+  Map<String, dynamic> parseJwt(String token) {
+    final parts = token.split('.');
+    if (parts.length != 3) {
+      throw Exception('invalid token');
+    }
+
+    final payload = _decodeBase64(parts[1]);
+    final payloadMap = json.decode(payload);
+    if (payloadMap is! Map<String, dynamic>) {
+      throw Exception('invalid payload');
+    }
+
+    return payloadMap;
+  }
+
+  String _decodeBase64(String str) {
+    String output = str.replaceAll('-', '+').replaceAll('_', '/');
+
+    switch (output.length % 4) {
+      case 0:
+        break;
+      case 2:
+        output += '==';
+        break;
+      case 3:
+        output += '=';
+        break;
+      default:
+        throw Exception('Illegal base64url string!"');
+    }
+
+    return utf8.decode(base64Url.decode(output));
+  }
+
+  _decodeJwt(String token) {
+    Map<String, dynamic> tokenDecoded = parseJwt(token);
+    String id = tokenDecoded['uid'];
+
+    return id;
   }
 }
