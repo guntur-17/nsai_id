@@ -2,14 +2,17 @@ import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_plus/dropdown_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:nsai_id/models/region_model.dart';
+import 'package:nsai_id/pages/prelogin_page.dart';
 import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
+import 'package:nsai_id/providers/auth_provider.dart';
 import 'package:nsai_id/providers/region_provider.dart';
 import 'package:nsai_id/services/region_service.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
 import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key? key}) : super(key: key);
@@ -22,6 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
   // List<RegionModel> regions = [];
   // List<RegionModel> _regions = [];
   late RegionModel dropdownvalue;
+  late String sendedDropDownValue;
   var items = [
     'Distributor 1',
     'Distributor 2',
@@ -31,12 +35,11 @@ class _RegisterPageState extends State<RegisterPage> {
   ];
   TextEditingController nameController = TextEditingController(text: '');
 
+  TextEditingController nicknameController = TextEditingController(text: '');
+
   TextEditingController passwordController = TextEditingController(text: '');
 
   TextEditingController nomerController = TextEditingController(text: '');
-
-  DropdownEditingController<String>? areaController =
-      DropdownEditingController(value: null);
 
   TextEditingController emailController = TextEditingController(text: '');
 
@@ -55,6 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
   FocusNode myFocusNode3 = FocusNode();
   FocusNode myFocusNode4 = FocusNode();
   FocusNode myFocusNode5 = FocusNode();
+  FocusNode myFocusNode6 = FocusNode();
 
   String? selectedValue;
 
@@ -65,6 +69,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
     RegionProvider regionProvider =
         Provider.of<RegionProvider>(context, listen: false);
+
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     // List distributor = distributorProvider.distributors.toList();
     List<RegionModel> regions = regionProvider.regions;
@@ -82,6 +88,26 @@ class _RegisterPageState extends State<RegisterPage> {
     for (var region in regions) {
       valueArea.add(region.id!);
       // print(region.id);
+    }
+
+    registerHandler() async {
+      print(emailController.text);
+      print(nameController.text);
+      print(nicknameController.text);
+      print(nomerController.text);
+      print(passwordController.text);
+      print(dropdownvalue.id);
+
+      if (await authProvider.register(
+          email: emailController.text,
+          full_name: nameController.text,
+          nick_name: nicknameController.text,
+          id_card_number: nomerController.text,
+          password: passwordController.text,
+          region_id: dropdownvalue.id)) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => PreloginPage()));
+      }
     }
 
     // print(_area);
@@ -183,6 +209,44 @@ class _RegisterPageState extends State<RegisterPage> {
           );
         }
 
+        Widget nickname() {
+          return Focus(
+            onFocusChange: (hasFocus) {
+              // When you focus on input email, you need to notify the color change into the widget.
+              setState(() => hasFocus ? primaryBlue : grey40);
+            },
+            child: TextFormField(
+              // scrollPadding: EdgeInsets.only(
+              //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
+              focusNode: myFocusNode6,
+              controller: nicknameController,
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+                labelText: 'Nama Panggilan',
+                labelStyle: TextStyle(
+                    color: myFocusNode6.hasFocus ? primaryBlue : grey),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(
+                    color: primaryBlue,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(
+                    color: grey40,
+                    width: 2.0,
+                  ),
+                ),
+
+                // errorText: 'Error message',
+                border: const OutlineInputBorder(),
+              ),
+            ),
+          );
+        }
+
         Widget area2() {
           return Center(
             child: Container(
@@ -221,7 +285,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       hintStyle: TextStyle(fontSize: 16.0, color: trueBlack),
                     ),
                     // Initial Value
-                    value: dropdownvalue,
+                    // value: dropdownvalue,
                     // Down Arrow Icon
                     icon: const Icon(Icons.keyboard_arrow_down),
 
@@ -237,7 +301,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     onChanged: (RegionModel? newValue) {
                       setState(() {
                         dropdownvalue = newValue!;
-                        print(dropdownvalue.id!);
+
+                        sendedDropDownValue = newValue.id!;
+                        print(newValue.id!);
                       });
                     },
                   ),
@@ -301,7 +367,7 @@ class _RegisterPageState extends State<RegisterPage> {
               decoration: InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
-                labelText: 'password',
+                labelText: 'Password',
                 labelStyle: TextStyle(
                     color: myFocusNode5.hasFocus ? primaryBlue : grey),
                 focusedBorder: OutlineInputBorder(
@@ -348,7 +414,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     const SizedBox(
                       height: 12,
                     ),
-                    // area(),
+                    nickname(),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     area2(),
                     const SizedBox(
                       height: 12,
@@ -378,8 +447,7 @@ class _RegisterPageState extends State<RegisterPage> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(primary: primaryBlue),
               onPressed: () {
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (BuildContext context) => StockListPage()));
+                registerHandler();
               },
               child: Container(
                 width: 315,
@@ -481,10 +549,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     logo(),
                     input(),
                     if (nameController.text.isEmpty ||
+                        nicknameController.text.isEmpty ||
                         passwordController.text.isEmpty ||
                         nomerController.text.isEmpty ||
                         emailController.text.isEmpty ||
-                        areaController!.value!.isEmpty) ...[
+                        sendedDropDownValue.isEmpty) ...[
                       disable()
                     ] else ...[
                       button()

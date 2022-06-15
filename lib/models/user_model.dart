@@ -3,7 +3,6 @@ class UserModel {
   String? id_card_number;
   String? full_name;
   String? email;
-  String? username;
   String? password;
   String? region;
   String? role;
@@ -15,7 +14,6 @@ class UserModel {
     this.id_card_number,
     this.full_name,
     this.email,
-    this.username,
     this.password,
     this.region,
     this.role,
@@ -28,7 +26,6 @@ class UserModel {
     id_card_number = json['id_card_number'];
     full_name = json['full_name'];
     email = json['email'];
-    username = json['username'];
     password = json['password'];
     region = json['region'];
     role = json['role'];
@@ -42,7 +39,6 @@ class UserModel {
       'id_card_number': id_card_number,
       'full_name': full_name,
       'email': email,
-      'username': username,
       'password': password,
       'region': region,
       'role': role,
