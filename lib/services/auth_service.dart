@@ -78,13 +78,13 @@ import 'package:nsai_id/models/user_model.dart';
 // }
 
 class AuthService {
-  String baseUrl = 'http://nsa-backend.sakataguna-dev.com';
+  String baseUrl = 'http://nsa-api.sakataguna-dev.com/api';
 
   Future<UserModel> login({
     String? email,
     String? password,
   }) async {
-    var url = Uri.parse('$baseUrl/auth/login');
+    var url = Uri.parse('$baseUrl/login');
     var headers = {'Content-Type': 'application/json'};
     var body = jsonEncode({'email': email, 'password': password});
 
@@ -93,16 +93,19 @@ class AuthService {
     print(response.body);
 
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
+      var data = jsonDecode(response.body)['data'];
       print(data);
-      UserModel user = UserModel.fromJson(data);
+      UserModel user = UserModel.fromJson(data['data']);
       // SharedPreferences prefs = await SharedPreferences.getInstance();
       // var token = prefs.setString('token', user.token as String);
-      user.access_token = data['access_token'];
+
+      print(user.id);
+      user.access_token = 'Bearer ' + data['access_token'];
+      print(user.access_token);
       // parseJwt(user.access_token!);
-      print(parseJwt(user.access_token!));
+      // print(parseJwt(user.access_token!));
       // print(_decodeJwt(user.access_token!));
-      user.id = _decodeJwt(user.access_token!);
+      // user.id = _decodeJwt(user.access_token!);
       // print(user.id);
 
       return user;
@@ -150,10 +153,10 @@ class AuthService {
       // print('data here');
       // print(data);
       UserModel user = UserModel.fromJson(data);
-      // print('user here');
+      print('user here');
       // print(user);
-      user.access_token = token;
-      // print(user.full_name);
+      // user.access_token = token;
+      print(user.access_token);
       // print('border');
 
       return user;

@@ -78,7 +78,7 @@ class FaqPage extends StatelessWidget {
                             height: 40,
                             width: MediaQuery.of(context).size.width * 0.9,
                             decoration: BoxDecoration(
-                              color: Color(0xFF0354A6),
+                              color: Color.fromARGB(255, 166, 14, 3),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Center(

@@ -21,6 +21,14 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   // List<RegionModel> regions = [];
   // List<RegionModel> _regions = [];
+  late RegionModel dropdownvalue;
+  var items = [
+    'Distributor 1',
+    'Distributor 2',
+    'Distributor 3',
+    'Distributor 4',
+    'Distributor 5',
+  ];
   TextEditingController nameController = TextEditingController(text: '');
 
   TextEditingController passwordController = TextEditingController(text: '');
@@ -60,15 +68,24 @@ class _RegisterPageState extends State<RegisterPage> {
 
     // List distributor = distributorProvider.distributors.toList();
     List<RegionModel> regions = regionProvider.regions;
+    dropdownvalue = regions[0];
 
     List<String> _area = [];
 
+    List<String> valueArea = [];
+
     for (var region in regions) {
       _area.add(region.name!);
-      print(region.name);
+      // print(region.name);
     }
 
-    print(_area);
+    for (var region in regions) {
+      valueArea.add(region.id!);
+      // print(region.id);
+    }
+
+    // print(_area);
+    // print(valueArea);
 
     // final List<String> roles = _roles;
 
@@ -104,7 +121,7 @@ class _RegisterPageState extends State<RegisterPage> {
               decoration: InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
-                labelText: 'nama',
+                labelText: 'Nama',
                 labelStyle:
                     TextStyle(color: myFocusNode.hasFocus ? primaryBlue : grey),
                 focusedBorder: OutlineInputBorder(
@@ -175,32 +192,55 @@ class _RegisterPageState extends State<RegisterPage> {
                   // When you focus on input email, you need to notify the color change into the widget.
                   setState(() => hasFocus3 ? primaryBlue : grey40);
                 },
-                child: TextDropdownFormField(
-                  controller: areaController,
-                  options: _area,
-                  decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
-                    labelText: 'Area',
-                    labelStyle: TextStyle(
-                        color: myFocusNode3.hasFocus ? primaryBlue : grey),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                        color: primaryBlue,
+                child: Container(
+                  // height: 40,
+                  width: MediaQuery.of(context).size.width * 0.47,
+                  child: DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Region',
+                      labelStyle: TextStyle(
+                          color: myFocusNode3.hasFocus ? primaryBlue : grey),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(width: 1, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                        color: grey40,
-                        width: 2.0,
+                      border: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(width: 1, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(width: 1, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      hintText: 'All',
+                      hintStyle: TextStyle(fontSize: 16.0, color: trueBlack),
                     ),
-                    // errorText: 'Error message',
-                    border: const OutlineInputBorder(),
+                    // Initial Value
+                    value: dropdownvalue,
+                    // Down Arrow Icon
+                    icon: const Icon(Icons.keyboard_arrow_down),
+
+                    // Array list of items
+                    items: regions.map((RegionModel region) {
+                      return DropdownMenuItem(
+                        value: region,
+                        child: Text(region.name!),
+                      );
+                    }).toList(),
+                    // After selecting the desired option,it will
+                    // change button value to selected value
+                    onChanged: (RegionModel? newValue) {
+                      setState(() {
+                        dropdownvalue = newValue!;
+                        print(dropdownvalue.id!);
+                      });
+                    },
                   ),
-                  dropdownHeight: 120,
                 ),
               ),
             ),

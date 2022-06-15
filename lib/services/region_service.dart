@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:nsai_id/models/region_model.dart';
 
 class RegionService {
-  String baseUrl = 'http://nsa-backend.sakataguna-dev.com';
+  String baseUrl = 'http://nsa-api.sakataguna-dev.com/api';
 
   Future<List<RegionModel>> getRegion() async {
     // var token = await.getToken();
