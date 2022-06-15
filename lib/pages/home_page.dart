@@ -6,6 +6,7 @@ import 'package:nsai_id/models/outlet_model.dart';
 import 'package:nsai_id/models/user_model.dart';
 import 'package:nsai_id/pages/attendance_page.dart';
 import 'package:nsai_id/pages/distributor_page.dart';
+import 'package:nsai_id/pages/document_page.dart';
 import 'package:nsai_id/pages/faq_page.dart';
 import 'package:nsai_id/pages/list_test_page.dart';
 import 'package:nsai_id/pages/list_test_page2.dart';
@@ -253,39 +254,47 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0xff101828).withOpacity(0.1),
-                              spreadRadius: -4,
-                              blurRadius: 16,
-                              offset:
-                                  Offset(0, 12), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        height: 70,
-                        width: MediaQuery.of(context).size.width * 0.45,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Image.asset(
-                              'assets/case.png',
-                              height: 36,
-                              width: 36,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 4.0),
-                              child: Text(
-                                'Dokumenku',
-                                style: trueBlackRobotoTextStyle.copyWith(
-                                    fontSize: 12, fontWeight: reguler),
+                      InkWell(
+                        onTap: (() {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => DocumentPage())));
+                        }),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xff101828).withOpacity(0.1),
+                                spreadRadius: -4,
+                                blurRadius: 16,
+                                offset:
+                                    Offset(0, 12), // changes position of shadow
                               ),
-                            )
-                          ],
+                            ],
+                          ),
+                          height: 70,
+                          width: MediaQuery.of(context).size.width * 0.45,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(
+                                'assets/case.png',
+                                height: 36,
+                                width: 36,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Text(
+                                  'Dokumenku',
+                                  style: trueBlackRobotoTextStyle.copyWith(
+                                      fontSize: 12, fontWeight: reguler),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       Container(

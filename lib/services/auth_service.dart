@@ -113,6 +113,39 @@ class AuthService {
     }
   }
 
+  Future<bool> register(
+    String? full_name,
+    String? nick_name,
+    String? id_card_number,
+    String? region_id,
+    String? email,
+    String? password,
+  ) async {
+    var url = Uri.parse('$baseUrl/register');
+    var headers = {
+      'Content-Type': 'application/json',
+    };
+    var body = jsonEncode({
+      'full_name': full_name,
+      'nick_name': nick_name,
+      'id_card_number': id_card_number,
+      'region_id': region_id,
+      'email': email,
+      'password': password,
+    });
+
+    var response = await http.post(url, headers: headers, body: body);
+
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Gagal attendance in ');
+    }
+  }
+
   Future<bool> logout(String? token) async {
     var url = Uri.parse('$baseUrl/logout');
     var headers = {

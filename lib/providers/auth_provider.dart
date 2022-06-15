@@ -24,6 +24,27 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> register({
+    String? full_name,
+    String? nick_name,
+    String? id_card_number,
+    String? region_id,
+    String? email,
+    String? password,
+  }) async {
+    try {
+      if (await AuthService().register(
+          full_name, nick_name, id_card_number, region_id, email, password)) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   Future<bool> logout({String? token}) async {
     try {
       if (await AuthService().logout(token)) {
