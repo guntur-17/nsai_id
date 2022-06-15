@@ -198,7 +198,12 @@ class _OutletListPageState extends State<OutletListPage3> {
                   loadMore: () => print('Loading More'),
                   child: ShopCard(
                     outlets,
-                    VisitPage(),
+                    VisitPage(
+                      longUser: currentposition!.longitude,
+                      latUser: currentposition!.latitude,
+                    ),
+                    longUser: currentposition!.longitude,
+                    latUser: currentposition!.latitude,
                   ));
 
               // ignore: avoid_print

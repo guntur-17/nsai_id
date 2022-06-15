@@ -60,6 +60,11 @@ class _HomePageState extends State<HomePage> {
     // getUser(token, id);
   }
 
+  outlethandler() async {
+    await Provider.of<OutletProvider>(context, listen: false)
+        .getShops('Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa');
+  }
+
   // shopHandler() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //   var token = prefs.getString('token');
@@ -649,6 +654,7 @@ class _HomePageState extends State<HomePage> {
                               title: 'Visit',
                               imgpath: 'assets/pin.png',
                               route: OutletListPage3(_outlet),
+                              function: outlethandler(),
                             ),
                             HomeMenu(
                                 title: 'Transaksi',

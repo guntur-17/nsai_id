@@ -9,8 +9,11 @@ import 'package:relative_scale/relative_scale.dart';
 
 class ShopCard extends StatelessWidget {
   final Map<String, dynamic> shop;
+  final longUser;
+  final latUser;
   final route;
-  const ShopCard(this.shop, this.route, {Key? key}) : super(key: key);
+  const ShopCard(this.shop, this.route, {this.latUser, this.longUser, Key? key})
+      : super(key: key);
 
   // @override
   // State<ShopCard> createState() => _ShopCardState();
