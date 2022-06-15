@@ -3,10 +3,31 @@ import 'package:nsai_id/pages/home_page.dart';
 import 'package:nsai_id/pages/login_page.dart';
 import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/theme.dart';
+import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 
-class PreloginPage extends StatelessWidget {
+import '../providers/region_provider.dart';
+
+class PreloginPage extends StatefulWidget {
   const PreloginPage({Key? key}) : super(key: key);
+
+  @override
+  State<PreloginPage> createState() => _PreloginPageState();
+}
+
+class _PreloginPageState extends State<PreloginPage> {
+  @override
+  void initState() {
+    // clear();
+    // getregion();
+    regionhandler();
+
+    super.initState();
+  }
+
+  regionhandler() async {
+    await Provider.of<RegionProvider>(context, listen: false).getRegion();
+  }
 
   @override
   Widget build(BuildContext context) {

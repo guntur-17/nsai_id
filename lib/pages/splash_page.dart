@@ -118,7 +118,7 @@ class _SplashPageState extends State<SplashPage> {
       //   // outlethandler(token);
       // });
     } else {
-      regionhandler();
+      // regionhandler();
       Timer(
         const Duration(seconds: 2),
         () => Navigator.of(context).pushReplacement(
