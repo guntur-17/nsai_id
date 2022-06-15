@@ -55,7 +55,7 @@ class OutletService {
 
       return shops;
     } else {
-      throw Exception('Gagal Get shop');
+      throw Exception('Gagal Get outlet');
     }
   }
 
@@ -77,28 +77,6 @@ class OutletService {
       List<OutletModel> shops = [];
       // List<ShopDistanceModel> shopDistance = [];
       List<Map<String, dynamic>> locationListWithDistance = [];
-
-      // data.map((json) => ShopModel.fromJson(json)).where((shop) {
-      //   final latShop = shop.lat;
-      //   final longShop = shop.long;
-      //   double radius =
-      //       Geolocator.distanceBetween(latUser!, longUser!, latShop, longShop);
-      //   // if radius
-      //   bool check = true;
-      //   // final searchLower = query!.toLowerCase();
-      //   return check;
-      //   // return titleLower.contains(searchLower);
-      // }).toList();
-      // toList();
-      // if (query != null) {
-      //   shops = shops
-      //       .where(
-      //           (shop) => shop.name.toLowerCase().contains(query.toLowerCase()))
-      //       .toList();
-      // }
-      // AttendanceModel attendance = AttendanceModel.fromJson(data['attendance']);
-      // attendance.token = 'Bearer' + data['access_token'];
-      // print(data);
 
       for (var item in data) {
         shops.add(OutletModel.fromJson(item));
@@ -134,7 +112,7 @@ class OutletService {
 
       return locationListWithDistance;
     } else {
-      throw Exception('Gagal Get shop');
+      throw Exception('Gagal Get outlet');
     }
   }
 }

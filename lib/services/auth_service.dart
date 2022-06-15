@@ -94,11 +94,12 @@ class AuthService {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
+
       print(data);
       UserModel user = UserModel.fromJson(data);
       // SharedPreferences prefs = await SharedPreferences.getInstance();
       // var token = prefs.setString('token', user.token as String);
-      user.access_token = data['access_token'];
+      // user.access_token = data['access_token'];
       // parseJwt(user.access_token!);
       print(parseJwt(user.access_token!));
       // print(_decodeJwt(user.access_token!));
@@ -152,7 +153,7 @@ class AuthService {
       UserModel user = UserModel.fromJson(data);
       // print('user here');
       // print(user);
-      user.access_token = token;
+      // user.access_token = token;
       // print(user.full_name);
       // print('border');
 

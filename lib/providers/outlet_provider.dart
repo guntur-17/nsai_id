@@ -9,13 +9,13 @@ import '../services/outlet_service.dart';
 class OutletProvider with ChangeNotifier {
   List<OutletModel> _outlets = [];
   List<OutletModel> get outlets => _outlets;
-  // List<ShopDistanceModel> _shopdistance = [];
-  // List<ShopDistanceModel> get shopdistance => _shopdistance = [];
+  List<Map<String, dynamic>> _shopdistance = [];
+  List<Map<String, dynamic>> get shopdistance => _shopdistance = [];
 
-  // set shopdistance(List<ShopDistanceModel> shopdistance) {
-  //   _shopdistance = shopdistance;
-  //   notifyListeners();
-  // }
+  set shopdistance(List<Map<String, dynamic>> shopdistance) {
+    _shopdistance = shopdistance;
+    notifyListeners();
+  }
 
   set shops(List<OutletModel> outlets) {
     _outlets = outlets;
@@ -35,18 +35,19 @@ class OutletProvider with ChangeNotifier {
     }
   }
 
-  // Future<List<Map<String, dynamic>>?> getShopDistance(
-  //     String? token, double latUser, double longuser) async {
-  //   try {
-  //     List<Map<String, dynamic>> shopdistance = await ShopService()
-  //         .getShopsDistance(token: token, latUser: latUser, longUser: longuser);
-  //     _shopdistance = shopdistance.cast<ShopDistanceModel>();
-  //     // print(_shops)
-  //     print(shopdistance);
-  //     return shopdistance;
-  //   } catch (e) {
-  //     print(e);
-  //     return null;
-  //   }
-  // }
+  Future<bool> getShopDistance(
+      String? token, double latUser, double longuser) async {
+    try {
+      List<Map<String, dynamic>> shopdistance = await OutletService()
+          .getOutletsDistance(
+              token: token, latUser: latUser, longUser: longuser);
+      _shopdistance = shopdistance;
+      // print(_shops)
+      print(shopdistance);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

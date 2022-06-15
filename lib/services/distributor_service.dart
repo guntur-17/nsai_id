@@ -29,7 +29,7 @@ class DistributorService {
 
       return distributors;
     } else {
-      throw Exception('Gagal Get attendances');
+      throw Exception('Gagal Get distributor');
     }
   }
 

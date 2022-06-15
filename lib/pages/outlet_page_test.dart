@@ -5,7 +5,6 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:nsai_id/models/shopDistance_model.dart';
 import 'package:nsai_id/models/outlet_model.dart';
 import 'package:nsai_id/pages/visit_page.dart';
@@ -19,19 +18,21 @@ import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class OutletListPage3 extends StatefulWidget {
+class OutletListPage4 extends StatefulWidget {
   // final String? addressUser;
-  List<OutletModel> outlet;
-  OutletListPage3(this.outlet, {Key? key}) : super(key: key);
+  // late List<OutletModel> outlet;
+
+  const OutletListPage4({Key? key}) : super(key: key);
 
   @override
   _OutletListPageState createState() => _OutletListPageState();
 }
 
-class _OutletListPageState extends State<OutletListPage3> {
+class _OutletListPageState extends State<OutletListPage4> {
   List<OutletModel> shops = [];
   List<Map<String, dynamic>> outletDistance = [];
   List<Map<String, dynamic>> _outletDistance = [];
+  List<OutletModel> outlet = [];
 
   String query = '';
   Timer? debouncer;
@@ -98,8 +99,7 @@ class _OutletListPageState extends State<OutletListPage3> {
           currentAddress =
               " ${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea} ${place.postalCode}";
           // Loader.hide();
-
-          outletListHandler();
+          // shopListHandler();
         },
       );
 
@@ -109,37 +109,6 @@ class _OutletListPageState extends State<OutletListPage3> {
       isLoading = false;
       return null;
     }
-  }
-
-  Future outletListHandler() async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // var token = prefs.getString('token');
-    // await OutletProvider().getShopDistance(
-    //     'Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa',
-    //     currentposition!.latitude,
-    //     currentposition!.longitude);
-    setState(() {
-      shops = widget.outlet;
-    });
-    // shops = widget.outlet;
-
-    for (var item in shops) {
-      final latShop = item.lat;
-      // print(latShop);
-      final longShop = item.long;
-      // print(longShop);
-
-      // List test = item./;
-      double radius = Geolocator.distanceBetween(currentposition!.latitude,
-          currentposition!.longitude, latShop, longShop);
-      outletDistance.add({'shop': item, 'distance': radius});
-    }
-    setState(() {
-      _outletDistance = outletDistance;
-      isLoading = false;
-    });
-
-    // print(outletDistance);
   }
 
   @override
@@ -161,55 +130,26 @@ class _OutletListPageState extends State<OutletListPage3> {
 
   @override
   Widget build(BuildContext context) {
-    // OutletProvider outletProvider = context.watch<OutletProvider>();
-    // late List<Map<String, dynamic>> outlet = outletProvider.shopdistance;
-    // print("test");
-    // shops = widget.outlet;
-    // print("test shops");
-
-    // print(shops);
-    print("test distance");
-    print(_outletDistance);
-
-    // setState(() {
-    //   _outletDistance = outlet;
-    //   print(outlet);
-    // });
-
     // ShopProvider shopProvider = Provider.of<ShopProvider>(context);
     // List list = shopProvider.shopdistance.toList();
     // print(list);
-
     Widget card() {
-      return Expanded(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.90,
-          height: MediaQuery.of(context).size.height,
-          child: ListView.builder(
-            itemCount: _outletDistance.length,
-            // shrinkWrap: true,
-            // physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              final outlets = _outletDistance[index];
-              return LazyLoadingList(
-                  initialSizeOfItems: 5,
-                  index: index,
-                  hasMore: true,
-                  loadMore: () => print('Loading More'),
-                  child: ShopCard(
-                    outlets,
-                    VisitPage(),
-                  ));
-
-              // ignore: avoid_print
-              // print(outlets);
-              // // setState(() {});
-              // return ShopCard(
-              //   outlets,
-              //   VisitPage(),
-              // );
-            },
-          ),
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.90,
+        child: ListView.builder(
+          itemCount: outletDistance.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final outlets = _outletDistance[index];
+            // ignore: avoid_print
+            print(outlets);
+            // setState(() {});
+            return ShopCard(
+              outlets,
+              VisitPage(),
+            );
+          },
         ),
       );
     }
@@ -243,13 +183,15 @@ class _OutletListPageState extends State<OutletListPage3> {
         backgroundColor: whiteColor,
         body: isLoading
             ? Loading()
-            : Center(
-                child: Column(
-                  children: <Widget>[
-                    // buildSearch(),
-                    // isLoading ? const LoadingDefault() :
-                    card(),
-                  ],
+            : SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      // buildSearch(),
+                      // isLoading ? const LoadingDefault() :
+                      card(),
+                    ],
+                  ),
                 ),
               ),
       ),

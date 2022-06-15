@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nsai_id/models/outlet_model.dart';
 import 'package:nsai_id/models/user_model.dart';
 import 'package:nsai_id/pages/attendance_page.dart';
 import 'package:nsai_id/pages/distributor_page.dart';
@@ -44,24 +45,19 @@ class _HomePageState extends State<HomePage> {
   //   if (await DistributorProvider().getDistributors(token)) setState(() {});
   // }
 
-  getUser(token, id) async {
-    print('token,id getter disini');
-    print(token);
-    print(id);
-    if (await Provider.of<AuthProvider>(context, listen: false)
-        .getUser(token: token, id: id)) {
-      setState(() {});
-    }
-  }
+  // getUser(token, id) async {
+  //   if (await Provider.of<AuthProvider>(context, listen: false)
+  //       .getUser(token: token, id: id)) {
+  //     setState(() {});
+  //   }
+  // }
 
   parentHandler() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var id = prefs.getString('id');
-    print('token,id home disini');
-    print(token);
-    print(id);
-    getUser(token, id);
+
+    // getUser(token, id);
   }
 
   // shopHandler() async {
@@ -153,30 +149,22 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    OutletProvider outletProvider =
+        Provider.of<OutletProvider>(context, listen: false);
+    List<OutletModel> outlet;
+    List<OutletModel> _outlet = [];
+    setState(() {
+      List<OutletModel> outlet = outletProvider.outlets;
+      _outlet = outlet;
+    });
+    print(_outlet);
+
+    print("outlet test");
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
+    // OutletProvider outletProvider = context.watch<OutletProvider>();
 
     UserModel user = authProvider.user;
-    print(user.toString());
-    print(user.full_name);
-
-    loader() async {
-      WidgetsFlutterBinding.ensureInitialized();
-
-      Loader.show(
-        context,
-        isSafeAreaOverlay: false,
-        // isBottomBarOverlay: false,
-        // overlayFromBottom: 80,
-        overlayColor: Colors.black26,
-        progressIndicator: CircularProgressIndicator(
-          color: blueBrightColor,
-        ),
-        themeData: Theme.of(context).copyWith(
-          colorScheme: ColorScheme.fromSwatch().copyWith(secondary: whiteColor),
-        ),
-      );
-    }
 
     Widget header() {
       return Expanded(
@@ -213,9 +201,11 @@ class _HomePageState extends State<HomePage> {
                               fontWeight: semiBold,
                             ),
                           ),
-                          Text('Jakarta',
-                              style: whiteRobotoTextStyle.copyWith(
-                                  fontSize: 12, fontWeight: reguler))
+                          Text(
+                            user.region!,
+                            style: whiteRobotoTextStyle.copyWith(
+                                fontSize: 12, fontWeight: reguler),
+                          )
                         ],
                       ),
                       Column(
@@ -658,7 +648,7 @@ class _HomePageState extends State<HomePage> {
                             HomeMenu(
                               title: 'Visit',
                               imgpath: 'assets/pin.png',
-                              route: OutletListPage3(),
+                              route: OutletListPage3(_outlet),
                             ),
                             HomeMenu(
                                 title: 'Transaksi',
