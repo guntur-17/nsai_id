@@ -154,7 +154,7 @@ class AuthService {
       UserModel user = UserModel.fromJson(data);
       // print('user here');
       // print(user);
-      // user.access_token = token;
+      user.access_token = token;
       // print(user.access_token);
       // print('border');
 
