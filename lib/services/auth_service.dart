@@ -98,7 +98,6 @@ class AuthService {
       UserModel user = UserModel.fromJson(data['data']);
       // SharedPreferences prefs = await SharedPreferences.getInstance();
       // var token = prefs.setString('token', user.token as String);
-
       print(user.id);
       user.access_token = 'Bearer ' + data['access_token'];
       print(user.access_token);
@@ -153,10 +152,10 @@ class AuthService {
       // print('data here');
       // print(data);
       UserModel user = UserModel.fromJson(data);
-      print('user here');
+      // print('user here');
       // print(user);
       // user.access_token = token;
-      print(user.access_token);
+      // print(user.access_token);
       // print('border');
 
       return user;

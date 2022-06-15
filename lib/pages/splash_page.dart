@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:nsai_id/pages/faq_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
 import 'package:nsai_id/pages/login_page.dart';
 
 import 'package:nsai_id/providers/auth_provider.dart';
 import 'package:nsai_id/providers/distributor_provider.dart';
+import 'package:nsai_id/providers/outlet_provider.dart';
 import 'package:nsai_id/providers/region_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
@@ -24,6 +28,8 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   Route route = MaterialPageRoute(builder: (context) => const HomePage());
+  String currentAddress = 'My Address';
+  Position? currentposition;
   // bool isLoading = false;
 
   @override
@@ -35,24 +41,50 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
   }
 
-  // clear() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.clear();
+  clear() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
 
-  //   Timer(
-  //     const Duration(seconds: 2),
-  //     () => Navigator.of(context).pushReplacement(
-  //       MaterialPageRoute(builder: (BuildContext context) => PreloginPage()),
-  //     ),
-  //   );
+    Timer(
+      const Duration(seconds: 2),
+      () => Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (BuildContext context) => PreloginPage()),
+      ),
+    );
+  }
+
+  // getattendance(token) async {
+  //   // SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   // var token = prefs.getString('token');
+  //   await Provider.of<AttedanceProvider>(context, listen: false)
+  //       .getAttendances(token);
   // }
 
-  getUser(token, id) async {
+  regionhandler() async {
+    await Provider.of<RegionProvider>(context, listen: false).getRegion();
+  }
+
+  distributorHandler(token) async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // var token = prefs.getString('idsebelah');
+    // print(token);
+    await Provider.of<DistributorProvider>(context, listen: false)
+        .getDistributors('Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa');
+  }
+
+  outlethandler(token) async {
+    await Provider.of<OutletProvider>(context, listen: false)
+        .getShops('Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa');
+  }
+
+  userhandler(token, id) async {
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     // var token = prefs.getString('token');
     if (await Provider.of<AuthProvider>(context, listen: false)
         .getUser(token: token, id: id)) {
+      await outlethandler(token);
+      await distributorHandler(token);
       Navigator.pushReplacement(context, route);
     } else {
       Timer(
@@ -66,38 +98,27 @@ class _SplashPageState extends State<SplashPage> {
     // Navigator.pushReplacement(context, route);
   }
 
-  // getattendance(token) async {
-  //   // SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   // var token = prefs.getString('token');
-  //   await Provider.of<AttedanceProvider>(context, listen: false)
-  //       .getAttendances(token);
-  // }
-
-  getregion() async {
-    await Provider.of<RegionProvider>(context, listen: false).getRegion();
-  }
-
-  // distributorHandler(token) async {
-  //   // SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   // var token = prefs.getString('token');
-  //   await Provider.of<DistributorProvider>(context, listen: false)
-  //       .getDistributors(token);
-  // }
-
   validator() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var token = prefs.getString('token');
     var id = prefs.getString('id');
+    // var tokensebelah = prefs.getString('')
     if (token != null) {
-      setState(() {
-        print(token);
-        getUser(token, id);
-        // getattendance(token);
-        // distributorHandler(token);
-      });
+      userhandler(token, id);
+      // distributorHandler(token);
+
+      // setState(() {
+      //   print(token);
+      //   // Navigator.pushReplacement(context, route);
+
+      //   outlethandler(token);
+
+      //   // getattendance(token);
+      //   // outlethandler(token);
+      // });
     } else {
-      getregion();
+      regionhandler();
       Timer(
         const Duration(seconds: 2),
         () => Navigator.of(context).pushReplacement(
@@ -105,6 +126,10 @@ class _SplashPageState extends State<SplashPage> {
         ),
       );
     }
+  }
+
+  void setStateIfMounted(f) {
+    if (mounted) setState(f);
   }
 
   @override
