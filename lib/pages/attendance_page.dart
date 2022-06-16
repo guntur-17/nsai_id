@@ -8,14 +8,18 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 
 import 'package:nsai_id/models/distributor_model.dart';
 import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
+import 'package:nsai_id/providers/attendance_provider.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
 import 'package:nsai_id/widget/loading_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AttendancePage extends StatefulWidget {
   DistributorModel distributor;
@@ -38,6 +42,10 @@ class _AttendancePageState extends State<AttendancePage> {
   bool isLoading = false;
 
   bool isChecked = false;
+
+  bool isCheckin = false;
+
+  dynamic currentTime = DateFormat.Hm().format(DateTime.now());
 
   String? _dropDownValue;
 
@@ -62,7 +70,7 @@ class _AttendancePageState extends State<AttendancePage> {
     setState(() {
       isLoading = true;
     });
-    _determinePosition();
+    await _determinePosition();
   }
 
   Future<Position?> _determinePosition() async {
@@ -139,6 +147,43 @@ class _AttendancePageState extends State<AttendancePage> {
   @override
   Widget build(BuildContext context) {
     // final List<String> roles = _roles;
+    AttedanceProvider attedanceProvider =
+        Provider.of<AttedanceProvider>(context);
+    handleCheckin() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      // _attendance();
+
+      if (await attedanceProvider.attendanceIn(
+        'Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa',
+        currentTime,
+        currentposition!.latitude,
+        currentposition!.longitude,
+      )) {
+        setState(() {
+          isCheckin = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: greenColor,
+            content: const Text(
+              'berhasil clockin',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: redColor,
+            content: const Text(
+              'gagal clockin',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }
+    }
 
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
@@ -992,8 +1037,10 @@ class _AttendancePageState extends State<AttendancePage> {
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: primaryBlue),
-                        onPressed: () {
-                          // Navigator.of(context).push(MaterialPageRoute(
+                        onPressed: () async {
+                          await handleCheckin();
+                          // Navigator.of(context).push
+                          // (MaterialPageRoute(
                           //     builder: (BuildContext context) => StockListPage()));
                         },
                         child: Container(
