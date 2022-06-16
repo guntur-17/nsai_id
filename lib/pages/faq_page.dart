@@ -104,7 +104,7 @@ class FaqPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80.0),
+          preferredSize: const Size.fromHeight(60.0),
           child: AppBar(
             titleSpacing: 0,
             toolbarHeight: 120,

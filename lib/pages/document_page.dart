@@ -15,8 +15,14 @@ class _DocumentPageState extends State<DocumentPage> {
   DateTime selectedDate = DateTime.now();
   TextEditingController _textEditingController = TextEditingController();
 
+  DateTime selectedDateA = DateTime.now();
+  TextEditingController _textEditingControllerA = TextEditingController();
+
   DateTime selectedDateSell = DateTime.now();
   TextEditingController _textEditingControllerSell = TextEditingController();
+
+  DateTime selectedDateB = DateTime.now();
+  TextEditingController _textEditingControllerB = TextEditingController();
 
   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -40,6 +46,28 @@ class _DocumentPageState extends State<DocumentPage> {
     }
   }
 
+  _selectDateA(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDateA != null ? selectedDateA : DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2040));
+    if (picked != null && picked != selectedDateA) {
+      setState(() {
+        selectedDateA = picked;
+      });
+    }
+
+    if (picked != null) {
+      selectedDateA = picked;
+      _textEditingControllerA
+        ..text = DateFormat.yMMMd().format(selectedDateA)
+        ..selection = TextSelection.fromPosition(TextPosition(
+            offset: _textEditingControllerA.text.length,
+            affinity: TextAffinity.upstream));
+    }
+  }
+
   _selectDateSell(BuildContext context) async {
     final DateTime? pickedSell = await showDatePicker(
         context: context,
@@ -59,6 +87,28 @@ class _DocumentPageState extends State<DocumentPage> {
         ..text = DateFormat.yMMMd().format(selectedDateSell)
         ..selection = TextSelection.fromPosition(TextPosition(
             offset: _textEditingControllerSell.text.length,
+            affinity: TextAffinity.upstream));
+    }
+  }
+
+  _selectDateB(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDateB != null ? selectedDateB : DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2040));
+    if (picked != null && picked != selectedDateB) {
+      setState(() {
+        selectedDateB = picked;
+      });
+    }
+
+    if (picked != null) {
+      selectedDateB = picked;
+      _textEditingControllerB
+        ..text = DateFormat.yMMMd().format(selectedDateB)
+        ..selection = TextSelection.fromPosition(TextPosition(
+            offset: _textEditingControllerB.text.length,
             affinity: TextAffinity.upstream));
     }
   }
@@ -169,6 +219,35 @@ class _DocumentPageState extends State<DocumentPage> {
                                       },
                                     ),
                                   ),
+                                  Container(
+                                    height: 40,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            EdgeInsets.fromLTRB(10, 2, 0, 0),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              width: 1, color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        hintText: 'Tanggal',
+                                        hintStyle: TextStyle(
+                                            fontSize: 16.0, color: trueBlack),
+                                        suffixIcon: Icon(
+                                          Icons.expand_more,
+                                          color: blackColor,
+                                        ),
+                                      ),
+                                      focusNode: AlwaysDisabledFocusNode(),
+                                      controller: _textEditingControllerA,
+                                      onTap: () {
+                                        _selectDateA(context);
+                                      },
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -220,6 +299,34 @@ class _DocumentPageState extends State<DocumentPage> {
                                     },
                                   ),
                                 ),
+                                Container(
+                                  height: 40,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      contentPadding:
+                                          EdgeInsets.fromLTRB(10, 2, 0, 0),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            width: 1, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      hintText: 'Tanggal',
+                                      hintStyle: TextStyle(
+                                          fontSize: 16.0, color: trueBlack),
+                                      suffixIcon: Icon(
+                                        Icons.expand_more,
+                                        color: blackColor,
+                                      ),
+                                    ),
+                                    focusNode: AlwaysDisabledFocusNode(),
+                                    controller: _textEditingControllerB,
+                                    onTap: () {
+                                      _selectDateB(context);
+                                    },
+                                  ),
+                                ),
                               ],
                             ),
                           ],
@@ -268,7 +375,7 @@ class _DocumentPageState extends State<DocumentPage> {
                   child: Container(
                     decoration: const BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage('assets/bgvisit.png'),
+                            image: AssetImage('assets/bggray.png'),
                             fit: BoxFit.cover)),
                     // height: MediaQuery.of(context).size.height,
                     // constraints: BoxConstraints(
