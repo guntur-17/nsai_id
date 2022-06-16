@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
-import 'package:nsai_id/models/distributor_model.dart';
-import 'package:nsai_id/services/distributor_service.dart';
+import 'package:nsai_id/models/attendance_model.dart';
+import 'package:nsai_id/services/attendance_service.dart';
 
-class DistributorProvider with ChangeNotifier {
+class AttedanceProvider with ChangeNotifier {
   // AttendanceModel? _attendance;
-  List<DistributorModel> _distributors = [];
+  List<AttendanceModel> _attendances = [];
 
-  List<DistributorModel> get distributors => _distributors;
+  List<AttendanceModel> get attendances => _attendances;
   // bool _checkConditionClock = true;
 
   // bool get checkConditionClock => _checkConditionClock;
@@ -16,16 +16,16 @@ class DistributorProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  set attendances(List<DistributorModel> distributors) {
-    _distributors = distributors;
+  set attendances(List<AttendanceModel> attendances) {
+    _attendances = attendances;
     notifyListeners();
   }
 
-  Future<bool> getDistributors(String? token) async {
+  Future<bool> getAttendances(String? token) async {
     try {
-      List<DistributorModel> distributors =
-          await DistributorService().getDistributors(token: token);
-      _distributors = distributors;
+      List<AttendanceModel> attendances =
+          await AttendanceService().getAttendances(token);
+      _attendances = attendances;
       return true;
     } catch (e) {
       print(e);
@@ -40,7 +40,7 @@ class DistributorProvider with ChangeNotifier {
     double? long,
   ) async {
     try {
-      if (await DistributorService().attendanceIn(token, time, lat, long)) {
+      if (await AttendanceService().attendanceIn(token, time, lat, long)) {
         return true;
       } else {
         return false;
@@ -58,7 +58,7 @@ class DistributorProvider with ChangeNotifier {
     double? long,
   ) async {
     try {
-      if (await DistributorService().attendanceOut(token, time, lat, long)) {
+      if (await AttendanceService().attendanceOut(token, time, lat, long)) {
         return true;
       } else {
         return false;

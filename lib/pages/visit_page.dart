@@ -3,14 +3,26 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_plus/dropdown_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
+import 'package:lazy_loading_list/lazy_loading_list.dart';
+import 'package:nsai_id/models/outlet_model.dart';
 import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
+import 'package:nsai_id/providers/attendance_provider.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
+import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VisitPage extends StatefulWidget {
-  VisitPage({Key? key}) : super(key: key);
+  final longUser;
+  final latUser;
+  final OutletModel? outlet;
+  VisitPage({this.latUser, this.longUser, this.outlet, Key? key})
+      : super(key: key);
 
   @override
   State<VisitPage> createState() => _VisitPageState();
@@ -18,11 +30,19 @@ class VisitPage extends StatefulWidget {
 
 class _VisitPageState extends State<VisitPage> {
   TextEditingController jumlahController = TextEditingController(text: '');
-  TextEditingController totalController = TextEditingController(text: '123556');
+  TextEditingController totalController = TextEditingController(text: '');
+  List<Map<String, dynamic>> test = [];
 
   bool isLoading = false;
 
   bool isChecked = false;
+
+  bool isCheckin = false;
+
+  dynamic currentTime = DateFormat.Hm().format(DateTime.now());
+
+  // String currentAddress = 'My Address';
+  // Position? currentposition;
 
   void iniState() {
     setState(() {});
@@ -78,7 +98,47 @@ class _VisitPageState extends State<VisitPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(currentTime);
+
     // final List<String> roles = _roles;
+    AttedanceProvider attedanceProvider =
+        Provider.of<AttedanceProvider>(context);
+
+    handleCheckin() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      // _attendance();
+
+      if (await attedanceProvider.attendanceIn(
+        'Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa',
+        currentTime,
+        widget.latUser,
+        widget.longUser,
+      )) {
+        setState(() {
+          isCheckin = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: greenColor,
+            content: const Text(
+              'berhasil clockin',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: redColor,
+            content: const Text(
+              'gagal clockin',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }
+    }
 
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
@@ -409,6 +469,15 @@ class _VisitPageState extends State<VisitPage> {
                   height: 6,
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.number,
+                  onChanged: ((value) {
+                    String jumlah = jumlahController.text;
+                    int jumlah2 = int.parse(jumlah);
+                    print(jumlah2);
+                    selectedProduct != null || jumlahController.text != ''
+                        ? totalController.text = (jumlah2 * 2).toString()
+                        : '';
+                  }),
                   // scrollPadding: EdgeInsets.only(
                   //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
                   focusNode: myFocusNode,
@@ -655,6 +724,95 @@ class _VisitPageState extends State<VisitPage> {
           );
         }
 
+        Widget result() {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: test.length,
+                itemBuilder: (context, index) {
+                  final _test = test[index];
+
+                  return Row(
+                    children: [
+                      Text("data"),
+                    ],
+                  );
+                },
+              ),
+            ],
+          );
+        }
+
+        Widget result2() {
+          return Table(
+              border: TableBorder.symmetric(
+                inside: BorderSide(width: 1),
+              ),
+              children: [
+                TableRow(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          child: Text('produk'),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          child: Text('Jumlah'),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          child: Text('Total'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                for (var produk in test)
+                  TableRow(children: [
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          verticalAlignment:
+                              TableCellVerticalAlignment.baseline,
+                          child: Text(produk['produk']),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          verticalAlignment: TableCellVerticalAlignment.middle,
+                          child: Text(produk['jumlah']),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          verticalAlignment: TableCellVerticalAlignment.middle,
+                          child: Text(produk['total'].toString()),
+                        ),
+                      ),
+                    ),
+                  ])
+              ]);
+        }
+
         Widget input() {
           return RelativeBuilder(builder: (context, height, width, sy, sx) {
             return Padding(
@@ -664,12 +822,11 @@ class _VisitPageState extends State<VisitPage> {
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: Column(
                   children: [
-                    kategoriOutlet(),
+                    // kategoriOutlet(),
                     produk(),
                     jumlah(),
-                    satuan(),
+                    // satuan(),
                     total(),
-                    takePhoto(),
                   ],
                 ),
               ),
@@ -682,40 +839,40 @@ class _VisitPageState extends State<VisitPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: primaryBlue),
-                  onPressed: () {
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //     builder: (BuildContext context) => StockListPage()));
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.3,
+                // ElevatedButton(
+                //   style: ElevatedButton.styleFrom(primary: primaryBlue),
+                //   onPressed: () {
+                //     // Navigator.of(context).push(MaterialPageRoute(
+                //     //     builder: (BuildContext context) => StockListPage()));
+                //   },
+                //   child: Container(
+                //     width: MediaQuery.of(context).size.width * 0.3,
 
-                    // height: 36,
-                    padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      // color: primaryBlue,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.check_circle_outline),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          'Calculate',
-                          style: whiteInterTextStyle.copyWith(
-                              fontSize: 16, fontWeight: medium),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 12,
-                ),
+                //     // height: 36,
+                //     padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                //     decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.circular(10),
+                //       // color: primaryBlue,
+                //     ),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         Icon(Icons.check_circle_outline),
+                //         SizedBox(
+                //           width: 10,
+                //         ),
+                //         Text(
+                //           'Calculate',
+                //           style: whiteInterTextStyle.copyWith(
+                //               fontSize: 16, fontWeight: medium),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   width: 12,
+                // ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       primary: whiteColor,
@@ -724,6 +881,19 @@ class _VisitPageState extends State<VisitPage> {
                         color: blueBrightColor,
                       )),
                   onPressed: () {
+                    test.add({
+                      // 'distributor': selectedDistributor,
+                      'produk': selectedProduct,
+                      'jumlah': jumlahController.text,
+                      'total': totalController.text,
+                    });
+                    setState(() {
+                      selectedProduct = null;
+                      jumlahController.text = '';
+                      totalController.text = '';
+                    });
+                    print(test);
+
                     // Navigator.of(context).push(MaterialPageRoute(
                     //     builder: (BuildContext context) => StockListPage()));
                   },
@@ -739,14 +909,14 @@ class _VisitPageState extends State<VisitPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.check_circle_outline,
+                          Icons.add,
                           color: blueBrightColor,
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
-                          'Save',
+                          'add',
                           style: whiteInterTextStyle.copyWith(
                               fontSize: 16,
                               fontWeight: medium,
@@ -810,30 +980,101 @@ class _VisitPageState extends State<VisitPage> {
           );
         }
 
+        Widget submit() {
+          return Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.86,
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: whiteColor,
+                    side: BorderSide(
+                      width: 1.0,
+                      color: blueBrightColor,
+                    )),
+                onPressed: () {
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (BuildContext context) => StockListPage()));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                  // width: MediaQuery.of(context).size.width,
+                  // height: 36,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    // color: primaryBlue,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.upload,
+                        color: blueBrightColor,
+                      ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+                      Text(
+                        'Submit',
+                        style: whiteInterTextStyle.copyWith(
+                            fontSize: 16,
+                            fontWeight: medium,
+                            color: blueBrightColor),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
         Widget body() {
           return Expanded(
             flex: 10,
-            child: Container(
-              // height: MediaQuery.of(context).size.height,
-              // width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0),
+            child: AbsorbPointer(
+              absorbing: !isCheckin,
+              child: Container(
+                foregroundDecoration: BoxDecoration(
+                  color: isCheckin == true ? Colors.transparent : grey,
+                  backgroundBlendMode: BlendMode.darken,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                  ),
                 ),
-              ),
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // logo(),
-                  input(),
-                  button(),
-                  download(),
-                  // check(),
-                ],
+                // height: MediaQuery.of(context).size.height,
+                // width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                  ),
+                ),
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // logo(),
+                    input(),
+                    button(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    test.isEmpty ? Container() : result2(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    takePhoto(),
+                    submit(),
+
+                    download(),
+
+                    // check(),
+                  ],
+                ),
               ),
             ),
           );
@@ -847,7 +1088,7 @@ class _VisitPageState extends State<VisitPage> {
               child: Column(
                 children: [
                   Text(
-                    "09:00 - 18:00",
+                    widget.outlet!.name,
                     style: trueBlackRobotTextStyle.copyWith(
                       fontWeight: semiBold,
                       fontSize: 24,
@@ -860,6 +1101,7 @@ class _VisitPageState extends State<VisitPage> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: primaryBlue),
                         onPressed: () {
+                          handleCheckin();
                           // Navigator.of(context).push(MaterialPageRoute(
                           //     builder: (BuildContext context) => StockListPage()));
                         },
@@ -887,33 +1129,33 @@ class _VisitPageState extends State<VisitPage> {
                       SizedBox(
                         width: 12,
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: redColor),
-                        onPressed: () {
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (BuildContext context) => StockListPage()));
-                        },
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-                          // width: 137,
-                          // height: 36,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            // color: primaryBlue,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Log In',
-                                style: whiteInterTextStyle.copyWith(
-                                    fontSize: 16, fontWeight: medium),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      // ElevatedButton(
+                      //   style: ElevatedButton.styleFrom(primary: redColor),
+                      //   onPressed: () {
+                      //     // Navigator.of(context).push(MaterialPageRoute(
+                      //     //     builder: (BuildContext context) => StockListPage()));
+                      //   },
+                      //   child: Container(
+                      //     padding:
+                      //         EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                      //     // width: 137,
+                      //     // height: 36,
+                      //     decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(10),
+                      //       // color: primaryBlue,
+                      //     ),
+                      //     child: Column(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         Text(
+                      //           'Log In',
+                      //           style: whiteInterTextStyle.copyWith(
+                      //               fontSize: 16, fontWeight: medium),
+                      //         )
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],

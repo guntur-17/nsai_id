@@ -4,6 +4,8 @@ import 'package:nsai_id/pages/attendance_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
 import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
+import 'package:nsai_id/providers/distributor_provider.dart';
+import 'package:nsai_id/providers/outlet_provider.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
 import 'package:provider/provider.dart';
@@ -54,6 +56,20 @@ class _LoginPageState extends State<LoginPage> {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     Route route = MaterialPageRoute(builder: (context) => const HomePage());
 
+    outlethandler(token) async {
+      await Provider.of<OutletProvider>(context, listen: false)
+          .getShops('Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa');
+    }
+
+    distributorHandler(token) async {
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // var token = prefs.getString('idsebelah');
+      // print(token);
+      await Provider.of<DistributorProvider>(context, listen: false)
+          .getDistributors(
+              'Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa');
+    }
+
     handleLogin() async {
       WidgetsFlutterBinding.ensureInitialized();
       // setState(() {
@@ -79,8 +95,6 @@ class _LoginPageState extends State<LoginPage> {
 
         prefs.setString('token', authProvider.user.access_token as String);
         prefs.setString('id', authProvider.user.id as String);
-        prefs.setString(
-            'idsebelah', '241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa');
 
         var token = prefs.getString('token');
         var id = prefs.getString('id');
@@ -89,6 +103,9 @@ class _LoginPageState extends State<LoginPage> {
         // getUser(token, id);
         await Provider.of<AuthProvider>(context, listen: false)
             .getUser(token: token, id: id);
+        await outlethandler(token);
+        await distributorHandler(token);
+
         // await Provider.of<VisitingAllProvider>(context, listen: false)
         //     .getAllVisit(token);
         // await Provider.of<AttedanceProvider>(context, listen: false)
