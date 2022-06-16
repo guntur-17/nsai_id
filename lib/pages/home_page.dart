@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
@@ -31,11 +35,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List yourList = [
+    "Kalimat 1",
+    "Kalimat 2",
+    "Kalimat 3",
+    "Kalimat 4",
+    "Kalimat 5"
+  ];
+
   @override
   void initState() {
     // shopHandler();
     // distributorHandler();
     // attendanceHandler();
+    Timer(
+      const Duration(microseconds: 10),
+      () {
+        int randomIndex = Random().nextInt(yourList.length);
+        // print(yourList[randomIndex]);
+        var snackBar = SnackBar(
+          /// need to set following properties for best effect of awesome_snackbar_content
+          elevation: 0,
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'On Snap!',
+            message: yourList[randomIndex],
+
+            /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+            contentType: ContentType.help,
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      },
+    );
     parentHandler();
     super.initState();
   }
@@ -664,7 +698,7 @@ class _HomePageState extends State<HomePage> {
                                 imgpath: 'assets/chart.png',
                                 route: TransactionPage()),
                             HomeMenu(
-                              title: 'FAQ',
+                              title: 'Lain-lain',
                               imgpath: 'assets/faq.png',
                               route: FaqPage(),
                             )
