@@ -1,45 +1,72 @@
+// class ShopModel {
+//   int? id;
+//   String? name;
+//   String? address;
+//   double? lat;
+//   double? long;
+
+//   ShopModel({
+//     this.id,
+//     this.name,
+//     this.address,
+//     this.lat,
+//     this.long,
+//   });
+
+//   ShopModel.fromJson(Map<String, dynamic> json) {
+//     id = json['id'];
+//     name = json['name'];
+//     address = json['address'];
+//     lat = json['lat'];
+//     long = json['long'];
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+
+//     data['id'] = this.id;
+//     data['name'] = this.name;
+//     data['address'] = this.address;
+//     data['lat'] = this.lat;
+//     data['long'] = this.long;
+//     return data;
+//   }
+// }
+
 class DistributorModel {
-  int? id;
-  int? user_id;
-  String? type;
-  String? time;
-  double? lat;
-  double? long;
-  DateTime? createdAt;
+  final int id;
+  final String name;
+  final String address;
+  final double lat;
+  final double long;
 
   DistributorModel({
-    this.id,
-    this.user_id,
-    this.type,
-    this.time,
-    this.lat,
-    this.long,
-    this.createdAt,
+    required this.id,
+    required this.name,
+    required this.address,
+    required this.lat,
+    required this.long,
   });
 
-  DistributorModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    user_id = json['user_id'];
-    type = json['type'];
-    time = json['time'];
-    lat = json['lat'];
-    long = json['long'];
-    createdAt = DateTime.parse(json['created_at']);
-  }
+  factory DistributorModel.fromJson(Map<String, dynamic> json) =>
+      DistributorModel(
+        id: json['id'],
+        name: json['name'],
+        address: json['address'],
+        lat: json['lat'],
+        long: json['long'],
+      );
   // id = json['id'];
   // name = json['name'];
   // address = json['address'];
   // lat = json['lat'];
   // long = json['long'];
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'user_id': user_id,
-      'type': type,
-      'time': time,
-      'lat': lat,
-      'long': long,
-      'created_at': createdAt.toString(),
-    };
-  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'address': address,
+        'lat': lat,
+        'long': long,
+      };
 }

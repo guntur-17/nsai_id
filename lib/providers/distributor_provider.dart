@@ -24,7 +24,7 @@ class DistributorProvider with ChangeNotifier {
   Future<bool> getDistributors(String? token) async {
     try {
       List<DistributorModel> distributors =
-          await DistributorService().getDistributors(token);
+          await DistributorService().getDistributors(token: token);
       _distributors = distributors;
       return true;
     } catch (e) {

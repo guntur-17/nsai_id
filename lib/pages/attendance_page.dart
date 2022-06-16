@@ -679,6 +679,123 @@ class _AttendancePageState extends State<AttendancePage> {
           );
         }
 
+        Widget result2() {
+          return Table(
+              border: TableBorder.symmetric(
+                inside: BorderSide(width: 1),
+              ),
+              children: [
+                TableRow(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          child: Text('produk'),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          child: Text('Jumlah'),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          child: Text('Total'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                for (var distributor in test)
+                  TableRow(children: [
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          verticalAlignment:
+                              TableCellVerticalAlignment.baseline,
+                          child: Text(distributor['produk']),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          verticalAlignment: TableCellVerticalAlignment.middle,
+                          child: Text(distributor['jumlah']),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          verticalAlignment: TableCellVerticalAlignment.middle,
+                          child: Text(distributor['total'].toString()),
+                        ),
+                      ),
+                    ),
+                  ])
+              ]);
+        }
+
+        Widget submit() {
+          return Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.86,
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: whiteColor,
+                    side: BorderSide(
+                      width: 1.0,
+                      color: blueBrightColor,
+                    )),
+                onPressed: () {
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (BuildContext context) => StockListPage()));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                  // width: MediaQuery.of(context).size.width,
+                  // height: 36,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    // color: primaryBlue,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.upload,
+                        color: blueBrightColor,
+                      ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+                      Text(
+                        'Submit',
+                        style: whiteInterTextStyle.copyWith(
+                            fontSize: 16,
+                            fontWeight: medium,
+                            color: blueBrightColor),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
         Widget download() {
           return Center(
             child: Container(
@@ -843,8 +960,11 @@ class _AttendancePageState extends State<AttendancePage> {
                   // logo(),
                   input(),
                   button(),
+                  SizedBox(height: 10),
+                  result2(),
+                  submit(),
                   download(),
-                  ssj(),
+                  // ssj(),
                   // check(),
                 ],
               ),
@@ -860,7 +980,7 @@ class _AttendancePageState extends State<AttendancePage> {
               child: Column(
                 children: [
                   Text(
-                    "09:00 - 18:00",
+                    widget.distributor.name,
                     style: trueBlackRobotTextStyle.copyWith(
                       fontWeight: semiBold,
                       fontSize: 24,

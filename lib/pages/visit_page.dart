@@ -3,9 +3,11 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_plus/dropdown_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
+import 'package:nsai_id/models/outlet_model.dart';
 import 'package:nsai_id/pages/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/providers/attendance_provider.dart';
@@ -18,7 +20,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class VisitPage extends StatefulWidget {
   final longUser;
   final latUser;
-  VisitPage({this.latUser, this.longUser, Key? key}) : super(key: key);
+  final OutletModel? outlet;
+  VisitPage({this.latUser, this.longUser, this.outlet, Key? key})
+      : super(key: key);
 
   @override
   State<VisitPage> createState() => _VisitPageState();
@@ -465,6 +469,7 @@ class _VisitPageState extends State<VisitPage> {
                   height: 6,
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.number,
                   onChanged: ((value) {
                     String jumlah = jumlahController.text;
                     int jumlah2 = int.parse(jumlah);
@@ -720,18 +725,92 @@ class _VisitPageState extends State<VisitPage> {
         }
 
         Widget result() {
-          return Expanded(
-            child: Container(
-              child: ListView.builder(
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
                 itemCount: test.length,
                 itemBuilder: (context, index) {
                   final _test = test[index];
 
-                  return Container();
+                  return Row(
+                    children: [
+                      Text("data"),
+                    ],
+                  );
                 },
               ),
-            ),
+            ],
           );
+        }
+
+        Widget result2() {
+          return Table(
+              border: TableBorder.symmetric(
+                inside: BorderSide(width: 1),
+              ),
+              children: [
+                TableRow(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          child: Text('produk'),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          child: Text('Jumlah'),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          child: Text('Total'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                for (var produk in test)
+                  TableRow(children: [
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          verticalAlignment:
+                              TableCellVerticalAlignment.baseline,
+                          child: Text(produk['produk']),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          verticalAlignment: TableCellVerticalAlignment.middle,
+                          child: Text(produk['jumlah']),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Center(
+                        child: TableCell(
+                          verticalAlignment: TableCellVerticalAlignment.middle,
+                          child: Text(produk['total'].toString()),
+                        ),
+                      ),
+                    ),
+                  ])
+              ]);
         }
 
         Widget input() {
@@ -748,7 +827,6 @@ class _VisitPageState extends State<VisitPage> {
                     jumlah(),
                     // satuan(),
                     total(),
-                    // result(),
                   ],
                 ),
               ),
@@ -902,6 +980,55 @@ class _VisitPageState extends State<VisitPage> {
           );
         }
 
+        Widget submit() {
+          return Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.86,
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: whiteColor,
+                    side: BorderSide(
+                      width: 1.0,
+                      color: blueBrightColor,
+                    )),
+                onPressed: () {
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (BuildContext context) => StockListPage()));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                  // width: MediaQuery.of(context).size.width,
+                  // height: 36,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    // color: primaryBlue,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.upload,
+                        color: blueBrightColor,
+                      ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+                      Text(
+                        'Submit',
+                        style: whiteInterTextStyle.copyWith(
+                            fontSize: 16,
+                            fontWeight: medium,
+                            color: blueBrightColor),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
         Widget body() {
           return Expanded(
             flex: 10,
@@ -933,7 +1060,16 @@ class _VisitPageState extends State<VisitPage> {
                     // logo(),
                     input(),
                     button(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    test.isEmpty ? Container() : result2(),
+                    SizedBox(
+                      height: 10,
+                    ),
                     takePhoto(),
+                    submit(),
+
                     download(),
 
                     // check(),
@@ -952,7 +1088,7 @@ class _VisitPageState extends State<VisitPage> {
               child: Column(
                 children: [
                   Text(
-                    "09:00 - 18:00",
+                    widget.outlet!.name,
                     style: trueBlackRobotTextStyle.copyWith(
                       fontWeight: semiBold,
                       fontSize: 24,

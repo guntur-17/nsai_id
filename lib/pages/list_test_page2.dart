@@ -201,6 +201,7 @@ class _OutletListPageState extends State<OutletListPage3> {
                     VisitPage(
                       longUser: currentposition!.longitude,
                       latUser: currentposition!.latitude,
+                      outlet: outlets['shop'],
                     ),
                     longUser: currentposition!.longitude,
                     latUser: currentposition!.latitude,

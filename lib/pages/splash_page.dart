@@ -83,7 +83,7 @@ class _SplashPageState extends State<SplashPage> {
     // var token = prefs.getString('token');
     if (await Provider.of<AuthProvider>(context, listen: false)
         .getUser(token: token, id: id)) {
-      // await outlethandler(token);
+      await outlethandler(token);
       await distributorHandler(token);
       Navigator.pushReplacement(context, route);
     } else {

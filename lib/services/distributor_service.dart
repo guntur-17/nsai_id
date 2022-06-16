@@ -7,7 +7,7 @@ class DistributorService {
   String baseUrl = 'http://decoy.sakataguna-dev.com/api';
   // String token = AuthProvider.user.token;
 
-  Future<List<DistributorModel>> getDistributors(String? token) async {
+  Future<List<DistributorModel>> getDistributors2(String? token) async {
     // var token = await.getToken();
     var url = Uri.parse('$baseUrl/user/attendance/history');
     var headers = {
@@ -30,6 +30,32 @@ class DistributorService {
       return distributors;
     } else {
       throw Exception('Gagal Get distributor');
+    }
+  }
+
+  Future<List<DistributorModel>> getDistributors({String? token}) async {
+    var url = Uri.parse('$baseUrl/user/show-shop');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': token as String
+    };
+
+    var response = await http.get(url, headers: headers);
+
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      List data = json.decode(response.body)['data']['shop'];
+      List<DistributorModel> distributors = [];
+
+      for (var item in data) {
+        distributors.add(DistributorModel.fromJson(item));
+      }
+
+      return distributors;
+    } else {
+      throw Exception('Gagal Get outlet');
     }
   }
 

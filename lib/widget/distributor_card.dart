@@ -45,7 +45,7 @@ class DistributorCard extends StatelessWidget {
                   width: 16,
                 ),
                 Text(
-                  shop.user_id.toString(),
+                  shop.name,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.left,
                   style: trueBlackTextStyle.copyWith(
