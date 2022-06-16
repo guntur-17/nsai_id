@@ -96,7 +96,7 @@ class _TransactionPageState extends State<TransactionPage> {
               alignment: FractionalOffset.bottomCenter,
               child: Container(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.8,
+                height: MediaQuery.of(context).size.height * 0.85,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -331,7 +331,7 @@ class _TransactionPageState extends State<TransactionPage> {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80.0),
+          preferredSize: const Size.fromHeight(60.0),
           child: AppBar(
             titleSpacing: 0,
             toolbarHeight: 120,

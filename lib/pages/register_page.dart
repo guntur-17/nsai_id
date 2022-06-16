@@ -460,7 +460,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Log In',
+                      'Register',
                       style: whiteInterTextStyle.copyWith(
                           fontSize: 16, fontWeight: medium),
                     )

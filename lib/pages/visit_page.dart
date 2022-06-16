@@ -1118,7 +1118,7 @@ class _VisitPageState extends State<VisitPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Log In',
+                                'Check In',
                                 style: whiteInterTextStyle.copyWith(
                                     fontSize: 16, fontWeight: medium),
                               )
