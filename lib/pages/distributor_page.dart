@@ -125,30 +125,6 @@ class _DistributorListPageState extends State<DistributorListPage> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80.0),
-          child: AppBar(
-            toolbarHeight: 120,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios_new,
-                color: trueBlack,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            iconTheme: const IconThemeData(color: Colors.black),
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            bottomOpacity: 0.0,
-            elevation: 0.0,
-            title: Text(
-              'Distributor',
-              style: trueBlackTextStyle.copyWith(fontWeight: FontWeight.w600),
-            ),
-          ),
-        ),
         backgroundColor: whiteColor,
         body: isLoading
             ? Loading()

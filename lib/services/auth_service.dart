@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nsai_id/models/user_model.dart';
 
@@ -113,14 +113,15 @@ class AuthService {
     }
   }
 
-  Future<bool> register(
+  Future<bool> register({
+    context,
     String? full_name,
     String? nick_name,
     String? id_card_number,
     String? region_id,
     String? email,
     String? password,
-  ) async {
+  }) async {
     var url = Uri.parse('$baseUrl/register');
     var headers = {
       'Content-Type': 'application/json',
@@ -140,6 +141,20 @@ class AuthService {
     print(response.body);
 
     if (response.statusCode == 200) {
+      var message = jsonDecode(response.body)['meta']['message'];
+      var validation = jsonDecode(response.body)['data']['validation_errors'];
+      print(message);
+      print(validation);
+      if (message == 'Validation Error') {
+        switch (validation.toString()) {
+          case '{id_card_number: [The id card number has already been taken.]}':
+            return throw Exception('NIK sudah terdaftar');
+          case '{email: [The email has already been taken.]}':
+            return throw Exception('Email sudah terdaftar');
+          default:
+            return throw Exception('Error tidak diketahui');
+        }
+      }
       return true;
     } else {
       throw Exception('Gagal attendance in ');
