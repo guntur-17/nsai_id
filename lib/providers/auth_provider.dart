@@ -34,7 +34,12 @@ class AuthProvider with ChangeNotifier {
   }) async {
     try {
       if (await AuthService().register(
-          full_name, nick_name, id_card_number, region_id, email, password)) {
+          full_name: full_name,
+          nick_name: nick_name,
+          id_card_number: id_card_number,
+          region_id: region_id,
+          email: email,
+          password: password)) {
         return true;
       } else {
         return false;

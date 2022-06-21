@@ -107,6 +107,16 @@ class _RegisterPageState extends State<RegisterPage> {
           region_id: dropdownvalue.id)) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => PreloginPage()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: redColor,
+            content: Text(
+              'Email atau NIK sudah terdaftar',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
       }
     }
 

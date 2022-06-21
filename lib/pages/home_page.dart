@@ -8,6 +8,7 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nsai_id/models/outlet_model.dart';
 import 'package:nsai_id/models/user_model.dart';
+import 'package:nsai_id/pages/absent_tab.dart';
 import 'package:nsai_id/pages/attendance_page.dart';
 import 'package:nsai_id/pages/distributor_page.dart';
 import 'package:nsai_id/pages/document_page.dart';
@@ -17,6 +18,7 @@ import 'package:nsai_id/pages/list_test_page2.dart';
 import 'package:nsai_id/pages/outlet_page.dart';
 import 'package:nsai_id/pages/transaction_page.dart';
 import 'package:nsai_id/pages/visit_page.dart';
+import 'package:nsai_id/pages/visit_tab.dart';
 
 import 'package:nsai_id/providers/auth_provider.dart';
 import 'package:nsai_id/providers/distributor_provider.dart';
@@ -686,13 +688,13 @@ class _HomePageState extends State<HomePage> {
                             HomeMenu(
                               title: 'Absensi',
                               imgpath: 'assets/check.png',
-                              route: DistributorListPage(),
+                              route: AbsentTab(),
                               // function: attendanceHandler(),
                             ),
                             HomeMenu(
                               title: 'Visit',
                               imgpath: 'assets/pin.png',
-                              route: OutletListPage(_outlet),
+                              route: VisitTab(_outlet),
                               // function: outlethandler(),
                             ),
                             HomeMenu(
