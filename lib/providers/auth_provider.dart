@@ -25,6 +25,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> register({
+    BuildContext? context,
     String? full_name,
     String? nick_name,
     String? id_card_number,
@@ -34,6 +35,7 @@ class AuthProvider with ChangeNotifier {
   }) async {
     try {
       if (await AuthService().register(
+          context: context,
           full_name: full_name,
           nick_name: nick_name,
           id_card_number: id_card_number,

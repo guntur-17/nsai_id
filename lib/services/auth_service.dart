@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nsai_id/models/user_model.dart';
 
+import '../theme.dart';
+
 // class AuthService {
 //   String baseUrl = 'http://decoy.sakataguna-dev.com/api';
 
@@ -114,7 +116,7 @@ class AuthService {
   }
 
   Future<bool> register({
-    context,
+    BuildContext? context,
     String? full_name,
     String? nick_name,
     String? id_card_number,
@@ -148,11 +150,35 @@ class AuthService {
       if (message == 'Validation Error') {
         switch (validation.toString()) {
           case '{id_card_number: [The id card number has already been taken.]}':
-            return throw Exception('NIK sudah terdaftar');
+            return throw ScaffoldMessenger.of(context!).showSnackBar(
+              SnackBar(
+                backgroundColor: redColor,
+                content: Text(
+                  'NIK sudah terdaftar',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
           case '{email: [The email has already been taken.]}':
-            return throw Exception('Email sudah terdaftar');
+            return throw ScaffoldMessenger.of(context!).showSnackBar(
+              SnackBar(
+                backgroundColor: redColor,
+                content: Text(
+                  'Email sudah terdaftar',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
           default:
-            return throw Exception('Error tidak diketahui');
+            return throw ScaffoldMessenger.of(context!).showSnackBar(
+              SnackBar(
+                backgroundColor: redColor,
+                content: Text(
+                  'Terjadi kesalahan',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
         }
       }
       return true;

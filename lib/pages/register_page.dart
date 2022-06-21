@@ -1,6 +1,7 @@
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_plus/dropdown_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:nsai_id/models/region_model.dart';
 import 'package:nsai_id/pages/prelogin_page.dart';
 import 'package:nsai_id/pages/register_page.dart';
@@ -98,7 +99,22 @@ class _RegisterPageState extends State<RegisterPage> {
       print(passwordController.text);
       print(dropdownvalue.id);
 
+      Loader.show(
+        context,
+        isSafeAreaOverlay: false,
+        // isBottomBarOverlay: false,
+        // overlayFromBottom: 80,
+        overlayColor: Colors.black26,
+        progressIndicator: CircularProgressIndicator(
+          color: blueBrightColor,
+        ),
+        themeData: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.fromSwatch().copyWith(secondary: whiteColor),
+        ),
+      );
+
       if (await authProvider.register(
+          context: context,
           email: emailController.text,
           full_name: nameController.text,
           nick_name: nicknameController.text,
@@ -107,16 +123,9 @@ class _RegisterPageState extends State<RegisterPage> {
           region_id: dropdownvalue.id)) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => PreloginPage()));
+        Loader.hide();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: redColor,
-            content: Text(
-              'Email atau NIK sudah terdaftar',
-              textAlign: TextAlign.center,
-            ),
-          ),
-        );
+        Loader.hide();
       }
     }
 
