@@ -5,9 +5,11 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:nsai_id/models/shopDistance_model.dart';
 import 'package:nsai_id/models/outlet_model.dart';
 import 'package:nsai_id/pages/visit_page.dart';
+import 'package:nsai_id/pages/visit_page_test.dart';
 import 'package:nsai_id/providers/outlet_provider.dart';
 import 'package:nsai_id/services/outlet_service.dart';
 import 'package:nsai_id/theme.dart';
@@ -20,8 +22,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class OutletListPage extends StatefulWidget {
   // final String? addressUser;
-
-  const OutletListPage({Key? key}) : super(key: key);
+  List<OutletModel> outlet;
+  OutletListPage(this.outlet, {Key? key}) : super(key: key);
 
   @override
   _OutletListPageState createState() => _OutletListPageState();
@@ -97,7 +99,8 @@ class _OutletListPageState extends State<OutletListPage> {
           currentAddress =
               " ${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea} ${place.postalCode}";
           // Loader.hide();
-          shopListHandler();
+
+          outletListHandler();
         },
       );
 
@@ -109,21 +112,35 @@ class _OutletListPageState extends State<OutletListPage> {
     }
   }
 
-  Future shopListHandler() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
+  Future outletListHandler() async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // var token = prefs.getString('token');
+    // await OutletProvider().getShopDistance(
+    //     'Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa',
+    //     currentposition!.latitude,
+    //     currentposition!.longitude);
+    setState(() {
+      shops = widget.outlet;
+    });
+    // shops = widget.outlet;
 
-    outletDistance = (await OutletService().getOutletsDistance(
-        token: token,
-        latUser: currentposition!.latitude,
-        longUser: currentposition!.longitude));
+    for (var item in shops) {
+      final latShop = item.lat;
+      // print(latShop);
+      final longShop = item.long;
+      // print(longShop);
 
+      // List test = item./;
+      double radius = Geolocator.distanceBetween(currentposition!.latitude,
+          currentposition!.longitude, latShop, longShop);
+      outletDistance.add({'shop': item, 'distance': radius});
+    }
     setState(() {
       _outletDistance = outletDistance;
       isLoading = false;
     });
 
-    print(outletDistance);
+    // print(outletDistance);
   }
 
   @override
@@ -145,26 +162,61 @@ class _OutletListPageState extends State<OutletListPage> {
 
   @override
   Widget build(BuildContext context) {
+    // OutletProvider outletProvider = context.watch<OutletProvider>();
+    // late List<Map<String, dynamic>> outlet = outletProvider.shopdistance;
+    // print("test");
+    // shops = widget.outlet;
+    // print("test shops");
+
+    // print(shops);
+    print("test distance");
+    print(_outletDistance);
+
+    // setState(() {
+    //   _outletDistance = outlet;
+    //   print(outlet);
+    // });
+
     // ShopProvider shopProvider = Provider.of<ShopProvider>(context);
     // List list = shopProvider.shopdistance.toList();
     // print(list);
+
     Widget card() {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.90,
-        child: ListView.builder(
-          itemCount: outletDistance.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            final outlets = _outletDistance[index];
-            // ignore: avoid_print
-            print(outlets);
-            // setState(() {});
-            return ShopCard(
-              outlets,
-              VisitPage(),
-            );
-          },
+      return Expanded(
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.90,
+          height: MediaQuery.of(context).size.height,
+          child: ListView.builder(
+            itemCount: _outletDistance.length,
+            // shrinkWrap: true,
+            // physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final outlets = _outletDistance[index];
+              return LazyLoadingList(
+                  initialSizeOfItems: 5,
+                  index: index,
+                  hasMore: true,
+                  loadMore: () => print('Loading More'),
+                  child: ShopCard(
+                    outlets,
+                    VisitPage2(
+                      longUser: currentposition!.longitude,
+                      latUser: currentposition!.latitude,
+                      outlet: outlets['shop'],
+                    ),
+                    longUser: currentposition!.longitude,
+                    latUser: currentposition!.latitude,
+                  ));
+
+              // ignore: avoid_print
+              // print(outlets);
+              // // setState(() {});
+              // return ShopCard(
+              //   outlets,
+              //   VisitPage(),
+              // );
+            },
+          ),
         ),
       );
     }
@@ -198,15 +250,13 @@ class _OutletListPageState extends State<OutletListPage> {
         backgroundColor: whiteColor,
         body: isLoading
             ? Loading()
-            : SingleChildScrollView(
-                child: Center(
-                  child: Column(
-                    children: <Widget>[
-                      // buildSearch(),
-                      // isLoading ? const LoadingDefault() :
-                      card(),
-                    ],
-                  ),
+            : Center(
+                child: Column(
+                  children: <Widget>[
+                    // buildSearch(),
+                    // isLoading ? const LoadingDefault() :
+                    card(),
+                  ],
                 ),
               ),
       ),

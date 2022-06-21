@@ -33,7 +33,7 @@ class AttendanceService {
     }
   }
 
-  Future<bool> attendanceIn(
+  Future<AttendanceModel> attendanceIn(
     String? token,
     String? time,
     double? lat,
@@ -52,7 +52,9 @@ class AttendanceService {
     print(response.body);
 
     if (response.statusCode == 200) {
-      return true;
+      var dataa = jsonDecode(response.body)['data'];
+      AttendanceModel data = AttendanceModel.fromJson(dataa['attendance']);
+      return data;
     } else {
       throw Exception('Gagal attendance in ');
     }

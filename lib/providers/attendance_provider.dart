@@ -3,6 +3,14 @@ import 'package:nsai_id/models/attendance_model.dart';
 import 'package:nsai_id/services/attendance_service.dart';
 
 class AttedanceProvider with ChangeNotifier {
+  AttendanceModel? _data;
+
+  AttendanceModel get data => _data as AttendanceModel;
+  set data(AttendanceModel data) {
+    _data = data;
+    notifyListeners();
+  }
+
   // AttendanceModel? _attendance;
   List<AttendanceModel> _attendances = [];
 
@@ -40,11 +48,15 @@ class AttedanceProvider with ChangeNotifier {
     double? long,
   ) async {
     try {
-      if (await AttendanceService().attendanceIn(token, time, lat, long)) {
-        return true;
-      } else {
-        return false;
-      }
+      AttendanceModel data =
+          await AttendanceService().attendanceIn(token, time, lat, long);
+      _data = data;
+      // if (await AttendanceService().attendanceIn(token, time, lat, long)) {
+
+      // } else {
+      //   return false;
+      // }
+      return true;
     } catch (e) {
       print(e);
       return false;

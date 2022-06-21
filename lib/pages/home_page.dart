@@ -692,7 +692,7 @@ class _HomePageState extends State<HomePage> {
                             HomeMenu(
                               title: 'Visit',
                               imgpath: 'assets/pin.png',
-                              route: OutletListPage3(_outlet),
+                              route: OutletListPage(_outlet),
                               // function: outlethandler(),
                             ),
                             HomeMenu(

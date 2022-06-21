@@ -50,7 +50,8 @@ dependencies:
   syncfusion_flutter_pdf: ^20.1.59-beta
   infinite_scroll_pagination: ^3.2.0
   lazy_loading_list: ^1.0.1
-
+  bottom_sheet: ^3.1.1
+  
 dev_dependencies:
   flutter_lints: ^1.0.0
   flutter_test:
