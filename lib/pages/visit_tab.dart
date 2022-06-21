@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nsai_id/pages/visit_page.dart';
+import 'package:nsai_id/pages/visit_list_page.dart';
 
 import '../models/outlet_model.dart';
 import 'list_test_page2.dart';

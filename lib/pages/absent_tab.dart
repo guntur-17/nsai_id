@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nsai_id/pages/distributor_page.dart';
+import 'package:nsai_id/pages/distributor_list_page.dart';
 
 class AbsentTab extends StatefulWidget {
   const AbsentTab({Key? key}) : super(key: key);

@@ -22,7 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class VisitListPage extends StatefulWidget {
   // final String? addressUser;
-  List<OutletModel> outlet;
+  final List<OutletModel> outlet;
   VisitListPage(this.outlet, {Key? key}) : super(key: key);
 
   @override
