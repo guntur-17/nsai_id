@@ -69,12 +69,11 @@ class _SplashPageState extends State<SplashPage> {
     // var token = prefs.getString('idsebelah');
     // print(token);
     await Provider.of<DistributorProvider>(context, listen: false)
-        .getDistributors('Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa');
+        .getDistributors(token);
   }
 
   outlethandler(token) async {
-    await Provider.of<OutletProvider>(context, listen: false)
-        .getShops('Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa');
+    await Provider.of<OutletProvider>(context, listen: false).getShops(token);
   }
 
   userhandler(token, id) async {

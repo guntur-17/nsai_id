@@ -34,11 +34,11 @@
 // }
 
 class DistributorModel {
-  final int id;
+  final String id;
   final String name;
   final String address;
-  final double lat;
-  final double long;
+  final String lat;
+  final String long;
 
   DistributorModel({
     required this.id,

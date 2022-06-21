@@ -35,19 +35,19 @@ class OutletProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> getShopDistance(
-      String? token, double latUser, double longuser) async {
-    try {
-      List<Map<String, dynamic>> shopdistance = await OutletService()
-          .getOutletsDistance(
-              token: token, latUser: latUser, longUser: longuser);
-      _shopdistance = shopdistance;
-      // print(_shops)
-      print(shopdistance);
-      return true;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
+  // Future<bool> getShopDistance(
+  //     String? token, double latUser, double longuser) async {
+  //   try {
+  //     List<Map<String, dynamic>> shopdistance = await OutletService()
+  //         .getOutletsDistance(
+  //             token: token, latUser: latUser, longUser: longuser);
+  //     _shopdistance = shopdistance;
+  //     // print(_shops)
+  //     print(shopdistance);
+  //     return true;
+  //   } catch (e) {
+  //     print(e);
+  //     return false;
+  //   }
+  // }
 }

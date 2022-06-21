@@ -9,10 +9,10 @@ import 'package:nsai_id/models/outlet_model.dart';
 class OutletService {
   // var data = [];
   // List<ShopModel> shops = [];
-  String baseUrl = 'http://decoy.sakataguna-dev.com/api';
+  String baseUrl = 'http://nsa-api.sakataguna-dev.com/api';
 
   Future<List<OutletModel>> getOutlets({String? token}) async {
-    var url = Uri.parse('$baseUrl/user/show-shop');
+    var url = Uri.parse('$baseUrl/outlet');
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': token as String
@@ -24,7 +24,7 @@ class OutletService {
     print(response.body);
 
     if (response.statusCode == 200) {
-      List data = json.decode(response.body)['data']['shop'];
+      List data = json.decode(response.body)['data'];
       List<OutletModel> shops = [];
 
       // data.map((json) => ShopModel.fromJson(json)).where((shop) {
@@ -59,60 +59,60 @@ class OutletService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getOutletsDistance(
-      {String? token, double? latUser, double? longUser}) async {
-    var url = Uri.parse('$baseUrl/user/show-shop');
-    var headers = {
-      'Content-Type': 'application/json',
-      'Authorization': token as String
-    };
+  // Future<List<Map<String, dynamic>>> getOutletsDistance(
+  //     {String? token, double? latUser, double? longUser}) async {
+  //   var url = Uri.parse('$baseUrl/user/show-shop');
+  //   var headers = {
+  //     'Content-Type': 'application/json',
+  //     'Authorization': token as String
+  //   };
 
-    var response = await http.get(url, headers: headers);
+  //   var response = await http.get(url, headers: headers);
 
-    print(response.statusCode);
-    print(response.body);
+  //   print(response.statusCode);
+  //   print(response.body);
 
-    if (response.statusCode == 200) {
-      List data = json.decode(response.body)['data']['shop'];
-      List<OutletModel> shops = [];
-      // List<ShopDistanceModel> shopDistance = [];
-      List<Map<String, dynamic>> locationListWithDistance = [];
+  //   if (response.statusCode == 200) {
+  //     List data = json.decode(response.body)['data']['shop'];
+  //     List<OutletModel> shops = [];
+  //     // List<ShopDistanceModel> shopDistance = [];
+  //     List<Map<String, dynamic>> locationListWithDistance = [];
 
-      for (var item in data) {
-        shops.add(OutletModel.fromJson(item));
-      }
+  //     for (var item in data) {
+  //       shops.add(OutletModel.fromJson(item));
+  //     }
 
-      for (var item in shops) {
-        final latShop = item.lat;
-        // print(latShop);
-        final longShop = item.long;
-        // print(longShop);
+  //     for (var item in shops) {
+  //       final latShop = item.lat;
+  //       // print(latShop);
+  //       final longShop = item.long;
+  //       // print(longShop);
 
-        // List test = item./;
-        double radius =
-            Geolocator.distanceBetween(latUser!, longUser!, latShop, longShop);
-        locationListWithDistance.add({'shop': item, 'distance': radius});
-      }
+  //       // List test = item./;
+  //       double radius =
+  //           Geolocator.distanceBetween(latUser!, longUser!, latShop, longShop);
+  //       locationListWithDistance.add({'shop': item, 'distance': radius});
+  //     }
 
-      // print(locationListWithDistance);
-      locationListWithDistance.sort((a, b) {
-        double d1 = a['distance'];
-        double d2 = b['distance'];
-        if (d1 > d2) {
-          return 1;
-        } else if (d1 < d2) {
-          return -1;
-        } else {
-          return 0;
-        }
-      });
+  //     // print(locationListWithDistance);
+  //     locationListWithDistance.sort((a, b) {
+  //       double d1 = a['distance'];
+  //       double d2 = b['distance'];
+  //       if (d1 > d2) {
+  //         return 1;
+  //       } else if (d1 < d2) {
+  //         return -1;
+  //       } else {
+  //         return 0;
+  //       }
+  //     });
 
-      // locationListWithDistance(shopDistance);
-      // List<ShopDistanceModel> shopDistance = locationListWithDistance.toList();
+  //     // locationListWithDistance(shopDistance);
+  //     // List<ShopDistanceModel> shopDistance = locationListWithDistance.toList();
 
-      return locationListWithDistance;
-    } else {
-      throw Exception('Gagal Get outlet');
-    }
-  }
+  //     return locationListWithDistance;
+  //   } else {
+  //     throw Exception('Gagal Get outlet');
+  //   }
+  // }
 }

@@ -34,11 +34,11 @@
 // }
 
 class OutletModel {
-  final int id;
+  final String id;
   final String name;
   final String address;
-  final double lat;
-  final double long;
+  final String lat;
+  final String long;
 
   OutletModel({
     required this.id,

@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:nsai_id/models/distributor_model.dart';
 
 class DistributorService {
-  String baseUrl = 'http://decoy.sakataguna-dev.com/api';
+  String baseUrl = 'http://nsa-api.sakataguna-dev.com/api';
   // String token = AuthProvider.user.token;
 
   Future<List<DistributorModel>> getDistributors2(String? token) async {
@@ -34,7 +34,7 @@ class DistributorService {
   }
 
   Future<List<DistributorModel>> getDistributors({String? token}) async {
-    var url = Uri.parse('$baseUrl/user/show-shop');
+    var url = Uri.parse('$baseUrl/distributor');
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': token as String
@@ -46,7 +46,8 @@ class DistributorService {
     print(response.body);
 
     if (response.statusCode == 200) {
-      List data = json.decode(response.body)['data']['shop'];
+      List data = json.decode(response.body)['data'];
+      print(data);
       List<DistributorModel> distributors = [];
 
       for (var item in data) {

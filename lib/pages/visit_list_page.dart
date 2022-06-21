@@ -125,9 +125,9 @@ class _VisitListPageState extends State<VisitListPage> {
     // shops = widget.outlet;
 
     for (var item in shops) {
-      final latShop = item.lat;
+      final latShop = double.parse(item.lat);
       // print(latShop);
-      final longShop = item.long;
+      final longShop = double.parse(item.long);
       // print(longShop);
 
       // List test = item./;
