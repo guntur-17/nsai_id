@@ -80,7 +80,7 @@ class _VisitTabState extends State<VisitTab> {
             },
             body: TabBarView(
               children: <Widget>[
-                OutletListPage(widget.outlet),
+                VisitListPage(widget.outlet),
                 Container(
                   child: Text('1'),
                 )
