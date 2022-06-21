@@ -223,30 +223,30 @@ class _OutletListPageState extends State<OutletListPage> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80.0),
-          child: AppBar(
-            toolbarHeight: 120,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: trueBlack,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            iconTheme: const IconThemeData(color: Colors.black),
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            bottomOpacity: 0.0,
-            elevation: 0.0,
-            title: Text(
-              'Outlet',
-              style: trueBlackTextStyle.copyWith(fontWeight: FontWeight.w600),
-            ),
-          ),
-        ),
+        // appBar: PreferredSize(
+        //   preferredSize: const Size.fromHeight(80.0),
+        //   child: AppBar(
+        //     toolbarHeight: 120,
+        //     leading: IconButton(
+        //       icon: Icon(
+        //         Icons.arrow_back,
+        //         color: trueBlack,
+        //       ),
+        //       onPressed: () {
+        //         Navigator.pop(context);
+        //       },
+        //     ),
+        //     iconTheme: const IconThemeData(color: Colors.black),
+        //     centerTitle: true,
+        //     backgroundColor: Colors.white,
+        //     bottomOpacity: 0.0,
+        //     elevation: 0.0,
+        //     title: Text(
+        //       'Outlet',
+        //       style: trueBlackTextStyle.copyWith(fontWeight: FontWeight.w600),
+        //     ),
+        //   ),
+        // ),
         backgroundColor: whiteColor,
         body: isLoading
             ? Loading()

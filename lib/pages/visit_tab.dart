@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nsai_id/pages/outlet_page.dart';
 
 import '../models/outlet_model.dart';
 import 'list_test_page2.dart';
@@ -79,7 +80,7 @@ class _VisitTabState extends State<VisitTab> {
             },
             body: TabBarView(
               children: <Widget>[
-                OutletListPage3(widget.outlet),
+                OutletListPage(widget.outlet),
                 Container(
                   child: Text('1'),
                 )
