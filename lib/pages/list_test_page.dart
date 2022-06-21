@@ -7,7 +7,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nsai_id/models/shopDistance_model.dart';
 import 'package:nsai_id/models/outlet_model.dart';
-import 'package:nsai_id/pages/visit_page.dart';
+import 'package:nsai_id/pages/outlet_page.dart';
 import 'package:nsai_id/providers/outlet_provider.dart';
 import 'package:nsai_id/services/outlet_service.dart';
 import 'package:nsai_id/theme.dart';

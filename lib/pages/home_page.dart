@@ -15,9 +15,9 @@ import 'package:nsai_id/pages/document_page.dart';
 import 'package:nsai_id/pages/faq_page.dart';
 import 'package:nsai_id/pages/list_test_page.dart';
 import 'package:nsai_id/pages/list_test_page2.dart';
-import 'package:nsai_id/pages/outlet_page.dart';
-import 'package:nsai_id/pages/transaction_page.dart';
 import 'package:nsai_id/pages/visit_page.dart';
+import 'package:nsai_id/pages/transaction_page.dart';
+import 'package:nsai_id/pages/outlet_page.dart';
 import 'package:nsai_id/pages/visit_tab.dart';
 
 import 'package:nsai_id/providers/auth_provider.dart';
