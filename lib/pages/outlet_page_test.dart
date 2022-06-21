@@ -39,7 +39,7 @@ class _VisitPageState extends State<OutletPage2> {
   TextEditingController jumlahController = TextEditingController(text: '');
   TextEditingController totalController = TextEditingController(text: '');
   List<Map<String, dynamic>> test = [];
-  AttendanceModel? test2;
+  AttendanceModel? dataAttendance;
 
   num totalprice = 0;
 
@@ -49,7 +49,7 @@ class _VisitPageState extends State<OutletPage2> {
 
   bool isCheckin = false;
 
-  bool condition = false;
+  // bool condition = false;
 
   dynamic currentTime = DateFormat.Hm().format(DateTime.now());
 
@@ -177,7 +177,7 @@ class _VisitPageState extends State<OutletPage2> {
       )) {
         setState(() {
           isCheckin = true;
-          test2 = attedanceProvider.data;
+          dataAttendance = attedanceProvider.data;
         });
         Loader.hide();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -688,8 +688,8 @@ class _VisitPageState extends State<OutletPage2> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      test2 != null
-                          ? Text(test2!.time.toString(),
+                      dataAttendance != null
+                          ? Text(dataAttendance!.time.toString(),
                               style: blackTextStyle.copyWith(
                                   fontSize: 16, fontWeight: medium))
                           : ElevatedButton(
@@ -976,6 +976,9 @@ class _VisitPageState extends State<OutletPage2> {
                             fit: BoxFit.cover)),
                     child: Column(
                       children: <Widget>[
+                        const SizedBox(
+                          height: 20,
+                        ),
                         header(),
                         const SizedBox(
                           height: 20,
