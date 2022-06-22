@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:intl/intl.dart';
 import 'package:nsai_id/models/attendance_model.dart';
 
@@ -20,13 +23,14 @@ import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
 import 'package:nsai_id/widget/currency.dart';
 import 'package:nsai_id/widget/loading_widget.dart';
+import 'package:nsai_id/widget/retakePhoto_widget.dart';
 import 'package:nsai_id/widget/takePhoto_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AttendancePage extends StatefulWidget {
-  DistributorModel distributor;
+  final DistributorModel distributor;
 
   AttendancePage({required this.distributor, Key? key}) : super(key: key);
 
@@ -53,6 +57,9 @@ class _AttendancePageState extends State<AttendancePage> {
 
   bool isCheckin = false;
 
+  File? imageDistributor;
+  File? imageProduct;
+
   dynamic currentTime = DateFormat.Hm().format(DateTime.now());
 
   String? _dropDownValue;
@@ -72,6 +79,36 @@ class _AttendancePageState extends State<AttendancePage> {
     _handlefunction();
 
     // setState(() {});
+  }
+
+  Future getPhotoDistributor() async {
+    final ImagePicker _picker = ImagePicker();
+
+    // Capture a photo
+    final XFile? photo =
+        await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    //mengubah Xfile jadi file
+
+    setState(() {
+      if (photo != null) {
+        imageDistributor = File(photo.path);
+      }
+    });
+  }
+
+  Future getPhotoProduct() async {
+    final ImagePicker _picker2 = ImagePicker();
+
+    // Capture a photo
+    final XFile? photo2 =
+        await _picker2.pickImage(source: ImageSource.camera, imageQuality: 50);
+    //mengubah Xfile jadi file
+
+    setState(() {
+      if (photo2 != null) {
+        imageProduct = File(photo2.path);
+      }
+    });
   }
 
   Future _handlefunction() async {
@@ -988,7 +1025,7 @@ class _AttendancePageState extends State<AttendancePage> {
           );
         }
 
-        Widget showModalcontent() {
+        Widget showModalcontent(setState) {
           return Container(
             height: MediaQuery.of(context).size.height * 0.7,
             child: SingleChildScrollView(
@@ -1039,12 +1076,87 @@ class _AttendancePageState extends State<AttendancePage> {
                           SizedBox(
                             height: 10,
                           ),
-                          TakePhoto(
-                            text: "Ambil Gambar Distributor",
+                          if (imageDistributor != null)
+                            RetakePhoto(
+                              function: () async {
+                                await getPhotoDistributor();
+                                setState;
+                              },
+                              // setState: setState,
+                              image: imageDistributor!,
+                            )
+                          else
+                            TakePhoto(
+                              text: "Ambil Gambar Distributor",
+                              function: () async {
+                                await getPhotoDistributor();
+                                setState;
+                              },
+                            ),
+                          SizedBox(
+                            height: 20,
                           ),
-                          TakePhoto(
-                            text: "Ambil Gambar Produk",
-                          ),
+                          if (imageProduct != null)
+                            RetakePhoto(
+                              function: () async {
+                                await getPhotoProduct();
+                                setState;
+                              },
+                              // setState: setState,
+                              image: imageProduct!,
+                            )
+                          // Column(
+                          //   children: [
+                          //     Align(
+                          //       alignment: Alignment.centerLeft,
+                          //       child: Text(
+                          //         "Foto Produk",
+                          //         style: trueBlackInterTextStyle.copyWith(
+                          //           fontSize: 16,
+                          //           fontWeight: medium,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     SizedBox(
+                          //       height: 20,
+                          //     ),
+                          //     Center(
+                          //       child: Container(
+                          //         margin: const EdgeInsets.only(bottom: 10),
+                          //         child: InstaImageViewer(
+                          //           child: Image.file(
+                          //             imageDistributor!,
+                          //             fit: BoxFit.cover,
+                          //             height: sx(230),
+                          //             width: sx(230),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     TextButton(
+                          //       style: TextButton.styleFrom(
+                          //           backgroundColor: blueColor),
+                          //       onPressed: () async {
+                          //         await getPhotoProduct();
+                          //         setState;
+                          //       },
+                          //       child: Text(
+                          //         'Retake a photo',
+                          //         style: whiteTextStyle.copyWith(
+                          //             fontSize: 18, fontWeight: bold),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // )
+                          else
+                            TakePhoto(
+                              text: "Ambil Gambar Produk",
+                              function: () async {
+                                await getPhotoProduct();
+                                setState;
+                              },
+                              // function: getPhoto(),
+                            ),
 
                           submit(),
                           // download(),
@@ -1078,11 +1190,16 @@ class _AttendancePageState extends State<AttendancePage> {
                       isScrollControlled: true,
                       context: context,
                       builder: (context) {
-                        return Wrap(
-                          children: [
-                            showModalcontent(),
-                          ],
-                        );
+                        return StatefulBuilder(
+                            // stream: ,
+                            builder:
+                                (BuildContext context, StateSetter setState) {
+                          return Wrap(
+                            children: [
+                              showModalcontent(setState),
+                            ],
+                          );
+                        });
                       },
                     );
                   },

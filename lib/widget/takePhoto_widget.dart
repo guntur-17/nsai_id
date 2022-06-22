@@ -3,9 +3,12 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:nsai_id/theme.dart';
 
+// typedef AsyncCallback = Future<void> Function();
+
 class TakePhoto extends StatelessWidget {
-  var text;
-  var function;
+  final text;
+  final VoidCallback? function;
+
   TakePhoto({this.text, this.function, Key? key}) : super(key: key);
 
   @override
@@ -35,11 +38,7 @@ class TakePhoto extends StatelessWidget {
                     width: 1.0,
                     color: blueBrightColor,
                   )),
-              onPressed: () {
-                function;
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (BuildContext context) => StockListPage()));
-              },
+              onPressed: function,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 1, vertical: 12),
                 // width: MediaQuery.of(context).size.width,
