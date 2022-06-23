@@ -29,7 +29,9 @@ environment:
 dependencies:
   adaptive_scrollbar: ^2.1.2
   awesome_snackbar_content: ^0.0.5
+  bottom_sheet: ^3.1.1
   cupertino_icons: ^1.0.2
+  dio: ^4.0.6
   dropdown_button2: ^1.4.0
   dropdown_plus: ^0.0.9
   fl_chart: ^0.50.6
@@ -41,19 +43,19 @@ dependencies:
   geocoding: ^2.0.4
   geolocator: ^7.6.2
   google_fonts: ^3.0.1
+  image_picker: ^0.8.5+3
+  infinite_scroll_pagination: ^3.2.0
+  insta_image_viewer: ^0.0.1+3
   intl: ^0.17.0
+  lazy_loading_list: ^1.0.1
   open_file: ^3.2.1
+  path_provider: ^2.0.11
   provider: ^6.0.3
   relative_scale: ^2.0.0
   scroll_app_bar: ^2.0.0
   shared_preferences: ^2.0.15
   syncfusion_flutter_pdf: ^20.1.59-beta
-  infinite_scroll_pagination: ^3.2.0
-  lazy_loading_list: ^1.0.1
-  bottom_sheet: ^3.1.1
-  image_picker: ^0.8.5+3
-  insta_image_viewer: ^0.0.1+3
-  
+
 dev_dependencies:
   flutter_lints: ^1.0.0
   flutter_test:

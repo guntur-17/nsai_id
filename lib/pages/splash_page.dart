@@ -10,6 +10,7 @@ import 'package:nsai_id/pages/auth/login_page.dart';
 
 import 'package:nsai_id/providers/auth_provider.dart';
 import 'package:nsai_id/providers/distributor_provider.dart';
+import 'package:nsai_id/providers/document_provider.dart';
 import 'package:nsai_id/providers/outlet_provider.dart';
 import 'package:nsai_id/providers/region_provider.dart';
 import 'package:provider/provider.dart';
@@ -72,6 +73,14 @@ class _SplashPageState extends State<SplashPage> {
         .getDistributors(token);
   }
 
+  documentHandler(token) async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // var token = prefs.getString('idsebelah');
+    // print(token);
+    await Provider.of<DocumentProvider>(context, listen: false)
+        .getDocuments(token);
+  }
+
   outlethandler(token) async {
     await Provider.of<OutletProvider>(context, listen: false).getShops(token);
   }
@@ -84,6 +93,7 @@ class _SplashPageState extends State<SplashPage> {
         .getUser(token: token, id: id)) {
       await outlethandler(token);
       await distributorHandler(token);
+      await documentHandler(token);
       Navigator.pushReplacement(context, route);
     } else {
       Timer(

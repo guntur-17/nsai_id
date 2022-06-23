@@ -13,6 +13,7 @@ import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../providers/document_provider.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -68,6 +69,14 @@ class _LoginPageState extends State<LoginPage> {
           .getDistributors(token);
     }
 
+    documentHandler(token) async {
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // var token = prefs.getString('idsebelah');
+      // print(token);
+      await Provider.of<DocumentProvider>(context, listen: false)
+          .getDocuments(token);
+    }
+
     handleLogin() async {
       WidgetsFlutterBinding.ensureInitialized();
       // setState(() {
@@ -103,6 +112,7 @@ class _LoginPageState extends State<LoginPage> {
             .getUser(token: token, id: id);
         await outlethandler(token);
         await distributorHandler(token);
+        await documentHandler(token);
 
         // await Provider.of<VisitingAllProvider>(context, listen: false)
         //     .getAllVisit(token);

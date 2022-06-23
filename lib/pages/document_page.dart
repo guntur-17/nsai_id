@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nsai_id/models/document_model.dart';
+import 'package:nsai_id/providers/document_provider.dart';
+import 'package:nsai_id/widget/document_card.dart';
+import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 
+import '../providers/region_provider.dart';
 import '../theme.dart';
 
 class DocumentPage extends StatefulWidget {
@@ -115,6 +120,9 @@ class _DocumentPageState extends State<DocumentPage> {
 
   @override
   Widget build(BuildContext context) {
+    DocumentProvider documentProvider =
+        Provider.of<DocumentProvider>(context, listen: false);
+    List document = documentProvider.documents.reversed.toList();
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
         Widget header() {
@@ -346,7 +354,8 @@ class _DocumentPageState extends State<DocumentPage> {
             child: Container(
               // height: MediaQuery.of(context).size.height,
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -357,7 +366,11 @@ class _DocumentPageState extends State<DocumentPage> {
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [],
+                children: document
+                    .map((e) => DocumentCard(
+                          document: e,
+                        ))
+                    .toList(),
               ),
             ),
           );
