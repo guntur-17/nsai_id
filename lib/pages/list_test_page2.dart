@@ -125,9 +125,8 @@ class _OutletListPageState extends State<OutletListPage3> {
 
     for (var item in shops) {
       final latShop = double.parse(item.lat);
-      // print(latShop);
+
       final longShop = double.parse(item.long);
-      // print(longShop);
 
       // List test = item./;
       double radius = Geolocator.distanceBetween(currentposition!.latitude,

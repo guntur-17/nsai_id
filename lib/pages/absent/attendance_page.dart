@@ -16,8 +16,10 @@ import 'package:intl/intl.dart';
 import 'package:nsai_id/models/attendance_model.dart';
 
 import 'package:nsai_id/models/distributor_model.dart';
+import 'package:nsai_id/models/product_model.dart';
 import 'package:nsai_id/pages/auth/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
+import 'package:nsai_id/providers/Product_provider.dart';
 import 'package:nsai_id/providers/attendance_provider.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
@@ -68,7 +70,7 @@ class _AttendancePageState extends State<AttendancePage> {
   FocusNode myFocusNode2 = FocusNode();
 
   String? selectedDistributor;
-  String? selectedProduct;
+  ProductModel? selectedProduct;
   String? selectedSatuan;
 
   @override
@@ -195,6 +197,10 @@ class _AttendancePageState extends State<AttendancePage> {
     AttedanceProvider attedanceProvider =
         Provider.of<AttedanceProvider>(context);
 
+    late ProductProvider productProvider =
+        Provider.of<ProductProvider>(context, listen: false);
+    late List<ProductModel> products = productProvider.products.toList();
+
     Future handleadd() async {
       if (test.any((element) => element["produk"] == selectedProduct)) {
         // final text2 = test[test.indexWhere((element) => element["produk"]== selectedProduct)];
@@ -222,7 +228,10 @@ class _AttendancePageState extends State<AttendancePage> {
         totalprice += int.parse(totalController.text);
         test.add({
           // 'distributor': selectedDistributor,
-          'produk': selectedProduct,
+          'produkId': selectedProduct!.id,
+          'produkPrice': selectedProduct!.price,
+          'produkUnit': selectedProduct!.unit,
+          'produk': selectedProduct!.name,
           'jumlah': jumlahController.text,
           'total': totalController.text,
         });
@@ -233,7 +242,7 @@ class _AttendancePageState extends State<AttendancePage> {
         jumlahController.text = '';
         totalController.text = '';
       });
-      print(test);
+      // print(test);
     }
 
     handleCheckin() async {
@@ -367,9 +376,9 @@ class _AttendancePageState extends State<AttendancePage> {
                         .toList(),
                     value: selectedProduct,
                     onChanged: (value) {
-                      setState(() {
-                        selectedProduct = value as String;
-                      });
+                      // setState(() {
+                      //   selectedProduct = value as String;
+                      // });
                     },
                     icon: const Icon(
                       Icons.keyboard_arrow_down_rounded,
@@ -409,6 +418,62 @@ class _AttendancePageState extends State<AttendancePage> {
           );
         }
 
+        Widget produk2() {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Produk",
+                    style: trueBlackInterTextStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: medium,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 6,
+                ),
+                DropdownButtonFormField(
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+                    border: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(width: 1, color: Colors.grey),
+                    ),
+                    hintText: 'Pilih Produk',
+                    hintStyle: TextStyle(fontSize: 16.0, color: trueBlack),
+                  ),
+                  // Initial Value
+                  value: selectedProduct,
+                  // Down Arrow Icon
+                  icon: const Icon(Icons.keyboard_arrow_down),
+
+                  // Array list of items
+                  items: products.map((ProductModel product) {
+                    return DropdownMenuItem(
+                      value: product,
+                      child: Text(product.name!),
+                    );
+                  }).toList(),
+                  // After selecting the desired option,it will
+                  // change button value to selected value
+                  onChanged: (ProductModel? newValue) {
+                    setState(() {
+                      selectedProduct = newValue!;
+
+                      // sendedDropDownValue = newValue.id!;
+                    });
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+
         Widget jumlah() {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
@@ -428,12 +493,13 @@ class _AttendancePageState extends State<AttendancePage> {
                   height: 6,
                 ),
                 TextFormField(
+                  autofocus: false,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
                   onChanged: ((value) {
                     String jumlah = jumlahController.text;
                     int? jumlah2 = int.tryParse(jumlah);
-                    print(jumlah2);
+
                     selectedProduct != null || jumlahController.text != ''
                         ? totalController.text = (jumlah2! * 2000).toString()
                         : '';
@@ -533,7 +599,8 @@ class _AttendancePageState extends State<AttendancePage> {
                 child: Column(
                   children: [
                     // distributor(),
-                    produk(),
+                    // produk(),
+                    produk2(),
                     jumlah(),
                     // satuan(),
                     total(),
@@ -1104,49 +1171,6 @@ class _AttendancePageState extends State<AttendancePage> {
                               // setState: setState,
                               image: imageProduct!,
                             )
-                          // Column(
-                          //   children: [
-                          //     Align(
-                          //       alignment: Alignment.centerLeft,
-                          //       child: Text(
-                          //         "Foto Produk",
-                          //         style: trueBlackInterTextStyle.copyWith(
-                          //           fontSize: 16,
-                          //           fontWeight: medium,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     SizedBox(
-                          //       height: 20,
-                          //     ),
-                          //     Center(
-                          //       child: Container(
-                          //         margin: const EdgeInsets.only(bottom: 10),
-                          //         child: InstaImageViewer(
-                          //           child: Image.file(
-                          //             imageDistributor!,
-                          //             fit: BoxFit.cover,
-                          //             height: sx(230),
-                          //             width: sx(230),
-                          //           ),
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     TextButton(
-                          //       style: TextButton.styleFrom(
-                          //           backgroundColor: blueColor),
-                          //       onPressed: () async {
-                          //         await getPhotoProduct();
-                          //         setState;
-                          //       },
-                          //       child: Text(
-                          //         'Retake a photo',
-                          //         style: whiteTextStyle.copyWith(
-                          //             fontSize: 18, fontWeight: bold),
-                          //       ),
-                          //     ),
-                          //   ],
-                          // )
                           else
                             TakePhoto(
                               text: "Ambil Gambar Produk",

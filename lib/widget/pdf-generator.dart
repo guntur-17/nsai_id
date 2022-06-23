@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:nsai_id/pages/save_file_mobile.dart';
 import '../pages/save_file_mobile.dart';
 
-Future<void> generateInvoice(List<Product> product) async {
+Future<void> generateInvoice(List<ProductModel> product) async {
   //Create a PDF document.
   final PdfDocument document = PdfDocument();
   //Add page to the PDF
@@ -139,7 +139,7 @@ void drawFooter(PdfPage page, Size pageSize) {
 }
 
 //Create PDF grid and return
-PdfGrid getGrid(List<Product> products) {
+PdfGrid getGrid(List<ProductModel> products) {
   //Create a PDF grid
   final PdfGrid grid = PdfGrid();
   //Secify the columns count to the grid.
@@ -156,10 +156,11 @@ PdfGrid getGrid(List<Product> products) {
   headerRow.cells[3].value = 'Quantity';
   headerRow.cells[4].value = 'Total';
   //Add rows
-  for (var _products in products) {
-    addProducts(_products.id!, _products.name!, _products.price!,
-        _products.taken!, _products.price! * _products.taken!, grid);
-  }
+  //error
+  // for (var _products in products) {
+  //   addProducts(_products.id!, _products.name!, _products.price!,
+  //       _products.taken!, _products.price * _products.taken!, grid);
+  // }
 
   //Apply the table built-in style
   grid.applyBuiltInStyle(PdfGridBuiltInStyle.listTable4Accent5);
@@ -184,8 +185,8 @@ PdfGrid getGrid(List<Product> products) {
 }
 
 //Create and row for the grid.
-void addProducts(int productId, String productName, double price, int quantity,
-    double total, PdfGrid grid) {
+void addProducts(String productId, String productName, double price,
+    int quantity, double total, PdfGrid grid) {
   final PdfGridRow row = grid.rows.add();
   row.cells[0].value = productId;
   row.cells[1].value = productName;

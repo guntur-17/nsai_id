@@ -162,25 +162,6 @@ class _VisitListPageState extends State<VisitListPage> {
 
   @override
   Widget build(BuildContext context) {
-    // OutletProvider outletProvider = context.watch<OutletProvider>();
-    // late List<Map<String, dynamic>> outlet = outletProvider.shopdistance;
-    // print("test");
-    // shops = widget.outlet;
-    // print("test shops");
-
-    // print(shops);
-    print("test distance");
-    print(_outletDistance);
-
-    // setState(() {
-    //   _outletDistance = outlet;
-    //   print(outlet);
-    // });
-
-    // ShopProvider shopProvider = Provider.of<ShopProvider>(context);
-    // List list = shopProvider.shopdistance.toList();
-    // print(list);
-
     Widget card() {
       return Expanded(
         child: Container(
@@ -200,6 +181,7 @@ class _VisitListPageState extends State<VisitListPage> {
                   child: ShopCard(
                     outlets,
                     OutletPage2(
+                      address: currentAddress,
                       longUser: currentposition!.longitude,
                       latUser: currentposition!.latitude,
                       outlet: outlets['shop'],

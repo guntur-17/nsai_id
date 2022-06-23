@@ -12,9 +12,11 @@ import 'package:intl/intl.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:nsai_id/models/attendance_model.dart';
 import 'package:nsai_id/models/outlet_model.dart';
+import 'package:nsai_id/models/product_model.dart';
 import 'package:nsai_id/pages/auth/register_page.dart';
 import 'package:nsai_id/pages/test2_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
+import 'package:nsai_id/providers/Product_provider.dart';
 import 'package:nsai_id/providers/attendance_provider.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
@@ -27,8 +29,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class OutletPage2 extends StatefulWidget {
   final longUser;
   final latUser;
+  final String? address;
   final OutletModel? outlet;
-  OutletPage2({this.latUser, this.longUser, this.outlet, Key? key})
+  OutletPage2(
+      {this.latUser, this.longUser, this.outlet, this.address, Key? key})
       : super(key: key);
 
   @override
@@ -58,7 +62,7 @@ class _VisitPageState extends State<OutletPage2> {
 
   String? selectedcategory;
   String? selectedNamacategory;
-  String? selectedProduct;
+  ProductModel? selectedProduct;
   String? selectedSatuan;
   String? _dropDownValue;
 
@@ -106,10 +110,11 @@ class _VisitPageState extends State<OutletPage2> {
 
   @override
   Widget build(BuildContext context) {
-    print(currentTime);
-
     AttedanceProvider attedanceProvider =
         Provider.of<AttedanceProvider>(context);
+    late ProductProvider productProvider =
+        Provider.of<ProductProvider>(context, listen: false);
+    late List<ProductModel> products = productProvider.products.toList();
     // List<AttendanceModel> absent = attedanceProvider.attendances;
 
     Future handleadd() async {
@@ -139,7 +144,10 @@ class _VisitPageState extends State<OutletPage2> {
         totalprice += int.parse(totalController.text);
         test.add({
           // 'distributor': selectedDistributor,
-          'produk': selectedProduct,
+          'produkId': selectedProduct!.id,
+          'produkPrice': selectedProduct!.price,
+          'produkUnit': selectedProduct!.unit,
+          'produk': selectedProduct!.name,
           'jumlah': jumlahController.text,
           'total': totalController.text,
         });
@@ -150,7 +158,7 @@ class _VisitPageState extends State<OutletPage2> {
         jumlahController.text = '';
         totalController.text = '';
       });
-      print(test);
+      // print(test);
     }
 
     handleCheckin() async {
@@ -170,11 +178,12 @@ class _VisitPageState extends State<OutletPage2> {
         ),
       );
       if (await attedanceProvider.attendanceIn(
-          // 'Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa',
-          // currentTime,
-          // widget.latUser,
-          // widget.longUser,
-          )) {
+        token: token, clock_in: currentTime, address: widget.address,
+        // 'Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa',
+        // currentTime,
+        // widget.latUser,
+        // widget.longUser,
+      )) {
         setState(() {
           isCheckin = true;
           dataAttendance = attedanceProvider.data;
@@ -205,7 +214,100 @@ class _VisitPageState extends State<OutletPage2> {
 
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
-        Widget produk() {
+        // Widget produk() {
+        //   return Padding(
+        //     padding: const EdgeInsets.symmetric(vertical: 6),
+        //     child: Column(
+        //       children: [
+        //         Align(
+        //           alignment: Alignment.centerLeft,
+        //           child: Text(
+        //             "Produk",
+        //             style: trueBlackInterTextStyle.copyWith(
+        //               fontSize: 16,
+        //               fontWeight: medium,
+        //             ),
+        //           ),
+        //         ),
+        //         SizedBox(
+        //           height: 6,
+        //         ),
+        //         DropdownButtonHideUnderline(
+        //           child: DropdownButton2(
+        //             isExpanded: true,
+        //             hint: Row(
+        //               children: [
+        //                 Expanded(
+        //                   child: Text(
+        //                     'Pilih Produk',
+        //                     style: trueBlackInterTextStyle.copyWith(
+        //                       fontSize: 14,
+        //                       fontWeight: FontWeight.bold,
+        //                       // color: Colors.yellow,
+        //                     ),
+        //                     overflow: TextOverflow.ellipsis,
+        //                   ),
+        //                 ),
+        //               ],
+        //             ),
+        //             items: produks
+        //                 .map((produk) => DropdownMenuItem<String>(
+        //                       value: produk,
+        //                       child: Text(
+        //                         produk,
+        //                         style: trueBlackInterTextStyle.copyWith(
+        //                           fontSize: 14,
+        //                           fontWeight: FontWeight.bold,
+        //                         ),
+        //                         overflow: TextOverflow.ellipsis,
+        //                       ),
+        //                     ))
+        //                 .toList(),
+        //             value: selectedProduct,
+        //             onChanged: (value) {
+        //               // setState(() {
+        //               //   selectedProduct = value as String;
+        //               // });
+        //             },
+        //             icon: const Icon(
+        //               Icons.keyboard_arrow_down_rounded,
+        //             ),
+        //             iconSize: 14,
+        //             // iconEnabledColor: Colors.yellow,
+        //             // iconDisabledColor: Colors.grey,
+        //             buttonHeight: 50,
+        //             buttonWidth: MediaQuery.of(context).size.width * 0.9,
+        //             buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+        //             buttonDecoration: BoxDecoration(
+        //               borderRadius: BorderRadius.circular(4),
+        //               border: Border.all(
+        //                 color: Colors.black26,
+        //               ),
+        //               // color: Colors.redAccent,
+        //             ),
+        //             // buttonElevation: 2,
+        //             itemHeight: 40,
+        //             itemPadding: const EdgeInsets.only(left: 14, right: 14),
+        //             dropdownMaxHeight: 200,
+        //             dropdownWidth: MediaQuery.of(context).size.width * 0.9,
+        //             dropdownPadding: null,
+        //             dropdownDecoration: BoxDecoration(
+        //               borderRadius: BorderRadius.circular(14),
+        //               // color: Colors.redAccent,
+        //             ),
+        //             dropdownElevation: 8,
+        //             scrollbarRadius: const Radius.circular(40),
+        //             scrollbarThickness: 6,
+        //             scrollbarAlwaysShow: false,
+        //             offset: const Offset(0, 0),
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   );
+        // }
+
+        Widget produk2() {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Column(
@@ -223,75 +325,39 @@ class _VisitPageState extends State<OutletPage2> {
                 SizedBox(
                   height: 6,
                 ),
-                DropdownButtonHideUnderline(
-                  child: DropdownButton2(
-                    isExpanded: true,
-                    hint: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Pilih Produk',
-                            style: trueBlackInterTextStyle.copyWith(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              // color: Colors.yellow,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                DropdownButtonFormField(
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+                    border: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(width: 1, color: Colors.grey),
                     ),
-                    items: produks
-                        .map((produk) => DropdownMenuItem<String>(
-                              value: produk,
-                              child: Text(
-                                produk,
-                                style: trueBlackInterTextStyle.copyWith(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ))
-                        .toList(),
-                    value: selectedProduct,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedProduct = value as String;
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                    ),
-                    iconSize: 14,
-                    // iconEnabledColor: Colors.yellow,
-                    // iconDisabledColor: Colors.grey,
-                    buttonHeight: 50,
-                    buttonWidth: MediaQuery.of(context).size.width * 0.9,
-                    buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-                    buttonDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                        color: Colors.black26,
-                      ),
-                      // color: Colors.redAccent,
-                    ),
-                    // buttonElevation: 2,
-                    itemHeight: 40,
-                    itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                    dropdownMaxHeight: 200,
-                    dropdownWidth: MediaQuery.of(context).size.width * 0.9,
-                    dropdownPadding: null,
-                    dropdownDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      // color: Colors.redAccent,
-                    ),
-                    dropdownElevation: 8,
-                    scrollbarRadius: const Radius.circular(40),
-                    scrollbarThickness: 6,
-                    scrollbarAlwaysShow: false,
-                    offset: const Offset(0, 0),
+                    hintText: 'Pilih Produk',
+                    hintStyle: TextStyle(fontSize: 16.0, color: trueBlack),
                   ),
+                  // Initial Value
+                  value: selectedProduct,
+                  // Down Arrow Icon
+                  icon: const Icon(Icons.keyboard_arrow_down),
+
+                  // Array list of items
+                  items: products.map((ProductModel product) {
+                    return DropdownMenuItem(
+                      value: product,
+                      child: Text(product.name!),
+                    );
+                  }).toList(),
+                  // After selecting the desired option,it will
+                  // change button value to selected value
+
+                  onChanged: (ProductModel? newValue) {
+                    setState(() {
+                      selectedProduct = newValue!;
+
+                      // sendedDropDownValue = newValue.id!;
+                    });
+                  },
                 ),
               ],
             ),
@@ -474,7 +540,7 @@ class _VisitPageState extends State<OutletPage2> {
                 child: Column(
                   children: [
                     // kategoriOutlet(),
-                    produk(),
+                    produk2(),
                     jumlah(),
                     // satuan(),
                     total(),

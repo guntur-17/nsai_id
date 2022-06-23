@@ -22,8 +22,9 @@ class HomeMenu extends StatelessWidget {
     return InkWell(
       onTap: () async {
         await function;
+        final page = route;
         Navigator.push(
-            context, MaterialPageRoute(builder: ((context) => route)));
+            context, MaterialPageRoute(builder: ((context) => page)));
         ontap;
       },
       child: Container(

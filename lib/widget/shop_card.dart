@@ -22,10 +22,6 @@ class ShopCard extends StatelessWidget {
 // class _ShopCardState extends State<ShopCard> {
   @override
   Widget build(BuildContext context) {
-    // if (kDebugMode) {
-    //   print(widget.shop);
-    // }
-    print(shop);
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
         return InkWell(
