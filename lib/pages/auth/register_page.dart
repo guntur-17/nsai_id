@@ -83,22 +83,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
     for (var region in regions) {
       _area.add(region.name!);
-      // print(region.name);
     }
 
     for (var region in regions) {
       valueArea.add(region.id!);
-      // print(region.id);
     }
 
     registerHandler() async {
-      print(emailController.text);
-      print(nameController.text);
-      print(nicknameController.text);
-      print(nomerController.text);
-      print(passwordController.text);
-      print(dropdownvalue.id);
-
       Loader.show(
         context,
         isSafeAreaOverlay: false,
@@ -128,11 +119,6 @@ class _RegisterPageState extends State<RegisterPage> {
         Loader.hide();
       }
     }
-
-    // print(_area);
-    // print(valueArea);
-
-    // final List<String> roles = _roles;
 
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
@@ -322,7 +308,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         dropdownvalue = newValue!;
 
                         sendedDropDownValue = newValue.id!;
-                        print(newValue.id!);
                       });
                     },
                   ),

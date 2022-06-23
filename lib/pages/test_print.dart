@@ -19,12 +19,12 @@ class TestPrint extends StatefulWidget {
 }
 
 class _TestPrintState extends State<TestPrint> {
-  late List<Product> _product;
+  late List<ProductModel> _product;
   // List<Doctor> _foundDoctor = [];
 
   initState() {
     // at the beginning, all users are shown
-    _product = allProduct;
+    // _product = allProduct;
     // _foundDoctor = allDoctor;
     super.initState();
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nsai_id/providers/Product_provider.dart';
 import 'package:nsai_id/providers/attendance_provider.dart';
 import 'package:nsai_id/providers/auth_provider.dart';
 import 'package:nsai_id/providers/distributor_provider.dart';
@@ -31,6 +32,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => DistributorProvider()),
         ChangeNotifierProvider(create: (context) => RegionProvider()),
         ChangeNotifierProvider(create: (context) => AttedanceProvider()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
 
         // ChangeNotifierProvider(create: (context) => AuthProvider()),
       ],

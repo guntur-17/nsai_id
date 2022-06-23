@@ -66,9 +66,6 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   distributorHandler(token) async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // var token = prefs.getString('idsebelah');
-    // print(token);
     await Provider.of<DistributorProvider>(context, listen: false)
         .getDistributors(token);
   }
@@ -115,17 +112,6 @@ class _SplashPageState extends State<SplashPage> {
     // var tokensebelah = prefs.getString('')
     if (token != null) {
       userhandler(token, id);
-      // distributorHandler(token);
-
-      // setState(() {
-      //   print(token);
-      //   // Navigator.pushReplacement(context, route);
-
-      //   outlethandler(token);
-
-      //   // getattendance(token);
-      //   // outlethandler(token);
-      // });
     } else {
       // regionhandler();
       Timer(

@@ -1,33 +1,33 @@
 import 'dart:ffi';
 
-class Product {
-  int? id;
+class ProductModel {
+  String? id;
+  String? distributor_id;
   String? name;
-  String? unit;
-  double? price;
-  int? taken;
+  int? unit;
+  int? price;
 
-  Product({
+  ProductModel({
     this.id,
+    this.distributor_id,
     this.name,
     this.unit,
     this.price,
-    this.taken,
   });
 
-  Product.fromJson(Map<String, dynamic> json) {
+  ProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    distributor_id = json['distributor_id'];
     name = json['name'];
     unit = json['unit'];
     price = json['price'];
-    taken = json['taken'];
   }
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'distributor_id': distributor_id,
         'unit': unit,
         'name': name,
         'price': price,
-        'taken': taken,
       };
 }

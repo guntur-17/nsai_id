@@ -98,8 +98,6 @@ class _VisitPageState extends State<VisitPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(currentTime);
-
     // final List<String> roles = _roles;
     AttedanceProvider attedanceProvider =
         Provider.of<AttedanceProvider>(context);
@@ -473,7 +471,7 @@ class _VisitPageState extends State<VisitPage> {
                   onChanged: ((value) {
                     String jumlah = jumlahController.text;
                     int jumlah2 = int.parse(jumlah);
-                    print(jumlah2);
+
                     selectedProduct != null || jumlahController.text != ''
                         ? totalController.text = (jumlah2 * 2).toString()
                         : '';
@@ -892,7 +890,6 @@ class _VisitPageState extends State<VisitPage> {
                       jumlahController.text = '';
                       totalController.text = '';
                     });
-                    print(test);
 
                     // Navigator.of(context).push(MaterialPageRoute(
                     //     builder: (BuildContext context) => StockListPage()));

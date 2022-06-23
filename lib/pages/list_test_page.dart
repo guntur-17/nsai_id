@@ -59,7 +59,7 @@
 //     //   isLoading = true;
 //     // });
 //     _pagingController.addPageRequestListener((pageKey) {
-//       print("pagekey:" + pageKey.toString());
+
 //       _determinePosition(pageKey);
 //     });
 //   }
@@ -114,7 +114,7 @@
 
 //       return currentposition;
 //     } catch (e) {
-//       print(e);
+//   
 //       isLoading = false;
 //       return null;
 //     }
@@ -132,8 +132,8 @@
 //       setState(() {
 //         _outletDistance = outletDistance;
 //         isLoading = false;
-//         print(_outletDistance.length);
-//         // print(_pagingController);
+//
+//  \
 //       });
 //       final isLastPage = _outletDistance.length < _numberOfPostsPerRequest;
 //       if (isLastPage) {
@@ -143,7 +143,7 @@
 //         _pagingController.appendPage(_outletDistance, nextPageKey);
 //       }
 //     } catch (e) {
-//       print("error --> $e");
+//    \
 //       _pagingController.error = e;
 //     }
 //   }
@@ -162,7 +162,7 @@
 //       isLoading = false;
 //     });
 
-//     print(outletDistance);
+
 //   }
 
 //   @override
@@ -187,7 +187,7 @@
 //   Widget build(BuildContext context) {
 //     // ShopProvider shopProvider = Provider.of<ShopProvider>(context);
 //     // List list = shopProvider.shopdistance.toList();
-//     // print(list);
+//  
 //     Widget card() {
 //       return Container(
 //         width: MediaQuery.of(context).size.width * 0.90,
@@ -198,7 +198,7 @@
 //           itemBuilder: (context, index) {
 //             final outlets = _outletDistance[index];
 //             // ignore: avoid_print
-//             print(outlets);
+//          
 //             // setState(() {});
 //             return ShopCard(
 //               outlets,

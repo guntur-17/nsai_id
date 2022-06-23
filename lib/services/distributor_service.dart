@@ -47,7 +47,6 @@ class DistributorService {
 
     if (response.statusCode == 200) {
       List data = json.decode(response.body)['data'];
-      print(data);
       List<DistributorModel> distributors = [];
 
       for (var item in data) {

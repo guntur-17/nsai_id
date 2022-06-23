@@ -38,14 +38,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List yourList = [
-    "Kalimat 1",
-    "Kalimat 2",
-    "Kalimat 3",
-    "Kalimat 4",
-    "Kalimat 5"
-  ];
-
   @override
   void initState() {
     // shopHandler();
@@ -55,7 +47,7 @@ class _HomePageState extends State<HomePage> {
       const Duration(microseconds: 10),
       () {
         int randomIndex = Random().nextInt(yourList.length);
-        // print(yourList[randomIndex]);
+
         var snackBar = SnackBar(
           /// need to set following properties for best effect of awesome_snackbar_content
           elevation: 0,
@@ -103,20 +95,21 @@ class _HomePageState extends State<HomePage> {
   //   var token = prefs.getString('token');
   //   await OutletProvider().getShops(token);
   // }
+  List yourList = [
+    "Kalimat 1",
+    "Kalimat 2",
+    "Kalimat 3",
+    "Kalimat 4",
+    "Kalimat 5"
+  ];
 
   @override
   Widget build(BuildContext context) {
     OutletProvider outletProvider =
         Provider.of<OutletProvider>(context, listen: false);
-    List<OutletModel> outlet;
-    List<OutletModel> _outlet = [];
-    setState(() {
-      List<OutletModel> outlet = outletProvider.outlets;
-      _outlet = outlet;
-    });
-    print(_outlet);
+    late List<OutletModel> outlet = outletProvider.outlets;
+    late List<OutletModel> _outlet = outlet;
 
-    print("outlet test");
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     // OutletProvider outletProvider = context.watch<OutletProvider>();
@@ -393,6 +386,7 @@ class _HomePageState extends State<HomePage> {
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: CustomScrollView(slivers: [
           SliverFillRemaining(
             hasScrollBody: false,

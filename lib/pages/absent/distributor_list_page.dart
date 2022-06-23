@@ -9,6 +9,7 @@ import 'package:nsai_id/models/distributor_model.dart';
 import 'package:nsai_id/models/shopDistance_model.dart';
 import 'package:nsai_id/models/outlet_model.dart';
 import 'package:nsai_id/pages/absent/attendance_page.dart';
+import 'package:nsai_id/providers/Product_provider.dart';
 
 import 'package:nsai_id/providers/distributor_provider.dart';
 import 'package:nsai_id/providers/outlet_provider.dart';
@@ -69,6 +70,14 @@ class _DistributorListPageState extends State<DistributorListPage> {
       isLoading = true;
     });
     await _determinePosition();
+  }
+
+  producthandler(distributor_id) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString('token');
+    await Provider.of<ProductProvider>(context, listen: false)
+        .getProduct(token, distributor_id);
   }
 
   Future<Position?> _determinePosition() async {
@@ -142,7 +151,7 @@ class _DistributorListPageState extends State<DistributorListPage> {
 
     // List distributor = distributorProvider.distributors.toList();
     List list2 = distributorProvider.distributors.reversed.toList();
-    // print(list2);
+
     Widget card() {
       return Container(
         width: MediaQuery.of(context).size.width * 0.90,
@@ -152,7 +161,7 @@ class _DistributorListPageState extends State<DistributorListPage> {
                 (distributor) => DistributorCard(
                   latUser: currentposition!.latitude,
                   longUser: currentposition!.longitude,
-                  shop: distributor,
+                  distributor: distributor,
                   route: AttendancePage(
                     distributor: distributor,
                   ),
@@ -167,8 +176,7 @@ class _DistributorListPageState extends State<DistributorListPage> {
         //   itemBuilder: (context, index) {
         //     final distributor = _distributor[index];
         //     // ignore: avoid_print
-        //     print(distributor);
-        //     // setState(() {});
+        //     print(distributor);     //     // setState(() {});
         //     return ShopCard(
         //         distributor,
         //         AttendancePage(

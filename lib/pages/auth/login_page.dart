@@ -37,14 +37,6 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {});
   }
 
-  // getUser(token, id) async {
-  //   print('token,id getter disini');
-  //   print(token);
-  //   print(id);
-  //   await Provider.of<AuthProvider>(context, listen: false)
-  //       .getUser(token: token, id: id);
-  // }
-
   FocusNode myFocusNode = FocusNode();
 
   FocusNode myFocusNode2 = FocusNode();
@@ -62,9 +54,6 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     distributorHandler(token) async {
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // var token = prefs.getString('idsebelah');
-      // print(token);
       await Provider.of<DistributorProvider>(context, listen: false)
           .getDistributors(token);
     }
@@ -105,8 +94,7 @@ class _LoginPageState extends State<LoginPage> {
 
         var token = prefs.getString('token');
         var id = prefs.getString('id');
-        print(token);
-        print(id);
+
         // getUser(token, id);
         await Provider.of<AuthProvider>(context, listen: false)
             .getUser(token: token, id: id);
