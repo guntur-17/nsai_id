@@ -8,7 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:nsai_id/models/distributor_model.dart';
 import 'package:nsai_id/models/shopDistance_model.dart';
 import 'package:nsai_id/models/outlet_model.dart';
-import 'package:nsai_id/pages/attendance_page.dart';
+import 'package:nsai_id/pages/absent/attendance_page.dart';
 
 import 'package:nsai_id/providers/distributor_provider.dart';
 import 'package:nsai_id/providers/outlet_provider.dart';
@@ -54,14 +54,65 @@ class _DistributorListPageState extends State<DistributorListPage> {
     // init();
   }
 
+  // Future _handlefunction() async {
+  //   setState(() {
+  //     isLoading = true;
+  //     isLoading = false;
+  //   });
+  //   // _determinePosition();
+  //   // distributorHandler();
+  //   // attendanceHandler();
+  // }
+
   Future _handlefunction() async {
     setState(() {
       isLoading = true;
-      isLoading = false;
     });
-    // _determinePosition();
-    // distributorHandler();
-    // attendanceHandler();
+    await _determinePosition();
+  }
+
+  Future<Position?> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Fluttertoast.showToast(msg: 'Please Keep your location on.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Fluttertoast.showToast(msg: 'Location Permission is denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      Fluttertoast.showToast(msg: 'Permission is denied Forever');
+    }
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      Placemark place = placemarks[0];
+      setState(
+        () {
+          currentposition = position;
+
+          currentAddress =
+              " ${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea} ${place.postalCode}";
+          // Loader.hide();
+          isLoading = false;
+        },
+      );
+
+      return currentposition;
+    } catch (e) {
+      print(e);
+      isLoading = false;
+    }
   }
 
   @override
@@ -97,11 +148,16 @@ class _DistributorListPageState extends State<DistributorListPage> {
         width: MediaQuery.of(context).size.width * 0.90,
         child: Column(
           children: list2
-              .map((distributor) => DistributorCard(
-                  distributor,
-                  AttendancePage(
+              .map(
+                (distributor) => DistributorCard(
+                  latUser: currentposition!.latitude,
+                  longUser: currentposition!.longitude,
+                  shop: distributor,
+                  route: AttendancePage(
                     distributor: distributor,
-                  )))
+                  ),
+                ),
+              )
               .toList(),
         ),
         // child: ListView.builder(

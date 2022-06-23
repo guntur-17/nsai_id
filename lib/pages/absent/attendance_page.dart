@@ -1,45 +1,53 @@
-import 'package:bottom_sheet/bottom_sheet.dart';
+import 'dart:ffi';
+import 'dart:io';
+
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_plus/dropdown_plus.dart';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:intl/intl.dart';
-import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:nsai_id/models/attendance_model.dart';
-import 'package:nsai_id/models/outlet_model.dart';
-import 'package:nsai_id/pages/register_page.dart';
-import 'package:nsai_id/pages/test2_page.dart';
+
+import 'package:nsai_id/models/distributor_model.dart';
+import 'package:nsai_id/pages/auth/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/providers/attendance_provider.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
 import 'package:nsai_id/widget/currency.dart';
+import 'package:nsai_id/widget/loading_widget.dart';
+import 'package:nsai_id/widget/retakePhoto_widget.dart';
 import 'package:nsai_id/widget/takePhoto_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class OutletPage2 extends StatefulWidget {
-  final longUser;
-  final latUser;
-  final OutletModel? outlet;
-  OutletPage2({this.latUser, this.longUser, this.outlet, Key? key})
-      : super(key: key);
+class AttendancePage extends StatefulWidget {
+  final DistributorModel distributor;
+
+  AttendancePage({required this.distributor, Key? key}) : super(key: key);
 
   @override
-  State<OutletPage2> createState() => _VisitPageState();
+  State<AttendancePage> createState() => _AttendancePageState();
 }
 
-class _VisitPageState extends State<OutletPage2> {
+class _AttendancePageState extends State<AttendancePage> {
   TextEditingController jumlahController = TextEditingController(text: '');
   TextEditingController totalController = TextEditingController(text: '');
+
   List<Map<String, dynamic>> test = [];
+
   AttendanceModel? dataAttendance;
+
+  String currentAddress = 'My Address';
+  Position? currentposition;
 
   num totalprice = 0;
 
@@ -49,35 +57,112 @@ class _VisitPageState extends State<OutletPage2> {
 
   bool isCheckin = false;
 
-  // bool condition = false;
+  File? imageDistributor;
+  File? imageProduct;
 
-  dynamic currentTime = DateFormat.Hm().format(DateTime.now());
+  dynamic currentTime = DateFormat.Hms().format(DateTime.now());
+
+  String? _dropDownValue;
 
   FocusNode myFocusNode = FocusNode();
   FocusNode myFocusNode2 = FocusNode();
 
-  String? selectedcategory;
-  String? selectedNamacategory;
+  String? selectedDistributor;
   String? selectedProduct;
   String? selectedSatuan;
-  String? _dropDownValue;
 
-  void iniState() {
-    setState(() {});
+  @override
+  void initState() {
+    super.initState();
+
+    // _determinePosition();
+    _handlefunction();
+
+    // setState(() {});
   }
 
-  final List<String> categories = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8',
-  ];
+  Future getPhotoDistributor() async {
+    final ImagePicker _picker = ImagePicker();
 
-  final List<String> nama_categories = [
+    // Capture a photo
+    final XFile? photo =
+        await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    //mengubah Xfile jadi file
+
+    setState(() {
+      if (photo != null) {
+        imageDistributor = File(photo.path);
+      }
+    });
+  }
+
+  Future getPhotoProduct() async {
+    final ImagePicker _picker2 = ImagePicker();
+
+    // Capture a photo
+    final XFile? photo2 =
+        await _picker2.pickImage(source: ImageSource.camera, imageQuality: 50);
+    //mengubah Xfile jadi file
+
+    setState(() {
+      if (photo2 != null) {
+        imageProduct = File(photo2.path);
+      }
+    });
+  }
+
+  Future _handlefunction() async {
+    setState(() {
+      isLoading = true;
+    });
+    await _determinePosition();
+  }
+
+  Future<Position?> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Fluttertoast.showToast(msg: 'Please Keep your location on.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Fluttertoast.showToast(msg: 'Location Permission is denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      Fluttertoast.showToast(msg: 'Permission is denied Forever');
+    }
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      Placemark place = placemarks[0];
+      setState(
+        () {
+          currentposition = position;
+
+          currentAddress =
+              " ${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea} ${place.postalCode}";
+          // Loader.hide();
+          isLoading = false;
+        },
+      );
+
+      return currentposition;
+    } catch (e) {
+      print(e);
+      isLoading = false;
+    }
+  }
+
+  final List<String> items = [
     'Item1',
     'Item2',
     'Item3',
@@ -106,11 +191,9 @@ class _VisitPageState extends State<OutletPage2> {
 
   @override
   Widget build(BuildContext context) {
-    print(currentTime);
-
+    // final List<String> roles = _roles;
     AttedanceProvider attedanceProvider =
         Provider.of<AttedanceProvider>(context);
-    // List<AttendanceModel> absent = attedanceProvider.attendances;
 
     Future handleadd() async {
       if (test.any((element) => element["produk"] == selectedProduct)) {
@@ -170,11 +253,10 @@ class _VisitPageState extends State<OutletPage2> {
         ),
       );
       if (await attedanceProvider.attendanceIn(
-        'Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa',
-        currentTime,
-        widget.latUser,
-        widget.longUser,
-      )) {
+          token: token,
+          distributor_id: widget.distributor.id,
+          clock_in: currentTime,
+          address: widget.distributor.address)) {
         setState(() {
           isCheckin = true;
           dataAttendance = attedanceProvider.data;
@@ -205,6 +287,35 @@ class _VisitPageState extends State<OutletPage2> {
 
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
+        // Widget distributor() {
+        //   return DropdownButton(
+        //     hint: _dropDownValue == null
+        //         ? Text('Dropdown')
+        //         : Text(
+        //             _dropDownValue!,
+        //             style: TextStyle(color: Colors.blue),
+        //           ),
+        //     isExpanded: true,
+        //     iconSize: 30.0,
+        //     style: TextStyle(color: Colors.blue),
+        //     items: ['One', 'Two', 'Three'].map(
+        //       (val) {
+        //         return DropdownMenuItem<String>(
+        //           value: val,
+        //           child: Text(val),
+        //         );
+        //       },
+        //     ).toList(),
+        //     onChanged: (val) {
+        //       setState(
+        //         () {
+        //           _dropDownValue = val.toString();
+        //         },
+        //       );
+        //     },
+        //   );
+        // }
+
         Widget produk() {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
@@ -412,6 +523,104 @@ class _VisitPageState extends State<OutletPage2> {
           );
         }
 
+        Widget input() {
+          return RelativeBuilder(builder: (context, height, width, sy, sx) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 21, bottom: 20),
+              child: Container(
+                // padding: const EdgeInsets.all(30.0),
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: Column(
+                  children: [
+                    // distributor(),
+                    produk(),
+                    jumlah(),
+                    // satuan(),
+                    total(),
+                  ],
+                ),
+              ),
+            );
+          });
+        }
+
+        Widget button() {
+          return Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: whiteColor,
+                      side: BorderSide(
+                        width: 1.0,
+                        color: blueBrightColor,
+                      )),
+                  onPressed: () {
+                    handleadd();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    // height: 36,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      // color: primaryBlue,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Add',
+                          style: whiteInterTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: medium,
+                              color: blueBrightColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        Widget disable() {
+          return Center(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: primaryBlue),
+              onPressed: null,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                width: MediaQuery.of(context).size.width * 0.3,
+                // height: 36,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  // color: primaryBlue,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.add,
+                      color: grey40,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'add',
+                      style: whiteInterTextStyle.copyWith(
+                          fontSize: 16, fontWeight: medium, color: grey40),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
         Widget result2() {
           return Column(
             children: [
@@ -464,163 +673,6 @@ class _VisitPageState extends State<OutletPage2> {
           );
         }
 
-        Widget input() {
-          return RelativeBuilder(builder: (context, height, width, sy, sx) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 21, bottom: 20),
-              child: Container(
-                // padding: const EdgeInsets.all(30.0),
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Column(
-                  children: [
-                    // kategoriOutlet(),
-                    produk(),
-                    jumlah(),
-                    // satuan(),
-                    total(),
-                  ],
-                ),
-              ),
-            );
-          });
-        }
-
-        Widget buttonadd() {
-          return Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: whiteColor,
-                      side: BorderSide(
-                        width: 1.0,
-                        color: blueBrightColor,
-                      )),
-                  onPressed: () async {
-                    await handleadd();
-
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //     builder: (BuildContext context) => StockListPage()));
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    // height: 36,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      // color: primaryBlue,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          color: blueBrightColor,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          'add',
-                          style: whiteInterTextStyle.copyWith(
-                              fontSize: 16,
-                              fontWeight: medium,
-                              color: blueBrightColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        Widget disable() {
-          return Center(
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(primary: primaryBlue),
-              onPressed: null,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-                width: MediaQuery.of(context).size.width * 0.3,
-                // height: 36,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  // color: primaryBlue,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.add,
-                      color: grey40,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      'add',
-                      style: whiteInterTextStyle.copyWith(
-                          fontSize: 16, fontWeight: medium, color: grey40),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-
-        Widget download() {
-          return Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.86,
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: whiteColor,
-                    side: BorderSide(
-                      width: 1.0,
-                      color: blueBrightColor,
-                    )),
-                onPressed: () {
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (BuildContext context) => StockListPage()));
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-                  // width: MediaQuery.of(context).size.width,
-                  // height: 36,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    // color: primaryBlue,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.file_download_outlined,
-                        color: blueBrightColor,
-                      ),
-                      // SizedBox(
-                      //   width: 10,
-                      // ),
-                      Text(
-                        'Download Transaksi Saya',
-                        style: whiteInterTextStyle.copyWith(
-                            fontSize: 16,
-                            fontWeight: medium,
-                            color: blueBrightColor),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        }
-
         Widget submit() {
           return Center(
             child: Container(
@@ -670,6 +722,196 @@ class _VisitPageState extends State<OutletPage2> {
           );
         }
 
+        Widget download() {
+          return Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.86,
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: whiteColor,
+                    side: BorderSide(
+                      width: 1.0,
+                      color: blueBrightColor,
+                    )),
+                onPressed: () {
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (BuildContext context) => StockListPage()));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                  // height: 36,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    // color: primaryBlue,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.file_download_outlined,
+                        color: blueBrightColor,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Download Transaksi Saya',
+                        style: whiteInterTextStyle.copyWith(
+                            fontSize: 16,
+                            fontWeight: medium,
+                            color: blueBrightColor),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
+        Widget ssj() {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Sudah Siap Jualan?",
+                      style: trueBlackInterTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: medium,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(primary: primaryBlue),
+                        onPressed: () {
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (BuildContext context) => StockListPage()));
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.3,
+
+                          // height: 36,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            // color: primaryBlue,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Ya',
+                                style: whiteInterTextStyle.copyWith(
+                                    fontSize: 16, fontWeight: medium),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: whiteColor,
+                            side: BorderSide(
+                              width: 1.0,
+                              color: blueBrightColor,
+                            )),
+                        onPressed: () {
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (BuildContext context) => StockListPage()));
+                        },
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          // height: 36,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            // color: primaryBlue,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Tidak',
+                                style: whiteInterTextStyle.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: medium,
+                                    color: blueBrightColor),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        Widget body() {
+          return Expanded(
+            // flex: 10,
+            child: AbsorbPointer(
+              absorbing: !isCheckin,
+              child: Container(
+                // height: MediaQuery.of(context).size.height,
+                // width: double.infinity,
+                foregroundDecoration: BoxDecoration(
+                  color: isCheckin == true ? Colors.transparent : grey,
+                  backgroundBlendMode: BlendMode.darken,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                  ),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                  ),
+                ),
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // logo(),
+                    input(),
+                    selectedProduct != null && jumlahController.text != ''
+                        ? button()
+                        : disable(),
+
+                    // SizedBox(height: 10),
+                    // result2(),
+                    // submit(),
+                    // download(),
+                    // ssj(),
+                    // check(),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
         Widget attendance() {
           return Padding(
             padding: const EdgeInsets.only(
@@ -678,7 +920,7 @@ class _VisitPageState extends State<OutletPage2> {
               child: Column(
                 children: [
                   Text(
-                    widget.outlet!.name,
+                    widget.distributor.name,
                     style: trueBlackRobotTextStyle.copyWith(
                       fontWeight: semiBold,
                       fontSize: 24,
@@ -689,16 +931,16 @@ class _VisitPageState extends State<OutletPage2> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       dataAttendance != null
-                          ? Text(dataAttendance!.time.toString(),
+                          ? Text(dataAttendance!.clock_in!.substring(0, 5),
                               style: blackTextStyle.copyWith(
                                   fontSize: 16, fontWeight: medium))
                           : ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   primary: primaryBlue),
-                              onPressed: () {
-                                handleCheckin();
-
-                                // Navigator.of(context).push(MaterialPageRoute(
+                              onPressed: () async {
+                                await handleCheckin();
+                                // Navigator.of(context).push
+                                // (MaterialPageRoute(
                                 //     builder: (BuildContext context) => StockListPage()));
                               },
                               child: Container(
@@ -725,61 +967,6 @@ class _VisitPageState extends State<OutletPage2> {
                     ],
                   ),
                 ],
-              ),
-            ),
-          );
-        }
-
-        Widget body() {
-          return Expanded(
-            child: AbsorbPointer(
-              absorbing: !isCheckin,
-              child: IntrinsicHeight(
-                child: Container(
-                  // height: double.infinity,
-                  foregroundDecoration: BoxDecoration(
-                    color: isCheckin == true ? Colors.transparent : grey,
-                    backgroundBlendMode: BlendMode.darken,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30.0),
-                      topRight: Radius.circular(30.0),
-                    ),
-                  ),
-                  // height: MediaQuery.of(context).size.height,
-                  // width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30.0),
-                      topRight: Radius.circular(30.0),
-                    ),
-                  ),
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // logo(),
-                      input(),
-                      selectedProduct != null && jumlahController.text != ''
-                          ? buttonadd()
-                          : disable(),
-                      // SizedBox(
-                      //   height: 10,
-                      // ),
-                      // test.isEmpty ? Container() : result2(),
-                      // SizedBox(
-                      //   height: 10,
-                      // ),
-                      // takePhoto(),
-                      // submit(),
-
-                      // download(),
-
-                      // check(),
-                    ],
-                  ),
-                ),
               ),
             ),
           );
@@ -837,7 +1024,7 @@ class _VisitPageState extends State<OutletPage2> {
           );
         }
 
-        Widget showModalcontent() {
+        Widget showModalcontent(setState) {
           return Container(
             height: MediaQuery.of(context).size.height * 0.7,
             child: SingleChildScrollView(
@@ -888,15 +1075,87 @@ class _VisitPageState extends State<OutletPage2> {
                           SizedBox(
                             height: 10,
                           ),
-                          TakePhoto(
-                            text: "Ambil Gambar Toko",
+                          if (imageDistributor != null)
+                            RetakePhoto(
+                              function: () async {
+                                await getPhotoDistributor();
+                                setState;
+                              },
+                              // setState: setState,
+                              image: imageDistributor!,
+                            )
+                          else
+                            TakePhoto(
+                              text: "Ambil Gambar Distributor",
+                              function: () async {
+                                await getPhotoDistributor();
+                                setState;
+                              },
+                            ),
+                          SizedBox(
+                            height: 20,
                           ),
-                          TakePhoto(
-                            text: "Ambil Gambar Produk",
-                          ),
-                          TakePhoto(
-                            text: "Ambil Gambar Other",
-                          ),
+                          if (imageProduct != null)
+                            RetakePhoto(
+                              function: () async {
+                                await getPhotoProduct();
+                                setState;
+                              },
+                              // setState: setState,
+                              image: imageProduct!,
+                            )
+                          // Column(
+                          //   children: [
+                          //     Align(
+                          //       alignment: Alignment.centerLeft,
+                          //       child: Text(
+                          //         "Foto Produk",
+                          //         style: trueBlackInterTextStyle.copyWith(
+                          //           fontSize: 16,
+                          //           fontWeight: medium,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     SizedBox(
+                          //       height: 20,
+                          //     ),
+                          //     Center(
+                          //       child: Container(
+                          //         margin: const EdgeInsets.only(bottom: 10),
+                          //         child: InstaImageViewer(
+                          //           child: Image.file(
+                          //             imageDistributor!,
+                          //             fit: BoxFit.cover,
+                          //             height: sx(230),
+                          //             width: sx(230),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     TextButton(
+                          //       style: TextButton.styleFrom(
+                          //           backgroundColor: blueColor),
+                          //       onPressed: () async {
+                          //         await getPhotoProduct();
+                          //         setState;
+                          //       },
+                          //       child: Text(
+                          //         'Retake a photo',
+                          //         style: whiteTextStyle.copyWith(
+                          //             fontSize: 18, fontWeight: bold),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // )
+                          else
+                            TakePhoto(
+                              text: "Ambil Gambar Produk",
+                              function: () async {
+                                await getPhotoProduct();
+                                setState;
+                              },
+                              // function: getPhoto(),
+                            ),
 
                           submit(),
                           // download(),
@@ -930,11 +1189,16 @@ class _VisitPageState extends State<OutletPage2> {
                       isScrollControlled: true,
                       context: context,
                       builder: (context) {
-                        return Wrap(
-                          children: [
-                            showModalcontent(),
-                          ],
-                        );
+                        return StatefulBuilder(
+                            // stream: ,
+                            builder:
+                                (BuildContext context, StateSetter setState) {
+                          return Wrap(
+                            children: [
+                              showModalcontent(setState),
+                            ],
+                          );
+                        });
                       },
                     );
                   },
@@ -964,32 +1228,35 @@ class _VisitPageState extends State<OutletPage2> {
             // resizeToAvoidBottomInset: false,
             // backgroundColor: orangeYellow,
             bottomNavigationBar: showModal(),
-            body: CustomScrollView(slivers: [
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: GestureDetector(
-                  onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('assets/bgvisit.png'),
-                            fit: BoxFit.cover)),
-                    child: Column(
-                      children: <Widget>[
-                        const SizedBox(
-                          height: 20,
+            body: isLoading
+                ? Loading()
+                : CustomScrollView(slivers: [
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: GestureDetector(
+                        onTap: () =>
+                            FocusManager.instance.primaryFocus?.unfocus(),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage('assets/bgatt.png'),
+                                  fit: BoxFit.cover)),
+                          child: Column(
+                            children: <Widget>[
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              header(),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              body(),
+                            ],
+                          ),
                         ),
-                        header(),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        body(),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ]),
+                      ),
+                    )
+                  ]),
           ),
         );
       },

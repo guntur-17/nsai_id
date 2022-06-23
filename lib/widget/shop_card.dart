@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nsai_id/models/shopDistance_model.dart';
 import 'package:nsai_id/models/outlet_model.dart';
-import 'package:nsai_id/pages/attendance_page.dart';
+import 'package:nsai_id/pages/absent/attendance_page.dart';
 import 'package:nsai_id/pages/transaction_page.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:relative_scale/relative_scale.dart';

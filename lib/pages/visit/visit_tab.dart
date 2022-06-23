@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nsai_id/pages/visit_list_page.dart';
+import 'package:nsai_id/pages/visit/visit_list_page.dart';
 
-import '../models/outlet_model.dart';
-import 'list_test_page2.dart';
+import '../../models/outlet_model.dart';
+import '../list_test_page2.dart';
 
 class VisitTab extends StatefulWidget {
   List<OutletModel> outlet;

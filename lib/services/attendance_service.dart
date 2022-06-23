@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:nsai_id/models/attendance_model.dart';
 
 class AttendanceService {
-  String baseUrl = 'http://decoy.sakataguna-dev.com/api';
+  String baseUrl = 'http://nsa-api.sakataguna-dev.com/api';
   // String token = AuthProvider.user.token;
 
   Future<List<AttendanceModel>> getAttendances(String? token) async {
@@ -33,18 +33,22 @@ class AttendanceService {
     }
   }
 
-  Future<AttendanceModel> attendanceIn(
+  Future<AttendanceModel> attendanceIn({
     String? token,
-    String? time,
-    double? lat,
-    double? long,
-  ) async {
-    var url = Uri.parse('$baseUrl/user/attendance-in');
+    String? distributor_id,
+    String? clock_in,
+    String? address,
+  }) async {
+    var url = Uri.parse('$baseUrl/attendance/clock-in');
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': token as String
     };
-    var body = jsonEncode({'time': time, 'lat': lat, 'long': long});
+    var body = jsonEncode({
+      'distributor_id': distributor_id,
+      'clock_in': clock_in,
+      'address': address
+    });
 
     var response = await http.post(url, headers: headers, body: body);
 
@@ -53,7 +57,7 @@ class AttendanceService {
 
     if (response.statusCode == 200) {
       var dataa = jsonDecode(response.body)['data'];
-      AttendanceModel data = AttendanceModel.fromJson(dataa['attendance']);
+      AttendanceModel data = AttendanceModel.fromJson(dataa);
       return data;
     } else {
       throw Exception('Gagal attendance in ');

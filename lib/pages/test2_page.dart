@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nsai_id/pages/register_page.dart';
+import 'package:nsai_id/pages/auth/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';

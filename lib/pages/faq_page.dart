@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nsai_id/pages/guide_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
-import 'package:nsai_id/pages/prelogin_page.dart';
+import 'package:nsai_id/pages/auth/prelogin_page.dart';
 import 'package:nsai_id/pages/test_print.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/faq_menu.dart';

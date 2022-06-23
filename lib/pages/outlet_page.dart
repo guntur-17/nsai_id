@@ -8,7 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:nsai_id/models/outlet_model.dart';
-import 'package:nsai_id/pages/register_page.dart';
+import 'package:nsai_id/pages/auth/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/providers/attendance_provider.dart';
 import 'package:nsai_id/theme.dart';
@@ -110,11 +110,11 @@ class _VisitPageState extends State<VisitPage> {
       // _attendance();
 
       if (await attedanceProvider.attendanceIn(
-        'Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa',
-        currentTime,
-        widget.latUser,
-        widget.longUser,
-      )) {
+          // 'Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa',
+          // currentTime,
+          // widget.latUser,
+          // widget.longUser,
+          )) {
         setState(() {
           isCheckin = true;
         });

@@ -1,17 +1,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:nsai_id/models/distributor_model.dart';
 import 'package:nsai_id/models/shopDistance_model.dart';
 import 'package:nsai_id/models/outlet_model.dart';
-import 'package:nsai_id/pages/attendance_page.dart';
+import 'package:nsai_id/pages/absent/attendance_page.dart';
 import 'package:nsai_id/pages/transaction_page.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:relative_scale/relative_scale.dart';
 
 class DistributorCard extends StatelessWidget {
   final DistributorModel shop;
+  final double latUser;
+  final double longUser;
   final route;
-  const DistributorCard(this.shop, this.route, {Key? key}) : super(key: key);
+  const DistributorCard(
+      {Key? key,
+      required this.shop,
+      this.route,
+      required this.latUser,
+      required this.longUser})
+      : super(key: key);
 
   // @override
   // State<ShopCard> createState() => _ShopCardState();
@@ -28,12 +37,29 @@ class DistributorCard extends StatelessWidget {
       builder: (context, height, width, sy, sx) {
         return InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => route,
-              ),
-            );
+            double? latshop = double.tryParse(shop.lat);
+            double? longshop = double.tryParse(shop.long);
+            var radius = Geolocator.distanceBetween(
+                latUser, longUser, latshop!, longshop!);
+            print(radius);
+            if (radius <= 300) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => route,
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: greenColor,
+                  content: const Text(
+                    'Jauh cok',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            }
           },
           child: Container(
             height: sy(50),

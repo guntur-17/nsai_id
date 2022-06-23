@@ -42,14 +42,16 @@ class AttedanceProvider with ChangeNotifier {
   }
 
   Future<bool> attendanceIn(
-    String? token,
-    String? time,
-    double? lat,
-    double? long,
-  ) async {
+      {String? token,
+      String? distributor_id,
+      String? clock_in,
+      String? address}) async {
     try {
-      AttendanceModel data =
-          await AttendanceService().attendanceIn(token, time, lat, long);
+      AttendanceModel data = await AttendanceService().attendanceIn(
+          token: token,
+          distributor_id: distributor_id,
+          clock_in: clock_in,
+          address: address);
       _data = data;
       // if (await AttendanceService().attendanceIn(token, time, lat, long)) {
 

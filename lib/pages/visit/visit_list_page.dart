@@ -9,7 +9,7 @@ import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:nsai_id/models/shopDistance_model.dart';
 import 'package:nsai_id/models/outlet_model.dart';
 import 'package:nsai_id/pages/outlet_page.dart';
-import 'package:nsai_id/pages/outlet_page_test.dart';
+import 'package:nsai_id/pages/visit/outlet_page_test.dart';
 import 'package:nsai_id/providers/outlet_provider.dart';
 import 'package:nsai_id/services/outlet_service.dart';
 import 'package:nsai_id/theme.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
-import 'package:nsai_id/pages/attendance_page.dart';
+import 'package:nsai_id/pages/absent/attendance_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
-import 'package:nsai_id/pages/register_page.dart';
+import 'package:nsai_id/pages/auth/register_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/providers/distributor_provider.dart';
 import 'package:nsai_id/providers/outlet_provider.dart';
@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../providers/auth_provider.dart';
+import '../../providers/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);

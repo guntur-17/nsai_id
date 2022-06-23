@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nsai_id/pages/home_page.dart';
-import 'package:nsai_id/pages/login_page.dart';
-import 'package:nsai_id/pages/register_page.dart';
+import 'package:nsai_id/pages/auth/login_page.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 
-import '../providers/region_provider.dart';
+import '../../providers/region_provider.dart';
+import 'register_page.dart';
 
 class PreloginPage extends StatefulWidget {
   const PreloginPage({Key? key}) : super(key: key);

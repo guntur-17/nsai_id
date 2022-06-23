@@ -6,7 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nsai_id/pages/faq_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
-import 'package:nsai_id/pages/login_page.dart';
+import 'package:nsai_id/pages/auth/login_page.dart';
 
 import 'package:nsai_id/providers/auth_provider.dart';
 import 'package:nsai_id/providers/distributor_provider.dart';
@@ -17,7 +17,7 @@ import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../theme.dart';
-import 'prelogin_page.dart';
+import 'auth/prelogin_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
