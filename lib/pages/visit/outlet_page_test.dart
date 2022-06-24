@@ -13,11 +13,13 @@ import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:nsai_id/models/attendance_model.dart';
 import 'package:nsai_id/models/outlet_model.dart';
 import 'package:nsai_id/models/product_model.dart';
+import 'package:nsai_id/models/visiting_model.dart';
 import 'package:nsai_id/pages/auth/register_page.dart';
 import 'package:nsai_id/pages/test2_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/providers/Product_provider.dart';
 import 'package:nsai_id/providers/attendance_provider.dart';
+import 'package:nsai_id/providers/visiting_provider.dart';
 import 'package:nsai_id/theme.dart';
 import 'package:nsai_id/widget/checkbox.dart';
 import 'package:nsai_id/widget/currency.dart';
@@ -43,7 +45,7 @@ class _VisitPageState extends State<OutletPage2> {
   TextEditingController jumlahController = TextEditingController(text: '');
   TextEditingController totalController = TextEditingController(text: '');
   List<Map<String, dynamic>> test = [];
-  AttendanceModel? dataAttendance;
+  VisitingModel? dataAttendance;
 
   num totalprice = 0;
 
@@ -110,8 +112,7 @@ class _VisitPageState extends State<OutletPage2> {
 
   @override
   Widget build(BuildContext context) {
-    AttedanceProvider attedanceProvider =
-        Provider.of<AttedanceProvider>(context);
+    VisitingProvider visitingProvider = Provider.of<VisitingProvider>(context);
     late ProductProvider productProvider =
         Provider.of<ProductProvider>(context, listen: false);
     late List<ProductModel> products = productProvider.products.toList();
@@ -177,16 +178,14 @@ class _VisitPageState extends State<OutletPage2> {
           colorScheme: ColorScheme.fromSwatch().copyWith(secondary: whiteColor),
         ),
       );
-      if (await attedanceProvider.attendanceIn(
-        token: token, clock_in: currentTime, address: widget.address,
-        // 'Bearer 241|RNO7WPj6frL2OH2KWwrqSQoGWNw0BkU5KZHjS8qa',
-        // currentTime,
-        // widget.latUser,
-        // widget.longUser,
-      )) {
+      if (await visitingProvider.visitingIn(
+          token: token,
+          outlet_id: widget.outlet!.id,
+          clock_in: currentTime,
+          address: widget.outlet!.address)) {
         setState(() {
           isCheckin = true;
-          dataAttendance = attedanceProvider.data;
+          dataAttendance = visitingProvider.data;
         });
         Loader.hide();
         ScaffoldMessenger.of(context).showSnackBar(

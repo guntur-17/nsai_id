@@ -1,5 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:nsai_id/models/item_taken_model.dart';
+import 'package:nsai_id/services/item_taken_service.dart';
 
 import '../theme.dart';
 
@@ -11,6 +13,7 @@ class ChartBar extends StatefulWidget {
 }
 
 class _ChartBarState extends State<ChartBar> {
+  List<itemTakenModel> data = allItemTaken;
   List<Color> raisingGradient = [
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
@@ -27,7 +30,7 @@ class _ChartBarState extends State<ChartBar> {
       ];
 
   LineChartBarData get currentMonthData => LineChartBarData(
-        spots: const [
+        spots: [
           FlSpot(0, 3),
           FlSpot(2.6, 2),
           FlSpot(4.9, 5),

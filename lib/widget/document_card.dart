@@ -17,12 +17,18 @@ class DocumentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime current = DateTime.now();
+    String month = current.month.toString();
     return InkWell(
       onTap: (() {
         openFile(
-          url: 'https://core.ac.uk/download/pdf/11718807.pdf',
+          url: document.file!,
           context: context,
         );
+        print(document.createdAt);
+        print(current);
+        print(month);
+        print(document.createdAt!.month.toString());
       }),
       child: Container(
         child: Padding(
