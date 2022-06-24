@@ -16,7 +16,7 @@ class RetakePhoto extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Foto Produk",
+            "Foto",
             style: trueBlackInterTextStyle.copyWith(
               fontSize: 16,
               fontWeight: medium,
