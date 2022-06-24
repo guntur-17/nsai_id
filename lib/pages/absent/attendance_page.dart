@@ -54,10 +54,11 @@ class _AttendancePageState extends State<AttendancePage> {
   num totalprice = 0;
 
   bool isLoading = false;
+  bool isLoading2 = false;
 
   bool isChecked = false;
 
-  bool isCheckin = false;
+  bool isCheckin = true;
 
   File? imageDistributor;
   File? imageProduct;
@@ -83,7 +84,7 @@ class _AttendancePageState extends State<AttendancePage> {
     // setState(() {});
   }
 
-  Future getPhotoDistributor() async {
+  Future getPhotoDistributor(StateSetter updateState) async {
     final ImagePicker _picker = ImagePicker();
 
     // Capture a photo
@@ -91,14 +92,14 @@ class _AttendancePageState extends State<AttendancePage> {
         await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     //mengubah Xfile jadi file
 
-    setState(() {
+    updateState(() {
       if (photo != null) {
         imageDistributor = File(photo.path);
       }
     });
   }
 
-  Future getPhotoProduct() async {
+  Future getPhotoProduct(StateSetter updateState) async {
     final ImagePicker _picker2 = ImagePicker();
 
     // Capture a photo
@@ -106,7 +107,7 @@ class _AttendancePageState extends State<AttendancePage> {
         await _picker2.pickImage(source: ImageSource.camera, imageQuality: 50);
     //mengubah Xfile jadi file
 
-    setState(() {
+    updateState(() {
       if (photo2 != null) {
         imageProduct = File(photo2.path);
       }
@@ -499,10 +500,17 @@ class _AttendancePageState extends State<AttendancePage> {
                   onChanged: ((value) {
                     String jumlah = jumlahController.text;
                     int? jumlah2 = int.tryParse(jumlah);
+                    int? harga = selectedProduct?.price;
 
-                    selectedProduct != null || jumlahController.text != ''
-                        ? totalController.text = (jumlah2! * 2000).toString()
-                        : '';
+                    if (jumlah2 != null && selectedProduct != null) {
+                      selectedProduct != null || jumlahController.text != ''
+                          ? totalController.text = (jumlah2 * harga!).toString()
+                          : '';
+                    } else {
+                      setState(() {
+                        totalController.text = "";
+                      });
+                    }
                   }),
                   // scrollPadding: EdgeInsets.only(
                   //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
@@ -1091,7 +1099,7 @@ class _AttendancePageState extends State<AttendancePage> {
           );
         }
 
-        Widget showModalcontent(setState) {
+        Widget showModalcontent(StateSetter updateState) {
           return Container(
             height: MediaQuery.of(context).size.height * 0.7,
             child: SingleChildScrollView(
@@ -1145,18 +1153,36 @@ class _AttendancePageState extends State<AttendancePage> {
                           if (imageDistributor != null)
                             RetakePhoto(
                               function: () async {
-                                await getPhotoDistributor();
-                                setState;
+                                getPhotoDistributor(updateState);
+
+                                updateState(() {});
+                                // await getPhotoDistributor();
+                                // updateState;
                               },
                               // setState: setState,
                               image: imageDistributor!,
                             )
                           else
+                            // takephoto(
+                            //   "ambil gambar Distributor",
+                            //   () {
+                            //     updateState(() {
+                            //       getPhotoDistributor();
+                            //     });
+                            //   },
+                            // ),
+                            // takephoto(text, () { }, (fn) { })
+                            // takephoto("test", (fn) async {
+                            //   await getPhotoDistributor();
+                            // }),
                             TakePhoto(
                               text: "Ambil Gambar Distributor",
                               function: () async {
-                                await getPhotoDistributor();
-                                setState;
+                                getPhotoDistributor(updateState);
+
+                                updateState(() {});
+                                // await getPhotoDistributor();
+                                // updateState;
                               },
                             ),
                           SizedBox(
@@ -1165,8 +1191,11 @@ class _AttendancePageState extends State<AttendancePage> {
                           if (imageProduct != null)
                             RetakePhoto(
                               function: () async {
-                                await getPhotoProduct();
-                                setState;
+                                getPhotoProduct(updateState);
+
+                                updateState(() {});
+                                // await getPhotoProduct();
+                                // state;
                               },
                               // setState: setState,
                               image: imageProduct!,
@@ -1175,8 +1204,10 @@ class _AttendancePageState extends State<AttendancePage> {
                             TakePhoto(
                               text: "Ambil Gambar Produk",
                               function: () async {
-                                await getPhotoProduct();
-                                setState;
+                                // await getPhotoProduct();
+                                // state;
+                                getPhotoProduct(updateState);
+                                updateState(() {});
                               },
                               // function: getPhoto(),
                             ),
@@ -1215,11 +1246,10 @@ class _AttendancePageState extends State<AttendancePage> {
                       builder: (context) {
                         return StatefulBuilder(
                             // stream: ,
-                            builder:
-                                (BuildContext context, StateSetter setState) {
+                            builder: (context, state) {
                           return Wrap(
                             children: [
-                              showModalcontent(setState),
+                              showModalcontent(state),
                             ],
                           );
                         });
@@ -1286,4 +1316,67 @@ class _AttendancePageState extends State<AttendancePage> {
       },
     );
   }
+}
+
+Widget takephoto(String text, StateSetter updateState) {
+  return Center(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              text,
+              style: trueBlackInterTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: medium,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 6,
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                primary: whiteColor,
+                side: BorderSide(
+                  width: 1.0,
+                  color: blueBrightColor,
+                )),
+            onPressed: () {
+              updateState(() {
+                // function;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 12),
+              // width: MediaQuery.of(context).size.width,
+              // height: 36,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                // color: primaryBlue,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.camera_alt_outlined,
+                    color: blueBrightColor,
+                  ),
+                  Text(
+                    'Ambil Gambar',
+                    style: whiteInterTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: medium,
+                        color: blueBrightColor),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
