@@ -18,6 +18,7 @@ import 'package:nsai_id/models/attendance_model.dart';
 import 'package:nsai_id/models/distributor_model.dart';
 import 'package:nsai_id/models/product_model.dart';
 import 'package:nsai_id/pages/auth/register_page.dart';
+import 'package:nsai_id/pages/home_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
 import 'package:nsai_id/providers/Product_provider.dart';
 import 'package:nsai_id/providers/attendance_provider.dart';
@@ -288,6 +289,51 @@ class _AttendancePageState extends State<AttendancePage> {
             backgroundColor: redColor,
             content: const Text(
               'gagal clockin',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }
+    }
+
+    handlePhoto(String id, File image, File image2) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      Loader.show(
+        context,
+        isSafeAreaOverlay: false,
+        // isBottomBarOverlay: false,
+        // overlayFromBottom: 80,
+        overlayColor: Colors.black26,
+        progressIndicator: CircularProgressIndicator(
+          color: blueBrightColor,
+        ),
+        themeData: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.fromSwatch().copyWith(secondary: whiteColor),
+        ),
+      );
+      if (await attedanceProvider.visitingPhoto(id, token, image, image2)) {
+        Loader.hide();
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+            (route) => false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: greenColor,
+            content: const Text(
+              'berhasil Upload photo',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      } else {
+        Loader.hide();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: redColor,
+            content: const Text(
+              'gagal Upload Photo',
               textAlign: TextAlign.center,
             ),
           ),
@@ -760,7 +806,10 @@ class _AttendancePageState extends State<AttendancePage> {
                       width: 1.0,
                       color: blueBrightColor,
                     )),
-                onPressed: () {
+                onPressed: () async {
+                  String? id = dataAttendance?.id;
+                  await handlePhoto(id!, imageProduct!, imageDistributor!);
+
                   // Navigator.of(context).push(MaterialPageRoute(
                   //     builder: (BuildContext context) => StockListPage()));
                 },

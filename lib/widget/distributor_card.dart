@@ -69,7 +69,7 @@ class DistributorCard extends StatelessWidget {
                 SnackBar(
                   backgroundColor: greenColor,
                   content: const Text(
-                    'Jauh cok',
+                    'Diluar Jangkauan',
                     textAlign: TextAlign.center,
                   ),
                 ),
