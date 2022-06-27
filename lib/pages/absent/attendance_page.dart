@@ -58,7 +58,7 @@ class _AttendancePageState extends State<AttendancePage> {
 
   bool isChecked = false;
 
-  bool isCheckin = true;
+  bool isCheckin = true; //harusnya false
 
   File? imageDistributor;
   File? imageProduct;

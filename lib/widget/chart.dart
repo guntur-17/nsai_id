@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:nsai_id/models/item_taken_model.dart';
@@ -14,6 +16,21 @@ class ChartBar extends StatefulWidget {
 
 class _ChartBarState extends State<ChartBar> {
   List<itemTakenModel> data = allItemTaken;
+  List months = [
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember'
+  ];
+
   List<Color> raisingGradient = [
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
@@ -29,17 +46,58 @@ class _ChartBarState extends State<ChartBar> {
         previousMonthData,
       ];
 
+  List<FlSpot> getAccData() {
+    List<FlSpot> accList = [];
+    for (int i = 0; i <= data.length; i++) {
+      accList.add(FlSpot((i * 1.00), data[i].sales_result! / 1.00));
+    }
+    return accList;
+  }
+
+  getCurrentMonthData() {
+    List<FlSpot> widgets = [];
+    var i = 0;
+    for (var item in data) {
+      DateTime current = DateTime.now();
+      String month = current.month.toString();
+      if (item.createdAt!.month.toString() == month) {
+        widgets.add(FlSpot(i.toDouble(), (item.sales_result! / 1.00)));
+        i++;
+      }
+    }
+    return widgets;
+  }
+
+  getPreviousMonthData() {
+    List<FlSpot> widgets = [];
+    var i = 0;
+    for (var item in data) {
+      DateTime current = DateTime.now();
+      int month = current.month;
+      print(month);
+      print(item.createdAt!.month);
+      print(item.createdAt!.month - month);
+      if (item.createdAt!.month - month == -1) {
+        widgets.add(FlSpot(i.toDouble(), (item.sales_result! / 1.00)));
+        i++;
+      }
+    }
+    return widgets;
+  }
+
+  maxValue() {
+    List<double> _max = [];
+
+    for (var max in data) {
+      _max.add(max.sales_result!);
+    }
+    double _maxed = _max.reduce(max);
+
+    return _maxed;
+  }
+
   LineChartBarData get currentMonthData => LineChartBarData(
-        spots: [
-          FlSpot(0, 3),
-          FlSpot(2.6, 2),
-          FlSpot(4.9, 5),
-          FlSpot(6.8, 3.1),
-          FlSpot(8, 4),
-          FlSpot(9.5, 3),
-          FlSpot(11, 4),
-          FlSpot(12, 7),
-        ],
+        spots: getCurrentMonthData(),
         isCurved: false,
         gradient: LinearGradient(
           colors: raisingGradient,
@@ -63,16 +121,7 @@ class _ChartBarState extends State<ChartBar> {
       );
 
   LineChartBarData get previousMonthData => LineChartBarData(
-        spots: const [
-          FlSpot(0, 7),
-          FlSpot(2.6, 4),
-          FlSpot(4.9, 3),
-          FlSpot(6.8, 4),
-          FlSpot(8, 3),
-          FlSpot(9.5, 1),
-          FlSpot(11, 2),
-          FlSpot(12, 0),
-        ],
+        spots: getPreviousMonthData(),
         isCurved: false,
         gradient: LinearGradient(
           colors: lowerGradient,
@@ -96,6 +145,9 @@ class _ChartBarState extends State<ChartBar> {
       );
   @override
   Widget build(BuildContext context) {
+    var now = DateTime.now();
+    final monthName = now.month;
+
     LineChartData currentMonthChart() {
       return LineChartData(
         gridData: FlGridData(
@@ -122,9 +174,15 @@ class _ChartBarState extends State<ChartBar> {
             show: false,
             border: Border.all(color: const Color(0xff37434d), width: 1)),
         minX: 0,
-        maxX: 12,
+        maxX: data
+                    .where((element) =>
+                        element.createdAt!.month.toString() ==
+                        DateTime.now().month.toString())
+                    .length /
+                1.00 -
+            1,
         minY: 0,
-        maxY: 5,
+        maxY: maxValue(),
         lineBarsData: [currentMonthData],
       );
     }
@@ -154,7 +212,7 @@ class _ChartBarState extends State<ChartBar> {
                         height: 4,
                       ),
                       Text(
-                        'Januari',
+                        months[monthName - 1],
                         style: trueBlackInterTextStyle.copyWith(
                             fontSize: 12, fontWeight: reguler),
                       ),
@@ -205,9 +263,14 @@ class _ChartBarState extends State<ChartBar> {
             show: false,
             border: Border.all(color: const Color(0xff37434d), width: 1)),
         minX: 0,
-        maxX: 12,
+        maxX: data
+                    .where((element) =>
+                        element.createdAt!.month - DateTime.now().month == -1)
+                    .length /
+                1.00 -
+            1,
         minY: 0,
-        maxY: 5,
+        maxY: 7,
         lineBarsData: [previousMonthData],
       );
     }
@@ -237,7 +300,7 @@ class _ChartBarState extends State<ChartBar> {
                         height: 4,
                       ),
                       Text(
-                        'Desember',
+                        months[monthName - 2],
                         style: trueBlackInterTextStyle.copyWith(
                             fontSize: 12, fontWeight: reguler),
                       ),
@@ -288,9 +351,14 @@ class _ChartBarState extends State<ChartBar> {
             show: false,
             border: Border.all(color: const Color(0xff37434d), width: 1)),
         minX: 0,
-        maxX: 12,
+        maxX: data
+                    .where((element) =>
+                        element.createdAt!.month - DateTime.now().month == -1)
+                    .length /
+                1.00 -
+            1,
         minY: 0,
-        maxY: 5,
+        maxY: 7,
         lineBarsData: comparisonData,
       );
     }
@@ -320,7 +388,7 @@ class _ChartBarState extends State<ChartBar> {
                         height: 4,
                       ),
                       Text(
-                        'Desember - Januari',
+                        months[monthName - 2] + ' - ' + months[monthName - 1],
                         style: trueBlackInterTextStyle.copyWith(
                             fontSize: 12, fontWeight: reguler),
                       ),
