@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:nsai_id/models/attendance_model.dart';
 import 'package:nsai_id/services/attendance_service.dart';
@@ -83,6 +85,24 @@ class AttedanceProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> visitingPhoto(
+    String? id,
+    String? token,
+    File? image,
+    File? image2,
+  ) async {
+    try {
+      if (await AttendanceService().absentPhoto(id, token, image, image2)) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print("gagal provider photo");
+      print(e);
+      return false;
+    }
+  }
   // Future<bool> login({String? username, String? password}) async {
   //   try {
   //     UserModel user =

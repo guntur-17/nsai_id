@@ -1,6 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart' as dio;
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart';
 import 'package:nsai_id/models/attendance_model.dart';
 
 class AttendanceService {
@@ -86,6 +90,43 @@ class AttendanceService {
       return true;
     } else {
       throw Exception('Gagal attendance in ');
+    }
+  }
+
+  Future<bool> absentPhoto(
+    String? id,
+    String? token,
+    File? image,
+    File? image2,
+  ) async {
+    try {
+      // print(image);
+      var dioRequest = dio.Dio();
+      dioRequest.options.baseUrl = '$baseUrl/attendance/post-photo/$id';
+      dioRequest.options.headers = {
+        'Authorization': '$token',
+        'Content-Type': 'multipart/form-data'
+      };
+
+      var formData = new dio.FormData.fromMap({});
+      var file_item = await dio.MultipartFile.fromFile(image!.path,
+          filename: basename(image.path),
+          contentType: MediaType("image", basename(image.path)));
+      var file_distributor = await dio.MultipartFile.fromFile(image2!.path,
+          filename: basename(image2.path),
+          contentType: MediaType("image", basename(image2.path)));
+      formData.files.add(MapEntry('item_photo', file_item));
+      formData.files.add(MapEntry('distributor_photo', file_distributor));
+
+      var response = await dioRequest.post(
+        dioRequest.options.baseUrl,
+        data: formData,
+      );
+      final result = json.decode(response.toString())['data'];
+      return true;
+    } catch (err) {
+      print('ERROR  $err');
+      return false;
     }
   }
 }
