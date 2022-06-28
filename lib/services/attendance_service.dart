@@ -93,12 +93,8 @@ class AttendanceService {
     }
   }
 
-  Future<bool> absentPhoto(
-    String? id,
-    String? token,
-    File? image,
-    File? image2,
-  ) async {
+  Future<bool> absentPhoto(String? id, String? token, File? image, File? image2,
+      List<Map<String, dynamic>> listItemTaken) async {
     try {
       // print(image);
       var dioRequest = dio.Dio();
@@ -108,7 +104,8 @@ class AttendanceService {
         'Content-Type': 'multipart/form-data'
       };
 
-      var formData = new dio.FormData.fromMap({});
+      var formData =
+          dio.FormData.fromMap({"item": jsonEncode(listItemTaken.join(","))});
       var file_item = await dio.MultipartFile.fromFile(image!.path,
           filename: basename(image.path),
           contentType: MediaType("image", basename(image.path)));
@@ -117,6 +114,7 @@ class AttendanceService {
           contentType: MediaType("image", basename(image2.path)));
       formData.files.add(MapEntry('item_photo', file_item));
       formData.files.add(MapEntry('distributor_photo', file_distributor));
+      print(formData);
 
       var response = await dioRequest.post(
         dioRequest.options.baseUrl,

@@ -85,14 +85,11 @@ class AttedanceProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> visitingPhoto(
-    String? id,
-    String? token,
-    File? image,
-    File? image2,
-  ) async {
+  Future<bool> visitingPhoto(String? id, String? token, File? image,
+      File? image2, List<Map<String, dynamic>> listItemTaken) async {
     try {
-      if (await AttendanceService().absentPhoto(id, token, image, image2)) {
+      if (await AttendanceService()
+          .absentPhoto(id, token, image, image2, listItemTaken)) {
         return true;
       } else {
         return false;

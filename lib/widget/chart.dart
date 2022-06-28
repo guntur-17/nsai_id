@@ -74,9 +74,9 @@ class _ChartBarState extends State<ChartBar> {
     for (var item in data) {
       DateTime current = DateTime.now();
       int month = current.month;
-      print(month);
-      print(item.createdAt!.month);
-      print(item.createdAt!.month - month);
+      // print(month);
+      // print(item.createdAt!.month);
+      // print(item.createdAt!.month - month);
       if (item.createdAt!.month - month == -1) {
         widgets.add(FlSpot(i.toDouble(), (item.sales_result! / 1.00)));
         i++;

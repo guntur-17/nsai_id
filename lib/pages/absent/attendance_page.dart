@@ -16,6 +16,7 @@ import 'package:intl/intl.dart';
 import 'package:nsai_id/models/attendance_model.dart';
 
 import 'package:nsai_id/models/distributor_model.dart';
+import 'package:nsai_id/models/item_taken_model.dart';
 import 'package:nsai_id/models/product_model.dart';
 import 'package:nsai_id/pages/auth/register_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
@@ -46,7 +47,7 @@ class _AttendancePageState extends State<AttendancePage> {
   TextEditingController totalController = TextEditingController(text: '');
 
   List<Map<String, dynamic>> test = [];
-
+  List<Map<String, dynamic>> listItemTaken = [];
   AttendanceModel? dataAttendance;
 
   String currentAddress = 'My Address';
@@ -59,7 +60,7 @@ class _AttendancePageState extends State<AttendancePage> {
 
   bool isChecked = false;
 
-  bool isCheckin = true; //harusnya false
+  bool isCheckin = false; //harusnya false
 
   File? imageDistributor;
   File? imageProduct;
@@ -237,6 +238,7 @@ class _AttendancePageState extends State<AttendancePage> {
           'jumlah': jumlahController.text,
           'total': totalController.text,
         });
+        print(test.toList());
       }
 
       setState(() {
@@ -297,6 +299,13 @@ class _AttendancePageState extends State<AttendancePage> {
     }
 
     handlePhoto(String id, File image, File image2) async {
+      for (var item in test) {
+        listItemTaken.add({
+          'product_id': item['produkId'],
+          'item_taken': item['jumlah'],
+        });
+        print(listItemTaken);
+      }
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
       Loader.show(
@@ -312,7 +321,8 @@ class _AttendancePageState extends State<AttendancePage> {
           colorScheme: ColorScheme.fromSwatch().copyWith(secondary: whiteColor),
         ),
       );
-      if (await attedanceProvider.visitingPhoto(id, token, image, image2)) {
+      if (await attedanceProvider.visitingPhoto(
+          id, token, image, image2, listItemTaken)) {
         Loader.hide();
         Navigator.pushAndRemoveUntil(
             context,
