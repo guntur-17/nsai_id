@@ -78,7 +78,7 @@ class AttendanceHistoryCard extends StatelessWidget {
                   width: 16,
                 ),
                 Text(
-                  historyDistributor!.distributor_id.toString(),
+                  historyDistributor!.id.toString(),
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.left,
                   style: trueBlackTextStyle.copyWith(

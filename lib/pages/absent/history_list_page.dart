@@ -45,33 +45,35 @@ class _AbsentHistoryListState extends State<AbsentHistoryList> {
     List list = attendanceProvider.attendancesHistory.toList();
     print(list);
     Widget card() {
-      return Expanded(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.90,
-          height: MediaQuery.of(context).size.height,
-          child: ListView.builder(
-            itemCount: list.length,
-            // shrinkWrap: true,
-            // physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              final absent = list[index];
-              return LazyLoadingList(
-                initialSizeOfItems: 5,
-                index: index,
-                hasMore: true,
-                loadMore: () => print('Loading More'),
-                child: Text("test"),
-              );
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.90,
+        height: MediaQuery.of(context).size.height,
+        child: ListView.builder(
+          itemCount: list.length,
+          // shrinkWrap: true,
+          // physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final absent = list[index];
+            return LazyLoadingList(
+              initialSizeOfItems: 5,
+              index: index,
+              hasMore: true,
+              loadMore: () => print('Loading More'),
+              child: AttendanceHistoryCard(
+                  historyDistributor: absent,
+                  route: HistoryPage(
+                    attendanceHistory: absent,
+                  )),
+            );
 
-              // ignore: avoid_print
-              // print(outlets);
-              // // setState(() {});
-              // return ShopCard(
-              //   outlets,
-              //   VisitPage(),
-              // );
-            },
-          ),
+            // ignore: avoid_print
+            // print(outlets);
+            // // setState(() {});
+            // return ShopCard(
+            //   outlets,
+            //   VisitPage(),
+            // );
+          },
         ),
       );
     }
@@ -96,7 +98,7 @@ class _AbsentHistoryListState extends State<AbsentHistoryList> {
                     children: <Widget>[
                       // buildSearch(),
                       // isLoading ? const LoadingDefault() :
-                      card2(),
+                      card(),
                     ],
                   ),
                 ),
