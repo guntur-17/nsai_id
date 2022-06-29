@@ -29,7 +29,8 @@ class VisitListPage extends StatefulWidget {
   _VisitListPageState createState() => _VisitListPageState();
 }
 
-class _VisitListPageState extends State<VisitListPage> {
+class _VisitListPageState extends State<VisitListPage>
+    with AutomaticKeepAliveClientMixin {
   List<OutletModel> shops = [];
   List<Map<String, dynamic>> outletDistance = [];
   List<Map<String, dynamic>> _outletDistance = [];
@@ -50,6 +51,9 @@ class _VisitListPageState extends State<VisitListPage> {
     _handlefunction();
     // init();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   Future _handlefunction() async {
     setState(() {

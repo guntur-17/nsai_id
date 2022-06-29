@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../providers/attendance_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/document_provider.dart';
 
@@ -58,6 +59,12 @@ class _LoginPageState extends State<LoginPage> {
           .getDistributors(token);
     }
 
+    attendanceHistoryHandler(token, id) async {
+      await Provider.of<AttendanceProvider>(context, listen: false)
+          .getAttendancesHistory(token, id);
+      // if () setState(() {});
+    }
+
     documentHandler(token) async {
       // SharedPreferences prefs = await SharedPreferences.getInstance();
       // var token = prefs.getString('idsebelah');
@@ -101,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
         await outlethandler(token);
         await distributorHandler(token);
         await documentHandler(token);
+        await attendanceHistoryHandler(token, id);
 
         // await Provider.of<VisitingAllProvider>(context, listen: false)
         //     .getAllVisit(token);

@@ -17,7 +17,8 @@ class AbsentHistoryList extends StatefulWidget {
   State<AbsentHistoryList> createState() => _AbsentHistoryListState();
 }
 
-class _AbsentHistoryListState extends State<AbsentHistoryList> {
+class _AbsentHistoryListState extends State<AbsentHistoryList>
+    with AutomaticKeepAliveClientMixin {
   bool isLoading = false;
 
   @override
@@ -25,6 +26,9 @@ class _AbsentHistoryListState extends State<AbsentHistoryList> {
     super.initState();
     _handlefunction();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   Future _handlefunction() async {
     setState(() {

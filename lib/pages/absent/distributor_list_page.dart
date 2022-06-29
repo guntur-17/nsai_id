@@ -32,7 +32,8 @@ class DistributorListPage extends StatefulWidget {
   _DistributorListPageState createState() => _DistributorListPageState();
 }
 
-class _DistributorListPageState extends State<DistributorListPage> {
+class _DistributorListPageState extends State<DistributorListPage>
+    with AutomaticKeepAliveClientMixin {
   // List<OutletModel> shops = [];
   // List<Map<String, dynamic>> distributor = [];
   // List<Map<String, dynamic>> _distributor = [];
@@ -55,6 +56,9 @@ class _DistributorListPageState extends State<DistributorListPage> {
     // init();
   }
 
+  @override
+  bool get wantKeepAlive => true;
+
   // Future _handlefunction() async {
   //   setState(() {
   //     isLoading = true;
@@ -66,9 +70,11 @@ class _DistributorListPageState extends State<DistributorListPage> {
   // }
 
   Future _handlefunction() async {
+    if (!mounted) return;
     setState(() {
       isLoading = true;
     });
+    if (!mounted) return;
     await _determinePosition();
   }
 
