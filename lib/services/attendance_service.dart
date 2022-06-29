@@ -136,8 +136,9 @@ class AttendanceService {
         'Content-Type': 'multipart/form-data'
       };
 
-      var formData =
-          dio.FormData.fromMap({"item": jsonEncode(listItemTaken.join(","))});
+      // print('ini' + listItemTaken.toString());
+
+      var formData = dio.FormData.fromMap({'item': listItemTaken});
       var file_item = await dio.MultipartFile.fromFile(image!.path,
           filename: basename(image.path),
           contentType: MediaType("image", basename(image.path)));
@@ -146,7 +147,10 @@ class AttendanceService {
           contentType: MediaType("image", basename(image2.path)));
       formData.files.add(MapEntry('item_photo', file_item));
       formData.files.add(MapEntry('distributor_photo', file_distributor));
-      print(formData);
+      // for (var data in listItemTaken) {
+      //   formData.fields.add(MapEntry('product_id', data['product_id']));
+      //   formData.fields.add(MapEntry('item_taken', data['item_taken']));
+      // }
 
       var response = await dioRequest.post(
         dioRequest.options.baseUrl,

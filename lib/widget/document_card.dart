@@ -29,6 +29,7 @@ class DocumentCard extends StatelessWidget {
         print(current);
         print(month);
         print(document.createdAt!.month.toString());
+        print(document.file);
       }),
       child: Container(
         child: Padding(
