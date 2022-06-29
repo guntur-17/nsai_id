@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart' as dio;
 import 'package:http_parser/http_parser.dart';
+import 'package:nsai_id/models/history_attendance_model.dart';
 import 'package:path/path.dart';
 import 'package:nsai_id/models/attendance_model.dart';
 
@@ -11,9 +12,36 @@ class AttendanceService {
   String baseUrl = 'http://nsa-api.sakataguna-dev.com/api';
   // String token = AuthProvider.user.token;
 
-  Future<List<AttendanceModel>> getAttendances(String? token) async {
+  // Future<List<AttendanceModel>> getAttendances(String? token) async {
+  //   // var token = await.getToken();
+  //   var url = Uri.parse('$baseUrl/user/attendance/history');
+  //   var headers = {
+  //     'Content-Type': 'application/json',
+  //     'Authorization': token as String
+  //   };
+
+  //   var response = await http.get(url, headers: headers);
+  //   print(response.statusCode);
+  //   print(response.body);
+
+  //   if (response.statusCode == 200) {
+  //     List data = jsonDecode(response.body)['data']['attendance'];
+  //     List<AttendanceModel> attendances = [];
+
+  //     for (var item in data) {
+  //       attendances.add(AttendanceModel.fromJson(item));
+  //     }
+
+  //     return attendances;
+  //   } else {
+  //     throw Exception('Gagal Get attendances');
+  //   }
+  // }
+
+  Future<List<AttendanceHistoryModel>> getAttendancesHistory(
+      {String? token, String? id}) async {
     // var token = await.getToken();
-    var url = Uri.parse('$baseUrl/user/attendance/history');
+    var url = Uri.parse('$baseUrl/attendance/$id');
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': token as String
@@ -24,11 +52,15 @@ class AttendanceService {
     print(response.body);
 
     if (response.statusCode == 200) {
-      List data = jsonDecode(response.body)['data']['attendance'];
-      List<AttendanceModel> attendances = [];
+      List data = jsonDecode(response.body)['data'];
+      List<AttendanceHistoryModel> attendances = [];
 
       for (var item in data) {
-        attendances.add(AttendanceModel.fromJson(item));
+        await item["clock_out"] ?? "";
+        await item["item_photo"] ?? "";
+        await item["distributor_photo"] ?? "";
+        await item["item"] ?? [];
+        attendances.add(AttendanceHistoryModel.fromJson(item));
       }
 
       return attendances;

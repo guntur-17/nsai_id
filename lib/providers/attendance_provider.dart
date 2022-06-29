@@ -2,9 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:nsai_id/models/attendance_model.dart';
+import 'package:nsai_id/models/history_attendance_model.dart';
 import 'package:nsai_id/services/attendance_service.dart';
 
-class AttedanceProvider with ChangeNotifier {
+class AttendanceProvider with ChangeNotifier {
   AttendanceModel? _data;
 
   AttendanceModel get data => _data as AttendanceModel;
@@ -15,27 +16,38 @@ class AttedanceProvider with ChangeNotifier {
 
   // AttendanceModel? _attendance;
   List<AttendanceModel> _attendances = [];
+  List<AttendanceHistoryModel> _attendancesHistory = [];
 
   List<AttendanceModel> get attendances => _attendances;
-  // bool _checkConditionClock = true;
-
-  // bool get checkConditionClock => _checkConditionClock;
-
-  // set checkConditionClock(bool checkConditionClock) {
-  //   _checkConditionClock = checkConditionClock;
-  //   notifyListeners();
-  // }
+  List<AttendanceHistoryModel> get attendancesHistory => _attendancesHistory;
 
   set attendances(List<AttendanceModel> attendances) {
     _attendances = attendances;
     notifyListeners();
   }
 
-  Future<bool> getAttendances(String? token) async {
+  set attendancesHistory(List<AttendanceHistoryModel> attendancesHistory) {
+    _attendancesHistory = attendancesHistory;
+    notifyListeners();
+  }
+
+  // Future<bool> getAttendances(String? token) async {
+  //   try {
+  //     List<AttendanceModel> attendances =
+  //         await AttendanceService().getAttendances(token);
+  //     _attendances = attendances;
+  //     return true;
+  //   } catch (e) {
+  //     print(e);
+  //     return false;
+  //   }
+  // }
+
+  Future<bool> getAttendancesHistory(String? token, String? id) async {
     try {
-      List<AttendanceModel> attendances =
-          await AttendanceService().getAttendances(token);
-      _attendances = attendances;
+      List<AttendanceHistoryModel> attendanceHistory =
+          await AttendanceService().getAttendancesHistory(token: token, id: id);
+      _attendancesHistory = attendanceHistory;
       return true;
     } catch (e) {
       print(e);

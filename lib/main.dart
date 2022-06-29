@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => VisitingProvider()),
         ChangeNotifierProvider(create: (context) => DistributorProvider()),
         ChangeNotifierProvider(create: (context) => RegionProvider()),
-        ChangeNotifierProvider(create: (context) => AttedanceProvider()),
+        ChangeNotifierProvider(create: (context) => AttendanceProvider()),
         ChangeNotifierProvider(create: (context) => ProductProvider()),
 
         // ChangeNotifierProvider(create: (context) => AuthProvider()),

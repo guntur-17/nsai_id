@@ -99,8 +99,8 @@ class _VisitPageState extends State<VisitPage> {
   @override
   Widget build(BuildContext context) {
     // final List<String> roles = _roles;
-    AttedanceProvider attedanceProvider =
-        Provider.of<AttedanceProvider>(context);
+    AttendanceProvider attedanceProvider =
+        Provider.of<AttendanceProvider>(context);
 
     handleCheckin() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();

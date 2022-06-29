@@ -1,31 +1,31 @@
 import 'dart:ffi';
 
-class itemTakenModel {
-  int? id;
+class ItemTakenModel {
+  String? id;
   String? absent_id;
   String? product_id;
   int? item_taken;
-  int? total_item_sold;
-  double? sales_result;
+  int total_item_sold = 0;
+  int sales_result = 0;
   DateTime? createdAt;
 
-  itemTakenModel({
+  ItemTakenModel({
     this.id,
     this.absent_id,
     this.product_id,
     this.item_taken,
-    this.total_item_sold,
-    this.sales_result,
+    this.total_item_sold = 0,
+    this.sales_result = 0,
     this.createdAt,
   });
 
-  itemTakenModel.fromJson(Map<String, dynamic> json) {
+  ItemTakenModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     absent_id = json['absent_id'];
     product_id = json['product_id'];
     item_taken = json['item_taken'];
-    total_item_sold = json['total_item_sold'];
-    sales_result = json['sales_result'];
+    total_item_sold = json['total_item_sold'] ?? 0;
+    sales_result = json['sales_result'] ?? 0;
     createdAt = DateTime.parse(json['created_at']);
   }
 

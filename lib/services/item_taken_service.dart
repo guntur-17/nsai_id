@@ -1,73 +1,73 @@
 import 'package:nsai_id/models/item_taken_model.dart';
 import 'package:nsai_id/models/product_model.dart';
 
-final allItemTaken = <itemTakenModel>[
-  itemTakenModel(
-      id: 1,
+final allItemTaken = <ItemTakenModel>[
+  ItemTakenModel(
+      id: "1",
       absent_id: 'A0009',
       product_id: 'P0007',
       item_taken: 12000,
       total_item_sold: 1,
       sales_result: 6,
       createdAt: DateTime.parse('2022-06-22T08:41:09.000000Z')),
-  itemTakenModel(
-      id: 2,
+  ItemTakenModel(
+      id: "2",
       absent_id: 'A0009',
       product_id: 'P0001',
       item_taken: 10000,
       total_item_sold: 3,
       sales_result: 10,
       createdAt: DateTime.parse('2022-06-21T08:41:09.000000Z')),
-  itemTakenModel(
-      id: 3,
+  ItemTakenModel(
+      id: "3",
       absent_id: 'A0009',
       product_id: 'P0010',
       item_taken: 5000,
       total_item_sold: 2,
       sales_result: 2,
       createdAt: DateTime.parse('2022-06-20T08:41:09.000000Z')),
-  itemTakenModel(
-      id: 4,
+  ItemTakenModel(
+      id: "4",
       absent_id: 'A0009',
       product_id: 'P0017',
       item_taken: 2000,
       total_item_sold: 6,
       sales_result: 5,
       createdAt: DateTime.parse('2022-06-23T08:41:09.000000Z')),
-  itemTakenModel(
-      id: 2,
+  ItemTakenModel(
+      id: "2",
       absent_id: 'A0009',
       product_id: 'P0001',
       item_taken: 10000,
       total_item_sold: 3,
       sales_result: 3,
       createdAt: DateTime.parse('2022-07-21T08:41:09.000000Z')),
-  itemTakenModel(
-      id: 1,
+  ItemTakenModel(
+      id: "1",
       absent_id: 'A0009',
       product_id: 'P0007',
       item_taken: 12000,
       total_item_sold: 1,
       sales_result: 6,
       createdAt: DateTime.parse('2022-05-22T08:41:09.000000Z')),
-  itemTakenModel(
-      id: 2,
+  ItemTakenModel(
+      id: "2",
       absent_id: 'A0009',
       product_id: 'P0001',
       item_taken: 10000,
       total_item_sold: 3,
       sales_result: 2,
       createdAt: DateTime.parse('2022-05-21T08:41:09.000000Z')),
-  itemTakenModel(
-      id: 3,
+  ItemTakenModel(
+      id: "3",
       absent_id: 'A0009',
       product_id: 'P0010',
       item_taken: 5000,
       total_item_sold: 2,
       sales_result: 3,
       createdAt: DateTime.parse('2022-05-20T08:41:09.000000Z')),
-  itemTakenModel(
-      id: 4,
+  ItemTakenModel(
+      id: "4",
       absent_id: 'A0009',
       product_id: 'P0017',
       item_taken: 2000,

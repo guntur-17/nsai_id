@@ -169,21 +169,6 @@ class _DistributorListPageState extends State<DistributorListPage> {
               )
               .toList(),
         ),
-        // child: ListView.builder(
-        //   itemCount: distributor.length,
-        //   shrinkWrap: true,
-        //   physics: const NeverScrollableScrollPhysics(),
-        //   itemBuilder: (context, index) {
-        //     final distributor = _distributor[index];
-        //     // ignore: avoid_print
-        //     print(distributor);     //     // setState(() {});
-        //     return ShopCard(
-        //         distributor,
-        //         AttendancePage(
-        //           distributor: distributor as DistributorModel,
-        //         ));
-        //   },
-        // ),
       );
     }
 

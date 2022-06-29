@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:nsai_id/pages/faq_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
 import 'package:nsai_id/pages/auth/login_page.dart';
+import 'package:nsai_id/providers/attendance_provider.dart';
 
 import 'package:nsai_id/providers/auth_provider.dart';
 import 'package:nsai_id/providers/distributor_provider.dart';
@@ -82,6 +83,15 @@ class _SplashPageState extends State<SplashPage> {
     await Provider.of<OutletProvider>(context, listen: false).getShops(token);
   }
 
+  attendanceHistoryHandler() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var id = prefs.getString('id');
+    // await DistributorProvider().getDistributors(token);
+    await AttendanceProvider().getAttendancesHistory(token, id);
+    // if () setState(() {});
+  }
+
   userhandler(token, id) async {
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -91,6 +101,7 @@ class _SplashPageState extends State<SplashPage> {
       await outlethandler(token);
       await distributorHandler(token);
       await documentHandler(token);
+      await attendanceHistoryHandler();
       Navigator.pushReplacement(context, route);
     } else {
       Timer(

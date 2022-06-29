@@ -19,6 +19,7 @@ import 'package:nsai_id/pages/visit/visit_list_page.dart';
 import 'package:nsai_id/pages/transaction_page.dart';
 import 'package:nsai_id/pages/outlet_page.dart';
 import 'package:nsai_id/pages/visit/visit_tab.dart';
+import 'package:nsai_id/providers/attendance_provider.dart';
 
 import 'package:nsai_id/providers/auth_provider.dart';
 import 'package:nsai_id/providers/distributor_provider.dart';
@@ -69,12 +70,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  // distributorHandler() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   var token = prefs.getString('token');
-  //   if (await DistributorProvider().getDistributors(token)) setState(() {});
-  // }
-
   // getUser(token, id) async {
   //   if (await Provider.of<AuthProvider>(context, listen: false)
   //       .getUser(token: token, id: id)) {
@@ -113,6 +108,13 @@ class _HomePageState extends State<HomePage> {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     // OutletProvider outletProvider = context.watch<OutletProvider>();
+
+    AttendanceProvider attendanceProvider =
+        Provider.of<AttendanceProvider>(context, listen: false);
+    // List distributor = distributorProvider.distributors.toList();
+
+    List list = attendanceProvider.attendancesHistory.toList();
+    print(list);
 
     UserModel user = authProvider.user;
 
@@ -353,6 +355,7 @@ class _HomePageState extends State<HomePage> {
                               title: 'Absensi',
                               imgpath: 'assets/check.png',
                               route: AbsentTab(),
+                              // function: attendanceHistoryHandler(),
                               // function: attendanceHandler(),
                             ),
                             HomeMenu(

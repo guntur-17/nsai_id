@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nsai_id/pages/absent/distributor_list_page.dart';
+import 'package:nsai_id/pages/absent/history_list_page.dart';
 
 class AbsentTab extends StatefulWidget {
   const AbsentTab({Key? key}) : super(key: key);
@@ -75,12 +76,7 @@ class _AbsentTabState extends State<AbsentTab> {
               ];
             },
             body: TabBarView(
-              children: <Widget>[
-                DistributorListPage(),
-                Container(
-                  child: Text('1'),
-                )
-              ],
+              children: <Widget>[DistributorListPage(), AbsentHistoryList()],
             ),
           ),
         ),

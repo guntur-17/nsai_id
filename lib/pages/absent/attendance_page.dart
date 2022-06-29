@@ -197,8 +197,8 @@ class _AttendancePageState extends State<AttendancePage> {
   @override
   Widget build(BuildContext context) {
     // final List<String> roles = _roles;
-    AttedanceProvider attedanceProvider =
-        Provider.of<AttedanceProvider>(context);
+    AttendanceProvider attedanceProvider =
+        Provider.of<AttendanceProvider>(context);
 
     late ProductProvider productProvider =
         Provider.of<ProductProvider>(context, listen: false);
