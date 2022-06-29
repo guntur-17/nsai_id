@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nsai_id/providers/attendance_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../theme.dart';
 
@@ -19,12 +22,24 @@ class HomeMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    attendanceHistoryHandler() async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      var token = prefs.getString('token');
+      var id = prefs.getString('id');
+      await Provider.of<AttendanceProvider>(context, listen: false)
+          .getAttendancesHistory(token, id);
+      // if () setState(() {});
+    }
+
     return InkWell(
       onTap: () async {
         function;
         final page = route;
+        await attendanceHistoryHandler();
         Navigator.push(
             context, MaterialPageRoute(builder: ((context) => page)));
+
         ontap;
       },
       child: Container(

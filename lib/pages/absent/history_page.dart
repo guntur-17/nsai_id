@@ -59,6 +59,7 @@ class _HistoryPageState extends State<HistoryPage> {
       builder: (context, height, width, sy, sx) {
         bool? isCheckin = true;
         bool? isLoading = false;
+        List<ItemTakenModel>? product = widget.attendanceHistory.item?.toList();
         // Widget distributor() {
         //   return DropdownButton(
         //     hint: _dropDownValue == null
@@ -113,7 +114,20 @@ class _HistoryPageState extends State<HistoryPage> {
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [Text("data")],
+                children: product!
+                    .map(
+                      (e) => Container(
+                        padding: EdgeInsets.all(8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(e.product_id!),
+                            Text(e.item_taken.toString()!),
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
             ),
           );
@@ -134,6 +148,15 @@ class _HistoryPageState extends State<HistoryPage> {
                     ),
                   ),
                   Divider(),
+                  Text(
+                    widget.attendanceHistory.clock_in
+                        .toString()
+                        .substring(0, 5),
+                    style: trueBlackRobotTextStyle.copyWith(
+                      fontWeight: medium,
+                      fontSize: 20,
+                    ),
+                  ),
                 ],
               ),
             ),
