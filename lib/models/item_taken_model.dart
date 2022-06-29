@@ -5,8 +5,8 @@ class ItemTakenModel {
   String? absent_id;
   String? product_id;
   int? item_taken;
-  int total_item_sold = 0;
-  int sales_result = 0;
+  int? total_item_sold;
+  int? sales_result;
   DateTime? createdAt;
 
   ItemTakenModel({
@@ -14,8 +14,8 @@ class ItemTakenModel {
     this.absent_id,
     this.product_id,
     this.item_taken,
-    this.total_item_sold = 0,
-    this.sales_result = 0,
+    this.total_item_sold,
+    this.sales_result,
     this.createdAt,
   });
 
@@ -24,8 +24,8 @@ class ItemTakenModel {
     absent_id = json['absent_id'];
     product_id = json['product_id'];
     item_taken = json['item_taken'];
-    total_item_sold = json['total_item_sold'] ?? 0;
-    sales_result = json['sales_result'] ?? 0;
+    total_item_sold = json['total_item_sold'];
+    sales_result = json['sales_result'];
     createdAt = DateTime.parse(json['created_at']);
   }
 

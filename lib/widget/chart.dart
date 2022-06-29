@@ -49,7 +49,7 @@ class _ChartBarState extends State<ChartBar> {
   List<FlSpot> getAccData() {
     List<FlSpot> accList = [];
     for (int i = 0; i <= data.length; i++) {
-      accList.add(FlSpot((i * 1.00), data[i].sales_result.toDouble() / 1.00));
+      accList.add(FlSpot((i * 1.00), data[i].sales_result!.toDouble() / 1.00));
     }
     return accList;
   }
@@ -62,7 +62,7 @@ class _ChartBarState extends State<ChartBar> {
       String month = current.month.toString();
       if (item.createdAt!.month.toString() == month) {
         widgets
-            .add(FlSpot(i.toDouble(), (item.sales_result.toDouble() / 1.00)));
+            .add(FlSpot(i.toDouble(), (item.sales_result!.toDouble() / 1.00)));
         i++;
       }
     }
@@ -80,7 +80,7 @@ class _ChartBarState extends State<ChartBar> {
       // print(item.createdAt!.month - month);
       if (item.createdAt!.month - month == -1) {
         widgets
-            .add(FlSpot(i.toDouble(), (item.sales_result.toDouble() / 1.00)));
+            .add(FlSpot(i.toDouble(), (item.sales_result!.toDouble() / 1.00)));
         i++;
       }
     }
@@ -91,7 +91,7 @@ class _ChartBarState extends State<ChartBar> {
     List<int> _max = [];
 
     for (var max in data) {
-      _max.add(max.sales_result);
+      _max.add(max.sales_result!);
     }
     int _maxed = _max.reduce(max);
 

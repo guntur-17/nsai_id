@@ -83,12 +83,9 @@ class _SplashPageState extends State<SplashPage> {
     await Provider.of<OutletProvider>(context, listen: false).getShops(token);
   }
 
-  attendanceHistoryHandler() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    var id = prefs.getString('id');
-    // await DistributorProvider().getDistributors(token);
-    await AttendanceProvider().getAttendancesHistory(token, id);
+  attendanceHistoryHandler(token, id) async {
+    await Provider.of<AttendanceProvider>(context, listen: false)
+        .getAttendancesHistory(token, id);
     // if () setState(() {});
   }
 
@@ -101,7 +98,7 @@ class _SplashPageState extends State<SplashPage> {
       await outlethandler(token);
       await distributorHandler(token);
       await documentHandler(token);
-      await attendanceHistoryHandler();
+      await attendanceHistoryHandler(token, id);
       Navigator.pushReplacement(context, route);
     } else {
       Timer(

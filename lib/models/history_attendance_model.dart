@@ -6,11 +6,11 @@ class AttendanceHistoryModel {
   String? user_id;
   String? distributor_id;
   String? clock_in;
-  String clock_out = "";
+  String? clock_out;
   String? address;
-  String item_photo = "";
-  String distributor_photo = "";
-  List<ItemTakenModel> item = [];
+  String? item_photo;
+  String? distributor_photo;
+  List<ItemTakenModel>? item;
   DateTime? createdAt;
 
   AttendanceHistoryModel({
@@ -18,11 +18,11 @@ class AttendanceHistoryModel {
     this.user_id,
     this.distributor_id,
     this.clock_in,
-    this.clock_out = "",
+    this.clock_out,
     this.address,
-    this.item_photo = "",
-    this.distributor_photo = "",
-    this.item = const [],
+    this.item_photo,
+    this.distributor_photo,
+    this.item,
     this.createdAt,
   });
 
@@ -31,14 +31,12 @@ class AttendanceHistoryModel {
     user_id = json['user_id'];
     distributor_id = json['distributor_id'];
     clock_in = json['clock_in'];
-    clock_out = json['clock_out'] ?? "";
+    clock_out = json['clock_out'];
     address = json['address'];
-    item_photo = json['item_photo'] ?? "";
-    distributor_photo = json['distributor_photo'] ?? "";
-    item = json['item'] != null
-        ? List<ItemTakenModel>.from(
-            json['item'].map((x) => ItemTakenModel.fromJson(x)))
-        : [];
+    item_photo = json['item_photo'];
+    distributor_photo = json['distributor_photo'];
+    item = List<ItemTakenModel>.from(
+        json['item'].map((x) => ItemTakenModel.fromJson(x)));
     createdAt = DateTime.parse(json['created_at']);
   }
 
