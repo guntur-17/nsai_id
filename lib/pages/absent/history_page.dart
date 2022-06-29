@@ -122,7 +122,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(e.product_id!),
-                            Text(e.item_taken.toString()!),
+                            Text(e.item_taken.toString()),
                           ],
                         ),
                       ),
