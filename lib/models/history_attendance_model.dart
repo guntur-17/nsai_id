@@ -1,3 +1,4 @@
+import 'package:nsai_id/models/distributor_model.dart';
 import 'package:nsai_id/models/item_taken_model.dart';
 import 'package:nsai_id/models/product_model.dart';
 
@@ -5,6 +6,7 @@ class AttendanceHistoryModel {
   String? id;
   String? user_id;
   String? distributor_id;
+  DistributorModel? distributor;
   String? clock_in;
   String? clock_out;
   String? address;
@@ -16,6 +18,7 @@ class AttendanceHistoryModel {
   AttendanceHistoryModel({
     this.id,
     this.user_id,
+    this.distributor,
     this.distributor_id,
     this.clock_in,
     this.clock_out,
@@ -29,6 +32,7 @@ class AttendanceHistoryModel {
   AttendanceHistoryModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     user_id = json['user_id'];
+    distributor = DistributorModel.fromJson(json['distributor']);
     distributor_id = json['distributor_id'];
     clock_in = json['clock_in'];
     clock_out = json['clock_out'];
@@ -45,12 +49,13 @@ class AttendanceHistoryModel {
       'id': id,
       'user_id': user_id,
       'distributor_id': distributor_id,
+      'distributor': distributor!.toJson(),
       'clock_in': clock_in,
       'clock_out': clock_out,
       'address': address,
       'item_photo': item_photo,
       'distributor_photo': distributor_photo,
-      // 'item': item?.toList(),
+      // 'item': item!.toJson(),
       'created_at': createdAt.toString(),
     };
   }

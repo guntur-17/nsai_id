@@ -1,5 +1,7 @@
 import 'dart:ffi';
 
+import 'package:nsai_id/models/product_model.dart';
+
 class ItemTakenModel {
   String? id;
   String? absent_id;
@@ -8,6 +10,7 @@ class ItemTakenModel {
   int? total_item_sold;
   int? sales_result;
   DateTime? createdAt;
+  ProductModel? product;
 
   ItemTakenModel({
     this.id,
@@ -17,6 +20,7 @@ class ItemTakenModel {
     this.total_item_sold,
     this.sales_result,
     this.createdAt,
+    this.product,
   });
 
   ItemTakenModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +31,7 @@ class ItemTakenModel {
     total_item_sold = json['total_item_sold'];
     sales_result = json['sales_result'];
     createdAt = DateTime.parse(json['created_at']);
+    product = ProductModel.fromJson(json['product']);
   }
 
   Map<String, dynamic> toJson() => {

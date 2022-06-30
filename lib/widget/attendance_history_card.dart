@@ -20,10 +20,12 @@ class AttendanceHistoryCard extends StatelessWidget {
 
   // final VoidCallback? function;
   final route;
+  final route2;
   const AttendanceHistoryCard({
     Key? key,
     this.historyDistributor,
     this.route,
+    this.route2,
   }) : super(key: key);
 
   // @override
@@ -44,12 +46,19 @@ class AttendanceHistoryCard extends StatelessWidget {
     //   await Provider.of<ProductProvider>(context, listen: false)
     //       .getProduct(token, distributor_id);
     // }
+    producthandler(distributor_id) async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      var token = prefs.getString('token');
+      await Provider.of<ProductProvider>(context, listen: false)
+          .getProduct(token, distributor_id);
+    }
 
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
         return InkWell(
           onTap: () async {
-            if (this.historyDistributor!.distributor_photo != null) {
+            if (historyDistributor!.item!.isNotEmpty) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -57,6 +66,14 @@ class AttendanceHistoryCard extends StatelessWidget {
                 ),
               );
             } else {
+              await producthandler(historyDistributor!.distributor_id);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => route2,
+                ),
+              );
+
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: greenColor,
@@ -78,7 +95,7 @@ class AttendanceHistoryCard extends StatelessWidget {
                   width: 16,
                 ),
                 Text(
-                  historyDistributor!.id.toString(),
+                  historyDistributor!.distributor!.name,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.left,
                   style: trueBlackTextStyle.copyWith(

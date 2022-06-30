@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:nsai_id/pages/absent/history_page.dart';
+import 'package:nsai_id/pages/absent/history_no_item_page.dart';
 import 'package:nsai_id/providers/attendance_provider.dart';
 import 'package:nsai_id/providers/distributor_provider.dart';
 import 'package:nsai_id/widget/attendance_history_card.dart';
@@ -64,10 +65,12 @@ class _AbsentHistoryListState extends State<AbsentHistoryList>
               hasMore: true,
               loadMore: () => print('Loading More'),
               child: AttendanceHistoryCard(
-                  historyDistributor: absent,
-                  route: HistoryPage(
-                    attendanceHistory: absent,
-                  )),
+                historyDistributor: absent,
+                route: HistoryPage(
+                  attendanceHistory: absent,
+                ),
+                route2: HistoryWithoutItemPage(distributor: absent),
+              ),
             );
 
             // ignore: avoid_print

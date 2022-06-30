@@ -56,10 +56,6 @@ class AttendanceService {
       List<AttendanceHistoryModel> attendances = [];
 
       for (var item in data) {
-        await item["clock_out"] ?? "";
-        await item["item_photo"] ?? "";
-        await item["distributor_photo"] ?? "";
-        await item["item"] ?? [];
         attendances.add(AttendanceHistoryModel.fromJson(item));
       }
 

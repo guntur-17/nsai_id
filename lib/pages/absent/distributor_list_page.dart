@@ -112,16 +112,18 @@ class _DistributorListPageState extends State<DistributorListPage>
       List<Placemark> placemarks =
           await placemarkFromCoordinates(position.latitude, position.longitude);
       Placemark place = placemarks[0];
-      setState(
-        () {
-          currentposition = position;
+      if (mounted) {
+        setState(
+          () {
+            currentposition = position;
 
-          currentAddress =
-              " ${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea} ${place.postalCode}";
-          // Loader.hide();
-          isLoading = false;
-        },
-      );
+            currentAddress =
+                " ${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea} ${place.postalCode}";
+            // Loader.hide();
+            isLoading = false;
+          },
+        );
+      }
 
       return currentposition;
     } catch (e) {

@@ -111,23 +111,101 @@ class _HistoryPageState extends State<HistoryPage> {
                   topRight: Radius.circular(30.0),
                 ),
               ),
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: product!
-                    .map(
-                      (e) => Container(
-                        padding: EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20, bottom: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: product!
+                          .map(
+                            (e) => Container(
+                              padding: EdgeInsets.only(top: 8),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(
+                                    e.product!.name!,
+                                    style: trueBlackInterTextStyle.copyWith(
+                                      fontSize: 16,
+                                      fontWeight: medium,
+                                    ),
+                                  ),
+                                  Text(
+                                    e.item_taken.toString(),
+                                    style: trueBlackInterTextStyle.copyWith(
+                                      fontSize: 16,
+                                      fontWeight: medium,
+                                    ),
+                                  ),
+                                  Text(
+                                    e.product!.price!.toString(),
+                                    style: trueBlackInterTextStyle.copyWith(
+                                      fontSize: 16,
+                                      fontWeight: medium,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
                           children: [
-                            Text(e.product_id!),
-                            Text(e.item_taken.toString()),
+                            Text(
+                              "Foto Distributor",
+                              style: trueBlackInterTextStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: medium,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            InstaImageViewer(
+                              child: Image.network(
+                                widget.attendanceHistory.distributor_photo!,
+                                height: 130,
+                                width: 130,
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                    )
-                    .toList(),
+                        Column(
+                          children: [
+                            Text(
+                              "Foto Produk",
+                              style: trueBlackInterTextStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: medium,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            InstaImageViewer(
+                              child: Image.network(
+                                widget.attendanceHistory.item_photo!,
+                                height: 130,
+                                width: 130,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -141,7 +219,7 @@ class _HistoryPageState extends State<HistoryPage> {
               child: Column(
                 children: [
                   Text(
-                    widget.attendanceHistory.id.toString(),
+                    widget.attendanceHistory.distributor!.name,
                     style: trueBlackRobotTextStyle.copyWith(
                       fontWeight: semiBold,
                       fontSize: 24,
