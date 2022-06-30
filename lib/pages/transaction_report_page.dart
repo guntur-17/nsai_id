@@ -1,10 +1,25 @@
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:flutter/material.dart';
+import 'package:nsai_id/models/item_taken_model.dart';
+import 'package:nsai_id/services/item_taken_service.dart';
 
 import '../theme.dart';
 
-class ReportPage extends StatelessWidget {
+class ReportPage extends StatefulWidget {
   const ReportPage({Key? key}) : super(key: key);
+
+  @override
+  State<ReportPage> createState() => _ReportPageState();
+}
+
+class _ReportPageState extends State<ReportPage> {
+  List<ItemTakenModel> _itemTaken = [];
+  @override
+  initState() {
+    List<ItemTakenModel> itemTaken = allItemTaken;
+    _itemTaken = itemTaken;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,102 +89,126 @@ class ReportPage extends StatelessWidget {
                                 controller: _horizontalScrollController,
                                 scrollDirection: Axis.horizontal,
                                 child: DataTable(
-                                  border: TableBorder.all(
-                                    width: 1.0,
-                                    color: grey,
-                                  ),
-                                  headingRowColor:
-                                      MaterialStateColor.resolveWith(
-                                          (states) => Color(0xff005FBE)),
-                                  // dataRowColor:
-                                  //     MaterialStateProperty.resolveWith<Color?>(
-                                  //         (Set<MaterialState> states) {
-                                  //   if (states.contains(MaterialState.selected)) {
-                                  //     return Theme.of(context)
-                                  //         .colorScheme
-                                  //         .primary
-                                  //         .withOpacity(0.08);
-                                  //   }
-                                  //   return null; // Use the default value.
-                                  // }),
-                                  columns: <DataColumn>[
-                                    DataColumn(
-                                      label: Text(
-                                        "Nama \nBarang",
+                                    border: TableBorder.all(
+                                      width: 1.0,
+                                      color: grey,
+                                    ),
+                                    headingRowColor:
+                                        MaterialStateColor.resolveWith(
+                                            (states) => Color(0xff005FBE)),
+                                    // dataRowColor:
+                                    //     MaterialStateProperty.resolveWith<Color?>(
+                                    //         (Set<MaterialState> states) {
+                                    //   if (states.contains(MaterialState.selected)) {
+                                    //     return Theme.of(context)
+                                    //         .colorScheme
+                                    //         .primary
+                                    //         .withOpacity(0.08);
+                                    //   }
+                                    //   return null; // Use the default value.
+                                    // }),
+                                    columns: <DataColumn>[
+                                      DataColumn(
+                                        label: Text(
+                                          "Nama \nBarang",
+                                          style: whiteInterTextStyle.copyWith(
+                                              fontWeight: medium, fontSize: 16),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      DataColumn(
+                                          label: Text(
+                                        "Jenis \nBarang",
                                         style: whiteInterTextStyle.copyWith(
                                             fontWeight: medium, fontSize: 16),
                                         textAlign: TextAlign.center,
-                                      ),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        "Satuan \nBarang",
+                                        style: whiteInterTextStyle.copyWith(
+                                            fontWeight: medium, fontSize: 16),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        "Jumlah \nBarang",
+                                        style: whiteInterTextStyle.copyWith(
+                                            fontWeight: medium, fontSize: 16),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        "Satuan Harga",
+                                        style: whiteInterTextStyle.copyWith(
+                                            fontWeight: medium, fontSize: 16),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ],
+                                    rows: _itemTaken.map((e) {
+                                      var index = _itemTaken.indexOf(e);
+                                      return DataRow(
+                                        color: MaterialStateProperty
+                                            .resolveWith<Color?>(
+                                                (Set<MaterialState> states) {
+                                          if (index.isEven) {
+                                            return Color(0xffF4F4F5);
+                                          }
+                                          return null; // Use the default value.
+                                        }),
+                                        cells: <DataCell>[
+                                          DataCell(Text(e
+                                              .product_id!)), //Extracting from Map element the value
+                                          DataCell(Text(e.absent_id!)),
+                                          DataCell(
+                                              Text(e.item_taken.toString())),
+                                          DataCell(
+                                              Text(e.sales_result.toString())),
+                                          DataCell(Text(
+                                              e.total_item_sold.toString())),
+                                        ],
+                                      );
+                                    }).toList()
+                                    // List<DataRow>.generate(
+                                    //   10,
+                                    //   (index) => DataRow(
+                                    //     color: MaterialStateProperty.resolveWith<
+                                    //         Color?>((Set<MaterialState> states) {
+                                    //       if (index.isEven) {
+                                    //         return Color(0xffF4F4F5);
+                                    //       }
+                                    //       return null; // Use the default value.
+                                    //     }),
+                                    //     cells: [
+                                    //       DataCell(
+                                    //         Text(
+                                    //           'CV. Berkah',
+                                    //         ),
+                                    //       ),
+                                    //       DataCell(
+                                    //         Text(
+                                    //           'Permen',
+                                    //         ),
+                                    //       ),
+                                    //       DataCell(
+                                    //         Text(
+                                    //           'Karton',
+                                    //         ),
+                                    //       ),
+                                    //       DataCell(
+                                    //         Text(
+                                    //           '100',
+                                    //         ),
+                                    //       ),
+                                    //       DataCell(
+                                    //         Text(
+                                    //           'Rp 10.000',
+                                    //         ),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
                                     ),
-                                    DataColumn(
-                                        label: Text(
-                                      "Jenis \nBarang",
-                                      style: whiteInterTextStyle.copyWith(
-                                          fontWeight: medium, fontSize: 16),
-                                      textAlign: TextAlign.center,
-                                    )),
-                                    DataColumn(
-                                        label: Text(
-                                      "Satuan \nBarang",
-                                      style: whiteInterTextStyle.copyWith(
-                                          fontWeight: medium, fontSize: 16),
-                                      textAlign: TextAlign.center,
-                                    )),
-                                    DataColumn(
-                                        label: Text(
-                                      "Jumlah \nBarang",
-                                      style: whiteInterTextStyle.copyWith(
-                                          fontWeight: medium, fontSize: 16),
-                                      textAlign: TextAlign.center,
-                                    )),
-                                    DataColumn(
-                                        label: Text(
-                                      "Satuan Harga",
-                                      style: whiteInterTextStyle.copyWith(
-                                          fontWeight: medium, fontSize: 16),
-                                      textAlign: TextAlign.center,
-                                    )),
-                                  ],
-                                  rows: List<DataRow>.generate(
-                                    10,
-                                    (index) => DataRow(
-                                      color: MaterialStateProperty.resolveWith<
-                                          Color?>((Set<MaterialState> states) {
-                                        if (index.isEven) {
-                                          return Color(0xffF4F4F5);
-                                        }
-                                        return null; // Use the default value.
-                                      }),
-                                      cells: [
-                                        DataCell(
-                                          Text(
-                                            'CV. Berkah',
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Text(
-                                            'Permen',
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Text(
-                                            'Karton',
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Text(
-                                            '100',
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Text(
-                                            'Rp 10.000',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
                               ),
                             ),
                           ),

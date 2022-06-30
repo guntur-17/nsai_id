@@ -17,17 +17,13 @@ class DocumentPage extends StatefulWidget {
 }
 
 class _DocumentPageState extends State<DocumentPage> {
+  List<DocumentModel> _filterDocument = [];
+  List<DocumentModel> _filteredDocument = [];
   DateTime selectedDate = DateTime.now();
   TextEditingController _textEditingController = TextEditingController();
 
   DateTime selectedDateA = DateTime.now();
   TextEditingController _textEditingControllerA = TextEditingController();
-
-  DateTime selectedDateSell = DateTime.now();
-  TextEditingController _textEditingControllerSell = TextEditingController();
-
-  DateTime selectedDateB = DateTime.now();
-  TextEditingController _textEditingControllerB = TextEditingController();
 
   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -73,56 +69,44 @@ class _DocumentPageState extends State<DocumentPage> {
     }
   }
 
-  _selectDateSell(BuildContext context) async {
-    final DateTime? pickedSell = await showDatePicker(
-        context: context,
-        initialDate:
-            selectedDateSell != null ? selectedDateSell : DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2040));
-    if (pickedSell != null && pickedSell != selectedDateSell) {
-      setState(() {
-        selectedDateSell = pickedSell;
-      });
-    }
-
-    if (pickedSell != null) {
-      selectedDateSell = pickedSell;
-      _textEditingControllerSell
-        ..text = DateFormat.yMMMd().format(selectedDateSell)
-        ..selection = TextSelection.fromPosition(TextPosition(
-            offset: _textEditingControllerSell.text.length,
-            affinity: TextAffinity.upstream));
-    }
+  @override
+  initState() {
+    DocumentProvider documentProvider =
+        Provider.of<DocumentProvider>(context, listen: false);
+    List<DocumentModel> document = documentProvider.documents.toList();
+    print(document);
+    _filterDocument = document;
+    _filteredDocument = _filterDocument;
+    super.initState();
   }
 
-  _selectDateB(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDateB != null ? selectedDateB : DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2040));
-    if (picked != null && picked != selectedDateB) {
-      setState(() {
-        selectedDateB = picked;
-      });
+  void _runFilter() {
+    List<DocumentModel> results = [];
+    if (selectedDate == DateTime.now() && selectedDateA == DateTime.now()) {
+      print(selectedDate);
+      print(selectedDateA);
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = _filterDocument;
+    } else {
+      results = _filterDocument
+          .where(
+            (element) =>
+                selectedDate.isBefore(element.createdAt!) &&
+                selectedDateA.isAfter(element.createdAt!),
+          )
+          .toList();
     }
 
-    if (picked != null) {
-      selectedDateB = picked;
-      _textEditingControllerB
-        ..text = DateFormat.yMMMd().format(selectedDateB)
-        ..selection = TextSelection.fromPosition(TextPosition(
-            offset: _textEditingControllerB.text.length,
-            affinity: TextAffinity.upstream));
-    }
+    // Refresh the UI
+    setState(() {
+      _filteredDocument = results;
+      print(_filteredDocument);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    DocumentProvider documentProvider =
-        Provider.of<DocumentProvider>(context, listen: false);
-    List document = documentProvider.documents.reversed.toList();
+    // List document = documentProvider.documents.reversed.toList();
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
         Widget header() {
@@ -163,7 +147,7 @@ class _DocumentPageState extends State<DocumentPage> {
                   ),
                   Container(
                     // color: whiteColor,
-                    height: MediaQuery.of(context).size.height * 0.27,
+                    height: MediaQuery.of(context).size.height * 0.22,
                     width: MediaQuery.of(context).size.width * 0.9,
                     // padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     decoration: const BoxDecoration(
@@ -260,82 +244,27 @@ class _DocumentPageState extends State<DocumentPage> {
                               ),
                             ),
                             Center(
-                              child: Text(
-                                'Dokumen B',
-                                style: trueBlackRobotoTextStyle.copyWith(
-                                    fontSize: 16, fontWeight: semiBold),
+                              child: InkWell(
+                                onTap: () {
+                                  _runFilter();
+                                },
+                                child: Container(
+                                  height: 40,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF0354A6),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Submit',
+                                      style: whiteInterTextStyle.copyWith(
+                                          fontSize: 16),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: Text('Periode',
-                                      style: trueBlackInterTextStyle.copyWith(
-                                          fontSize: 16)),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  height: 40,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.fromLTRB(10, 2, 0, 0),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            width: 1, color: Colors.grey),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      hintText: 'Tanggal',
-                                      hintStyle: TextStyle(
-                                          fontSize: 16.0, color: trueBlack),
-                                      suffixIcon: Icon(
-                                        Icons.expand_more,
-                                        color: blackColor,
-                                      ),
-                                    ),
-                                    focusNode: AlwaysDisabledFocusNode(),
-                                    controller: _textEditingControllerSell,
-                                    onTap: () {
-                                      _selectDateSell(context);
-                                    },
-                                  ),
-                                ),
-                                Container(
-                                  height: 40,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.fromLTRB(10, 2, 0, 0),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            width: 1, color: Colors.grey),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      hintText: 'Tanggal',
-                                      hintStyle: TextStyle(
-                                          fontSize: 16.0, color: trueBlack),
-                                      suffixIcon: Icon(
-                                        Icons.expand_more,
-                                        color: blackColor,
-                                      ),
-                                    ),
-                                    focusNode: AlwaysDisabledFocusNode(),
-                                    controller: _textEditingControllerB,
-                                    onTap: () {
-                                      _selectDateB(context);
-                                    },
-                                  ),
-                                ),
-                              ],
                             ),
                           ],
                         ),
@@ -348,33 +277,67 @@ class _DocumentPageState extends State<DocumentPage> {
           );
         }
 
-        Widget body() {
-          return Expanded(
-            flex: 6,
-            child: Container(
-              // height: MediaQuery.of(context).size.height,
-              width: double.infinity,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0),
-                ),
+        Widget cardFiltered() {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0),
               ),
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: document
-                    .map((e) => DocumentCard(
-                          document: e,
-                        ))
-                    .toList(),
-              ),
+            ),
+            child: SizedBox(
+              child: _filteredDocument.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: _filteredDocument.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: ((context, index) {
+                        // ValueKey(_foundDoctor[index].id);
+                        final document = _filteredDocument[index];
+                        return DocumentCard(
+                          document: document,
+                        );
+                      }),
+                    )
+                  : const Text(
+                      'No results found',
+                      style: TextStyle(fontSize: 14),
+                    ),
             ),
           );
         }
+
+        // Widget body() {
+        //   return Expanded(
+        //     flex: 6,
+        //     child: Container(
+        //       // height: MediaQuery.of(context).size.height,
+        //       width: double.infinity,
+        //       padding:
+        //           const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+        //       decoration: const BoxDecoration(
+        //         color: Colors.white,
+        //         borderRadius: BorderRadius.only(
+        //           topLeft: Radius.circular(30.0),
+        //           topRight: Radius.circular(30.0),
+        //         ),
+        //       ),
+        //       child: Column(
+        //         // mainAxisAlignment: MainAxisAlignment.center,
+        //         crossAxisAlignment: CrossAxisAlignment.center,
+        //         children: document
+        //             .map((e) => DocumentCard(
+        //                   document: e,
+        //                 ))
+        //             .toList(),
+        //       ),
+        //     ),
+        //   );
+        // }
 
         return SafeArea(
           child: Scaffold(
@@ -399,7 +362,8 @@ class _DocumentPageState extends State<DocumentPage> {
                       // crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         header(),
-                        body(),
+                        cardFiltered()
+                        // body(),
                       ],
                     ),
                   ),
