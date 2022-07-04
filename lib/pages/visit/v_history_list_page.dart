@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:nsai_id/pages/visit/v_history_no_item.dart';
 import 'package:nsai_id/pages/visit/v_history_page.dart';
@@ -11,6 +12,16 @@ import '../../theme.dart';
 import '../../widget/loading_widget.dart';
 import '../absent/history_no_item_page.dart';
 import '../absent/history_page.dart';
+
+extension DateTimeExtension on DateTime {
+  bool isSameDay(DateTime date) {
+    // ignore hour,minute,second..
+    final dateFormat = DateFormat("yyyy-MM-dd");
+    final date1 = dateFormat.format(this);
+    final date2 = dateFormat.format(date);
+    return date1 == date2;
+  }
+}
 
 class VisitingHistoryList extends StatefulWidget {
   const VisitingHistoryList({Key? key}) : super(key: key);
@@ -60,7 +71,7 @@ class _VisitingHistoryListState extends State<VisitingHistoryList>
 
     List list = visitingProvider.visitingsHistory
         .where(
-          (element) => element.createdAt!.day == DateTime.now().day,
+          (element) => element.createdAt!.isSameDay(DateTime.now()),
         )
         .toList();
     print(list);
