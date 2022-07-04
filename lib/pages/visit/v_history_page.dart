@@ -170,8 +170,8 @@ class _HistoryVisitingState extends State<HistoryVisiting> {
                                       DataCell(Center(
                                           child: Text(e.product!.name!))),
                                       DataCell(Center(
-                                          child:
-                                              Text(e.item_taken.toString()))),
+                                          child: Text(
+                                              e.total_item_sold.toString()))),
                                       DataCell(Center(
                                           child: Text(
                                               e.product!.price!.toString()))),

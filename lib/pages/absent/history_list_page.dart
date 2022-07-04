@@ -7,6 +7,7 @@ import 'package:nsai_id/providers/distributor_provider.dart';
 import 'package:nsai_id/widget/attendance_history_card.dart';
 import 'package:nsai_id/widget/distributor_card.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../theme.dart';
 import '../../widget/loading_widget.dart';
@@ -35,7 +36,20 @@ class _AbsentHistoryListState extends State<AbsentHistoryList>
     setState(() {
       isLoading = true;
     });
-    isLoading = false;
+    await handler();
+    if (!mounted) return;
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  handler() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString('token');
+    var id = prefs.getString('id');
+    await Provider.of<AttendanceProvider>(context, listen: false)
+        .getAttendancesHistory(token, id);
   }
 
   @override

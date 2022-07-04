@@ -5,6 +5,7 @@ import 'package:nsai_id/pages/visit/v_history_page.dart';
 import 'package:nsai_id/providers/visiting_provider.dart';
 import 'package:nsai_id/widget/visiting_history_card.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../theme.dart';
 import '../../widget/loading_widget.dart';
@@ -35,7 +36,20 @@ class _VisitingHistoryListState extends State<VisitingHistoryList>
     setState(() {
       isLoading = true;
     });
-    isLoading = false;
+    await handler();
+    if (!mounted) return;
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  handler() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString('token');
+    var id = prefs.getString('id');
+    await Provider.of<VisitingProvider>(context, listen: false)
+        .getVisitingHistory(token, id);
   }
 
   @override

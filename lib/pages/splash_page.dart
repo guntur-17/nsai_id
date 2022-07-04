@@ -84,17 +84,17 @@ class _SplashPageState extends State<SplashPage> {
     await Provider.of<OutletProvider>(context, listen: false).getShops(token);
   }
 
-  attendanceHistoryHandler(token, id) async {
-    await Provider.of<AttendanceProvider>(context, listen: false)
-        .getAttendancesHistory(token, id);
-    // if () setState(() {});
-  }
+  // attendanceHistoryHandler(token, id) async {
+  //   await Provider.of<AttendanceProvider>(context, listen: false)
+  //       .getAttendancesHistory(token, id);
+  //   // if () setState(() {});
+  // }
 
-  visitingHistoryHandler(token, id) async {
-    await Provider.of<VisitingProvider>(context, listen: false)
-        .getVisitingHistory(token, id);
-    // if () setState(() {});
-  }
+  // visitingHistoryHandler(token, id) async {
+  //   await Provider.of<VisitingProvider>(context, listen: false)
+  //       .getVisitingHistory(token, id);
+  //   // if () setState(() {});
+  // }
 
   itemTakenHandler(token, id) async {
     await Provider.of<AttendanceProvider>(context, listen: false)
@@ -111,9 +111,9 @@ class _SplashPageState extends State<SplashPage> {
       await outlethandler(token);
       await distributorHandler(token);
       await documentHandler(token);
-      await attendanceHistoryHandler(token, id);
+      // await attendanceHistoryHandler(token, id);
       await itemTakenHandler(token, id);
-      await visitingHistoryHandler(token, id);
+      // await visitingHistoryHandler(token, id);
       Navigator.pushReplacement(context, route);
     } else {
       Timer(
