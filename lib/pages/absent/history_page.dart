@@ -173,7 +173,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                               Text(e.item_taken.toString()))),
                                       DataCell(Center(
                                           child: Text(
-                                              e.total_item_sold.toString()))),
+                                              e.product!.price!.toString()))),
                                     ],
                                   );
                                 }).toList()),
