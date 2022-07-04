@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/attendance_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/document_provider.dart';
+import '../../providers/visiting_provider.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -65,6 +66,18 @@ class _LoginPageState extends State<LoginPage> {
       // if () setState(() {});
     }
 
+    visitingHistoryHandler(token, id) async {
+      await Provider.of<VisitingProvider>(context, listen: false)
+          .getVisitingHistory(token, id);
+      // if () setState(() {});
+    }
+
+    itemTakenHandler(token, id) async {
+      await Provider.of<AttendanceProvider>(context, listen: false)
+          .getItemTaken(token, id);
+      // if () setState(() {});
+    }
+
     documentHandler(token) async {
       // SharedPreferences prefs = await SharedPreferences.getInstance();
       // var token = prefs.getString('idsebelah');
@@ -109,6 +122,8 @@ class _LoginPageState extends State<LoginPage> {
         await distributorHandler(token);
         await documentHandler(token);
         await attendanceHistoryHandler(token, id);
+        await itemTakenHandler(token, id);
+        await visitingHistoryHandler(token, id);
 
         // await Provider.of<VisitingAllProvider>(context, listen: false)
         //     .getAllVisit(token);

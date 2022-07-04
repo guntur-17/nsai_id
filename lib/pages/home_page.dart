@@ -15,6 +15,7 @@ import 'package:nsai_id/pages/document_page.dart';
 import 'package:nsai_id/pages/faq_page.dart';
 import 'package:nsai_id/pages/list_test_page.dart';
 import 'package:nsai_id/pages/list_test_page2.dart';
+import 'package:nsai_id/pages/profile_page.dart';
 import 'package:nsai_id/pages/visit/visit_list_page.dart';
 import 'package:nsai_id/pages/transaction_page.dart';
 import 'package:nsai_id/pages/outlet_page.dart';
@@ -52,7 +53,7 @@ class _HomePageState extends State<HomePage> {
         var snackBar = SnackBar(
           /// need to set following properties for best effect of awesome_snackbar_content
           elevation: 0,
-          duration: Duration(seconds: 2),
+          duration: Duration(seconds: 5),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
@@ -162,14 +163,23 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Column(
                         children: [
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: AssetImage('assets/ava.png')),
+                          InkWell(
+                            onTap: (() {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfilePage(),
+                                  ));
+                            }),
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: AssetImage('assets/ava.png')),
+                              ),
                             ),
                           ),
                         ],

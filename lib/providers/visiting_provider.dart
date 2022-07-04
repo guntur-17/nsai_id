@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
+import 'package:nsai_id/models/visiting_history_model.dart';
 import 'package:nsai_id/models/visiting_model.dart';
 import 'package:nsai_id/services/visiting_service.dart';
 
@@ -13,8 +16,10 @@ class VisitingProvider with ChangeNotifier {
 
   // AttendanceModel? _attendance;
   List<VisitingModel> _visitings = [];
+  List<VisitingHistoryModel> _visitingsHistory = [];
 
   List<VisitingModel> get visitings => _visitings;
+  List<VisitingHistoryModel> get visitingsHistory => _visitingsHistory;
   // bool _checkConditionClock = true;
 
   // bool get checkConditionClock => _checkConditionClock;
@@ -27,6 +32,23 @@ class VisitingProvider with ChangeNotifier {
   set visitings(List<VisitingModel> visitings) {
     _visitings = visitings;
     notifyListeners();
+  }
+
+  set visitingsHistory(List<VisitingHistoryModel> visitingsHistory) {
+    _visitingsHistory = visitingsHistory;
+    notifyListeners();
+  }
+
+  Future<bool> getVisitingHistory(String? token, String? id) async {
+    try {
+      List<VisitingHistoryModel> visitingsHistory =
+          await VisitingService().getVisitingHistory(token: token, id: id);
+      _visitingsHistory = visitingsHistory;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   Future<bool> getVisiting(String? token, String? id) async {
@@ -79,6 +101,27 @@ class VisitingProvider with ChangeNotifier {
         return false;
       }
     } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> visitingPhoto(
+      String? id,
+      String? token,
+      File? image,
+      File? image2,
+      File? image3,
+      List<Map<String, dynamic>> listItemTaken) async {
+    try {
+      if (await VisitingService()
+          .visitingPhoto(id, token, image, image2, image3, listItemTaken)) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print("gagal provider photo");
       print(e);
       return false;
     }

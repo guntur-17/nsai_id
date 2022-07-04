@@ -1,12 +1,30 @@
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:nsai_id/models/history_attendance_model.dart';
 import 'package:nsai_id/models/item_taken_model.dart';
 import 'package:nsai_id/services/item_taken_service.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/attendance_provider.dart';
 import '../theme.dart';
 
+extension DateTimeExtension on DateTime {
+  bool isSameDay(DateTime date) {
+    // ignore hour,minute,second..
+    final dateFormat = DateFormat("yyyy-MM-dd");
+    final date1 = dateFormat.format(this);
+    final date2 = dateFormat.format(date);
+    return date1 == date2;
+  }
+}
+
 class ReportPage extends StatefulWidget {
-  const ReportPage({Key? key}) : super(key: key);
+  final DateTime selectedDate;
+  final String distributor;
+  const ReportPage(
+      {Key? key, required this.selectedDate, required this.distributor})
+      : super(key: key);
 
   @override
   State<ReportPage> createState() => _ReportPageState();
@@ -14,10 +32,14 @@ class ReportPage extends StatefulWidget {
 
 class _ReportPageState extends State<ReportPage> {
   List<ItemTakenModel> _itemTaken = [];
+  List<ItemTakenModel> _itemTakens = [];
+
   @override
   initState() {
     List<ItemTakenModel> itemTaken = allItemTaken;
-    _itemTaken = itemTaken;
+    _itemTaken = itemTaken
+        .where((element) => widget.selectedDate.isSameDay(element.createdAt!))
+        .toList();
     super.initState();
   }
 
@@ -25,6 +47,16 @@ class _ReportPageState extends State<ReportPage> {
   Widget build(BuildContext context) {
     final _verticalScrollController = ScrollController();
     final _horizontalScrollController = ScrollController();
+    AttendanceProvider attendanceProvider =
+        Provider.of<AttendanceProvider>(context, listen: false);
+    // List distributor = distributorProvider.distributors.toList();
+
+    List<AttendanceHistoryModel> list = attendanceProvider.attendancesHistory
+        .where((element) => element.distributor_id == widget.distributor)
+        .toList();
+    for (var _item in list) {
+      _itemTakens.addAll(_item.item!);
+    }
 
     Widget body() {
       return Expanded(
@@ -118,13 +150,6 @@ class _ReportPageState extends State<ReportPage> {
                                       ),
                                       DataColumn(
                                           label: Text(
-                                        "Jenis \nBarang",
-                                        style: whiteInterTextStyle.copyWith(
-                                            fontWeight: medium, fontSize: 16),
-                                        textAlign: TextAlign.center,
-                                      )),
-                                      DataColumn(
-                                          label: Text(
                                         "Satuan \nBarang",
                                         style: whiteInterTextStyle.copyWith(
                                             fontWeight: medium, fontSize: 16),
@@ -132,21 +157,28 @@ class _ReportPageState extends State<ReportPage> {
                                       )),
                                       DataColumn(
                                           label: Text(
-                                        "Jumlah \nBarang",
+                                        "Harga \nSatuan",
                                         style: whiteInterTextStyle.copyWith(
                                             fontWeight: medium, fontSize: 16),
                                         textAlign: TextAlign.center,
                                       )),
                                       DataColumn(
                                           label: Text(
-                                        "Satuan Harga",
+                                        "Barang \nTerjual",
+                                        style: whiteInterTextStyle.copyWith(
+                                            fontWeight: medium, fontSize: 16),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        "Hasil \nPenjualan",
                                         style: whiteInterTextStyle.copyWith(
                                             fontWeight: medium, fontSize: 16),
                                         textAlign: TextAlign.center,
                                       )),
                                     ],
-                                    rows: _itemTaken.map((e) {
-                                      var index = _itemTaken.indexOf(e);
+                                    rows: _itemTakens.map((e) {
+                                      var index = _itemTakens.indexOf(e);
                                       return DataRow(
                                         color: MaterialStateProperty
                                             .resolveWith<Color?>(
@@ -157,15 +189,15 @@ class _ReportPageState extends State<ReportPage> {
                                           return null; // Use the default value.
                                         }),
                                         cells: <DataCell>[
-                                          DataCell(Text(e
-                                              .product_id!)), //Extracting from Map element the value
-                                          DataCell(Text(e.absent_id!)),
-                                          DataCell(
-                                              Text(e.item_taken.toString())),
-                                          DataCell(
-                                              Text(e.sales_result.toString())),
+                                          DataCell(Text(e.product!
+                                              .name!)), //Extracting from Map element the value
+                                          DataCell(Text(e.product!.unit!)),
+                                          DataCell(Text(
+                                              e.product!.price!.toString())),
                                           DataCell(Text(
                                               e.total_item_sold.toString())),
+                                          DataCell(
+                                              Text(e.sales_result.toString())),
                                         ],
                                       );
                                     }).toList()

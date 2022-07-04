@@ -56,9 +56,11 @@ class _VisitListPageState extends State<VisitListPage>
   bool get wantKeepAlive => true;
 
   Future _handlefunction() async {
+    if (!mounted) return;
     setState(() {
       isLoading = true;
     });
+    if (!mounted) return;
     _determinePosition();
   }
 
@@ -97,16 +99,17 @@ class _VisitListPageState extends State<VisitListPage>
       List<Placemark> placemarks =
           await placemarkFromCoordinates(position.latitude, position.longitude);
       Placemark place = placemarks[0];
-      setState(
-        () {
-          currentposition = position;
-          currentAddress =
-              " ${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea} ${place.postalCode}";
-          // Loader.hide();
+      if (mounted)
+        setState(
+          () {
+            currentposition = position;
+            currentAddress =
+                " ${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea} ${place.postalCode}";
+            // Loader.hide();
 
-          outletListHandler();
-        },
-      );
+            outletListHandler();
+          },
+        );
 
       return currentposition;
     } catch (e) {

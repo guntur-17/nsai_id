@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -7,7 +9,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:nsai_id/models/attendance_model.dart';
@@ -28,6 +33,35 @@ import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../models/history_attendance_model.dart';
+import '../../models/item_taken_model.dart';
+import '../../widget/loading_widget.dart';
+import '../../widget/retakePhoto_widget.dart';
+import '../home_page.dart';
+
+class LimitRangeTextInputFormatter extends TextInputFormatter {
+  LimitRangeTextInputFormatter(this.min, this.max) : assert(min <= max);
+
+  final int min;
+  final int max;
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    } else {
+      var value = int.parse(newValue.text);
+      if (value < min) {
+        return TextEditingValue(text: min.toString());
+      } else if (value > max) {
+        return TextEditingValue(text: max.toString());
+      }
+    }
+    return newValue;
+  }
+}
+
 class OutletPage2 extends StatefulWidget {
   final longUser;
   final latUser;
@@ -45,8 +79,10 @@ class _VisitPageState extends State<OutletPage2> {
   TextEditingController jumlahController = TextEditingController(text: '');
   TextEditingController totalController = TextEditingController(text: '');
   List<Map<String, dynamic>> test = [];
+  List<ItemTakenModel> _itemTaken = [];
+  List<ProductModel> _productTaken = [];
+  List<Map<String, dynamic>> listItemTaken = [];
   VisitingModel? dataAttendance;
-
   num totalprice = 0;
 
   bool isLoading = false;
@@ -68,9 +104,134 @@ class _VisitPageState extends State<OutletPage2> {
   String? selectedSatuan;
   String? _dropDownValue;
 
-  void iniState() {
-    setState(() {});
+  File? imageDistributor;
+  File? imageProduct;
+  File? imageOther;
+
+  String currentAddress = 'My Address';
+  Position? currentposition;
+
+  @override
+  void initState() {
+    super.initState();
+    AttendanceProvider attendanceProvider =
+        Provider.of<AttendanceProvider>(context, listen: false);
+    List<AttendanceHistoryModel> list = attendanceProvider.itemTaken.toList();
+
+    for (var _item in list) {
+      _itemTaken.addAll(_item.item!);
+    }
+
+    for (var _product in _itemTaken) {
+      _productTaken.add(_product.product!);
+    }
+
+    print(_itemTaken.toList());
+    print(_productTaken.toList());
+    // _determinePosition();
+
+    // setState(() {});
   }
+
+  Future getPhotoDistributor(StateSetter updateState) async {
+    final ImagePicker _picker = ImagePicker();
+
+    // Capture a photo
+    final XFile? photo =
+        await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    //mengubah Xfile jadi file
+
+    updateState(() {
+      if (photo != null) {
+        imageDistributor = File(photo.path);
+      }
+    });
+  }
+
+  Future getPhotoProduct(StateSetter updateState) async {
+    final ImagePicker _picker2 = ImagePicker();
+
+    // Capture a photo
+    final XFile? photo2 =
+        await _picker2.pickImage(source: ImageSource.camera, imageQuality: 50);
+    //mengubah Xfile jadi file
+
+    updateState(() {
+      if (photo2 != null) {
+        imageProduct = File(photo2.path);
+      }
+    });
+  }
+
+  Future getPhotoOther(StateSetter updateState) async {
+    final ImagePicker _picker = ImagePicker();
+
+    // Capture a photo
+    final XFile? photo3 =
+        await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    //mengubah Xfile jadi file
+
+    updateState(() {
+      if (photo3 != null) {
+        imageOther = File(photo3.path);
+      }
+    });
+  }
+
+  Future _handlefunction() async {
+    setState(() {
+      isLoading = true;
+    });
+    await _determinePosition();
+  }
+
+  Future<Position?> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Fluttertoast.showToast(msg: 'Please Keep your location on.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Fluttertoast.showToast(msg: 'Location Permission is denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      Fluttertoast.showToast(msg: 'Permission is denied Forever');
+    }
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      Placemark place = placemarks[0];
+      setState(
+        () {
+          currentposition = position;
+
+          currentAddress =
+              " ${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea} ${place.postalCode}";
+          // Loader.hide();
+          isLoading = false;
+        },
+      );
+
+      return currentposition;
+    } catch (e) {
+      print(e);
+      isLoading = false;
+    }
+  }
+  // void iniState() {
+  //   setState(() {});
+
+  // }
 
   final List<String> categories = [
     'Item1',
@@ -116,6 +277,7 @@ class _VisitPageState extends State<OutletPage2> {
     late ProductProvider productProvider =
         Provider.of<ProductProvider>(context, listen: false);
     late List<ProductModel> products = productProvider.products.toList();
+
     // List<AttendanceModel> absent = attedanceProvider.attendances;
 
     Future handleadd() async {
@@ -145,6 +307,10 @@ class _VisitPageState extends State<OutletPage2> {
         totalprice += int.parse(totalController.text);
         test.add({
           // 'distributor': selectedDistributor,
+          'absentId': _itemTaken
+              .firstWhere(
+                  (element) => element.product!.id == selectedProduct!.id)
+              .absent_id,
           'produkId': selectedProduct!.id,
           'produkPrice': selectedProduct!.price,
           'produkUnit': selectedProduct!.unit,
@@ -211,101 +377,68 @@ class _VisitPageState extends State<OutletPage2> {
       }
     }
 
+    handlePhoto(
+      String id,
+      File image,
+      File image2,
+      File image3,
+    ) async {
+      for (var item in test) {
+        listItemTaken.add({
+          'absent_id': item['absentId'],
+          'product_id': item['produkId'],
+          'item_sold': item['jumlah'],
+          'total_sales': item['total']
+        });
+        print(listItemTaken);
+      }
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      Loader.show(
+        context,
+        isSafeAreaOverlay: false,
+        // isBottomBarOverlay: false,
+        // overlayFromBottom: 80,
+        overlayColor: Colors.black26,
+        progressIndicator: CircularProgressIndicator(
+          color: blueBrightColor,
+        ),
+        themeData: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.fromSwatch().copyWith(secondary: whiteColor),
+        ),
+      );
+      if (await visitingProvider.visitingPhoto(
+          id, token, image, image2, image3, listItemTaken)) {
+        Loader.hide();
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+            (route) => false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: greenColor,
+            content: const Text(
+              'berhasil Upload photo',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      } else {
+        Loader.hide();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: redColor,
+            content: const Text(
+              'gagal Upload Photo',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }
+    }
+
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
-        // Widget produk() {
-        //   return Padding(
-        //     padding: const EdgeInsets.symmetric(vertical: 6),
-        //     child: Column(
-        //       children: [
-        //         Align(
-        //           alignment: Alignment.centerLeft,
-        //           child: Text(
-        //             "Produk",
-        //             style: trueBlackInterTextStyle.copyWith(
-        //               fontSize: 16,
-        //               fontWeight: medium,
-        //             ),
-        //           ),
-        //         ),
-        //         SizedBox(
-        //           height: 6,
-        //         ),
-        //         DropdownButtonHideUnderline(
-        //           child: DropdownButton2(
-        //             isExpanded: true,
-        //             hint: Row(
-        //               children: [
-        //                 Expanded(
-        //                   child: Text(
-        //                     'Pilih Produk',
-        //                     style: trueBlackInterTextStyle.copyWith(
-        //                       fontSize: 14,
-        //                       fontWeight: FontWeight.bold,
-        //                       // color: Colors.yellow,
-        //                     ),
-        //                     overflow: TextOverflow.ellipsis,
-        //                   ),
-        //                 ),
-        //               ],
-        //             ),
-        //             items: produks
-        //                 .map((produk) => DropdownMenuItem<String>(
-        //                       value: produk,
-        //                       child: Text(
-        //                         produk,
-        //                         style: trueBlackInterTextStyle.copyWith(
-        //                           fontSize: 14,
-        //                           fontWeight: FontWeight.bold,
-        //                         ),
-        //                         overflow: TextOverflow.ellipsis,
-        //                       ),
-        //                     ))
-        //                 .toList(),
-        //             value: selectedProduct,
-        //             onChanged: (value) {
-        //               // setState(() {
-        //               //   selectedProduct = value as String;
-        //               // });
-        //             },
-        //             icon: const Icon(
-        //               Icons.keyboard_arrow_down_rounded,
-        //             ),
-        //             iconSize: 14,
-        //             // iconEnabledColor: Colors.yellow,
-        //             // iconDisabledColor: Colors.grey,
-        //             buttonHeight: 50,
-        //             buttonWidth: MediaQuery.of(context).size.width * 0.9,
-        //             buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-        //             buttonDecoration: BoxDecoration(
-        //               borderRadius: BorderRadius.circular(4),
-        //               border: Border.all(
-        //                 color: Colors.black26,
-        //               ),
-        //               // color: Colors.redAccent,
-        //             ),
-        //             // buttonElevation: 2,
-        //             itemHeight: 40,
-        //             itemPadding: const EdgeInsets.only(left: 14, right: 14),
-        //             dropdownMaxHeight: 200,
-        //             dropdownWidth: MediaQuery.of(context).size.width * 0.9,
-        //             dropdownPadding: null,
-        //             dropdownDecoration: BoxDecoration(
-        //               borderRadius: BorderRadius.circular(14),
-        //               // color: Colors.redAccent,
-        //             ),
-        //             dropdownElevation: 8,
-        //             scrollbarRadius: const Radius.circular(40),
-        //             scrollbarThickness: 6,
-        //             scrollbarAlwaysShow: false,
-        //             offset: const Offset(0, 0),
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   );
-        // }
-
         Widget produk2() {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
@@ -341,7 +474,7 @@ class _VisitPageState extends State<OutletPage2> {
                   icon: const Icon(Icons.keyboard_arrow_down),
 
                   // Array list of items
-                  items: products.map((ProductModel product) {
+                  items: _productTaken.map((ProductModel product) {
                     return DropdownMenuItem(
                       value: product,
                       child: Text(product.name!),
@@ -353,7 +486,6 @@ class _VisitPageState extends State<OutletPage2> {
                   onChanged: (ProductModel? newValue) {
                     setState(() {
                       selectedProduct = newValue!;
-
                       // sendedDropDownValue = newValue.id!;
                     });
                   },
@@ -382,21 +514,52 @@ class _VisitPageState extends State<OutletPage2> {
                   height: 6,
                 ),
                 TextFormField(
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LimitRangeTextInputFormatter(
+                        0,
+                        _itemTaken
+                                .firstWhere((element) =>
+                                    element.product!.id == selectedProduct!.id)
+                                .item_taken! -
+                            _itemTaken
+                                .firstWhere((element) =>
+                                    element.product!.id == selectedProduct!.id)
+                                .total_item_sold!)
+                  ],
                   keyboardType: TextInputType.number,
                   onChanged: ((value) {
                     String jumlah = jumlahController.text;
                     int? jumlah2 = int.tryParse(jumlah);
-                    print(jumlah2);
-                    selectedProduct != null || jumlahController.text != ''
-                        ? totalController.text = (jumlah2! * 2000).toString()
-                        : '';
+                    int? harga = selectedProduct?.price;
+
+                    if (jumlah2 != null && selectedProduct != null) {
+                      selectedProduct != null || jumlahController.text != ''
+                          ? totalController.text = (jumlah2 * harga!).toString()
+                          : '';
+                    } else {
+                      setState(() {
+                        totalController.text = "";
+                      });
+                    }
                   }),
                   // scrollPadding: EdgeInsets.only(
                   //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
                   focusNode: myFocusNode,
                   controller: jumlahController,
                   decoration: InputDecoration(
+                    suffixText: 'max:' +
+                        (_itemTaken
+                                    .firstWhere((element) =>
+                                        element.product!.id ==
+                                        selectedProduct!.id)
+                                    .item_taken! -
+                                _itemTaken
+                                    .firstWhere((element) =>
+                                        element.product!.id ==
+                                        selectedProduct!.id)
+                                    .total_item_sold!)
+                            .toString(),
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
 
@@ -421,6 +584,73 @@ class _VisitPageState extends State<OutletPage2> {
                   ),
                 ),
               ],
+            ),
+          );
+        }
+
+        Widget jumlahDisabled() {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: AbsorbPointer(
+              absorbing: selectedProduct == null,
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Jumlah",
+                      style: trueBlackInterTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: medium,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Container(
+                    foregroundDecoration: BoxDecoration(
+                      color:
+                          selectedProduct != null ? Colors.transparent : grey,
+                      backgroundBlendMode: BlendMode.darken,
+                    ),
+                    child: TextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      keyboardType: TextInputType.number,
+                      onChanged: ((value) {}),
+                      // scrollPadding: EdgeInsets.only(
+                      //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
+                      focusNode: myFocusNode,
+                      controller: jumlahController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 2.0, horizontal: 10.0),
+
+                        labelStyle: TextStyle(
+                            color: myFocusNode.hasFocus ? primaryBlue : grey),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide(
+                            color: Colors.black26,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide(
+                            color: Colors.black26,
+                            width: 1.0,
+                          ),
+                        ),
+
+                        // errorText: 'Error message',
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -540,7 +770,7 @@ class _VisitPageState extends State<OutletPage2> {
                   children: [
                     // kategoriOutlet(),
                     produk2(),
-                    jumlah(),
+                    selectedProduct != null ? jumlah() : jumlahDisabled(),
                     // satuan(),
                     total(),
                   ],
@@ -698,7 +928,11 @@ class _VisitPageState extends State<OutletPage2> {
                       width: 1.0,
                       color: blueBrightColor,
                     )),
-                onPressed: () {
+                onPressed: () async {
+                  String? id = dataAttendance?.id;
+                  await handlePhoto(
+                      id!, imageProduct!, imageDistributor!, imageOther!);
+
                   // Navigator.of(context).push(MaterialPageRoute(
                   //     builder: (BuildContext context) => StockListPage()));
                 },
@@ -826,7 +1060,8 @@ class _VisitPageState extends State<OutletPage2> {
                     children: [
                       // logo(),
                       input(),
-                      selectedProduct != null && jumlahController.text != ''
+                      selectedProduct != null &&
+                              jumlahController.text.isNotEmpty
                           ? buttonadd()
                           : disable(),
                       // SizedBox(
@@ -902,7 +1137,7 @@ class _VisitPageState extends State<OutletPage2> {
           );
         }
 
-        Widget showModalcontent() {
+        Widget showModalcontent(StateSetter updateState) {
           return Container(
             height: MediaQuery.of(context).size.height * 0.7,
             child: SingleChildScrollView(
@@ -953,15 +1188,63 @@ class _VisitPageState extends State<OutletPage2> {
                           SizedBox(
                             height: 10,
                           ),
-                          TakePhoto(
-                            text: "Ambil Gambar Toko",
+                          if (imageDistributor != null)
+                            RetakePhoto(
+                              function: () async {
+                                getPhotoDistributor(updateState);
+
+                                updateState(() {});
+                              },
+                              image: imageDistributor!,
+                            )
+                          else
+                            TakePhoto(
+                              text: "Ambil Gambar Distributor",
+                              function: () async {
+                                getPhotoDistributor(updateState);
+
+                                updateState(() {});
+                              },
+                            ),
+                          SizedBox(
+                            height: 20,
                           ),
-                          TakePhoto(
-                            text: "Ambil Gambar Produk",
-                          ),
-                          TakePhoto(
-                            text: "Ambil Gambar Other",
-                          ),
+                          if (imageProduct != null)
+                            RetakePhoto(
+                              function: () async {
+                                getPhotoProduct(updateState);
+
+                                updateState(() {});
+                              },
+                              image: imageProduct!,
+                            )
+                          else
+                            TakePhoto(
+                              text: "Ambil Gambar Produk",
+                              function: () async {
+                                getPhotoProduct(updateState);
+                                updateState(() {});
+                              },
+                              // function: getPhoto(),
+                            ),
+                          if (imageOther != null)
+                            RetakePhoto(
+                              function: () async {
+                                getPhotoOther(updateState);
+
+                                updateState(() {});
+                              },
+                              image: imageProduct!,
+                            )
+                          else
+                            TakePhoto(
+                              text: "Ambil Gambar Lainnya",
+                              function: () async {
+                                getPhotoOther(updateState);
+                                updateState(() {});
+                              },
+                              // function: getPhoto(),
+                            ),
 
                           submit(),
                           // download(),
@@ -995,11 +1278,13 @@ class _VisitPageState extends State<OutletPage2> {
                       isScrollControlled: true,
                       context: context,
                       builder: (context) {
-                        return Wrap(
-                          children: [
-                            showModalcontent(),
-                          ],
-                        );
+                        return StatefulBuilder(builder: (context, state) {
+                          return Wrap(
+                            children: [
+                              showModalcontent(state),
+                            ],
+                          );
+                        });
                       },
                     );
                   },
@@ -1029,32 +1314,35 @@ class _VisitPageState extends State<OutletPage2> {
             // resizeToAvoidBottomInset: false,
             // backgroundColor: orangeYellow,
             bottomNavigationBar: showModal(),
-            body: CustomScrollView(slivers: [
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: GestureDetector(
-                  onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('assets/bgvisit.png'),
-                            fit: BoxFit.cover)),
-                    child: Column(
-                      children: <Widget>[
-                        const SizedBox(
-                          height: 20,
+            body: isLoading
+                ? Loading()
+                : CustomScrollView(slivers: [
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: GestureDetector(
+                        onTap: () =>
+                            FocusManager.instance.primaryFocus?.unfocus(),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage('assets/bgvisit.png'),
+                                  fit: BoxFit.cover)),
+                          child: Column(
+                            children: <Widget>[
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              header(),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              body(),
+                            ],
+                          ),
                         ),
-                        header(),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        body(),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ]),
+                      ),
+                    )
+                  ]),
           ),
         );
       },

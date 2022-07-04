@@ -20,6 +20,7 @@ import 'package:nsai_id/models/distributor_model.dart';
 import 'package:nsai_id/models/history_attendance_model.dart';
 import 'package:nsai_id/models/item_taken_model.dart';
 import 'package:nsai_id/models/product_model.dart';
+import 'package:nsai_id/models/visiting_history_model.dart';
 import 'package:nsai_id/pages/auth/register_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
@@ -35,16 +36,16 @@ import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HistoryPage extends StatefulWidget {
-  final AttendanceHistoryModel attendanceHistory;
+class HistoryVisiting extends StatefulWidget {
+  final VisitingHistoryModel visitingHistory;
 
-  HistoryPage({required this.attendanceHistory, Key? key}) : super(key: key);
+  HistoryVisiting({required this.visitingHistory, Key? key}) : super(key: key);
 
   @override
-  State<HistoryPage> createState() => _HistoryPageState();
+  State<HistoryVisiting> createState() => _HistoryVisitingState();
 }
 
-class _HistoryPageState extends State<HistoryPage> {
+class _HistoryVisitingState extends State<HistoryVisiting> {
   @override
   void initState() {
     super.initState();
@@ -60,7 +61,7 @@ class _HistoryPageState extends State<HistoryPage> {
       builder: (context, height, width, sy, sx) {
         bool? isCheckin = true;
         bool? isLoading = false;
-        List<ItemTakenModel>? product = widget.attendanceHistory.item?.toList();
+        List<ItemTakenModel>? product = widget.visitingHistory.item?.toList();
         // Widget distributor() {
         //   return DropdownButton(
         //     hint: _dropDownValue == null
@@ -215,6 +216,9 @@ class _HistoryPageState extends State<HistoryPage> {
                         //     )
                         //     .toList(),
                         ),
+                    SizedBox(
+                      height: 24,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -232,7 +236,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             ),
                             InstaImageViewer(
                               child: Image.network(
-                                widget.attendanceHistory.distributor_photo!,
+                                widget.visitingHistory.outlet_photo!,
                                 height: 130,
                                 width: 130,
                               ),
@@ -253,12 +257,33 @@ class _HistoryPageState extends State<HistoryPage> {
                             ),
                             InstaImageViewer(
                               child: Image.network(
-                                widget.attendanceHistory.item_photo!,
+                                widget.visitingHistory.item_photo!,
                                 height: 130,
                                 width: 130,
                               ),
                             ),
                           ],
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          "Foto Lainnya",
+                          style: trueBlackInterTextStyle.copyWith(
+                            fontSize: 16,
+                            fontWeight: medium,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InstaImageViewer(
+                          child: Image.network(
+                            widget.visitingHistory.other_photo!,
+                            height: 130,
+                            width: 130,
+                          ),
                         ),
                       ],
                     ),
@@ -277,7 +302,7 @@ class _HistoryPageState extends State<HistoryPage> {
               child: Column(
                 children: [
                   Text(
-                    widget.attendanceHistory.distributor!.name,
+                    widget.visitingHistory.outlet!.name,
                     style: trueBlackRobotTextStyle.copyWith(
                       fontWeight: semiBold,
                       fontSize: 24,
@@ -285,9 +310,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                   Divider(),
                   Text(
-                    widget.attendanceHistory.clock_in
-                        .toString()
-                        .substring(0, 5),
+                    widget.visitingHistory.clock_in.toString().substring(0, 5),
                     style: trueBlackRobotTextStyle.copyWith(
                       fontWeight: medium,
                       fontSize: 20,

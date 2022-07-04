@@ -77,17 +77,17 @@ class _RegisterPageState extends State<RegisterPage> {
     List<RegionModel> regions = regionProvider.regions;
     dropdownvalue = regions[0];
 
-    List<String> _area = [];
+    // List<String> _area = [];
 
-    List<String> valueArea = [];
+    // List<String> valueArea = [];
 
-    for (var region in regions) {
-      _area.add(region.name!);
-    }
+    // for (var region in regions) {
+    //   _area.add(region.name!);
+    // }
 
-    for (var region in regions) {
-      valueArea.add(region.id!);
-    }
+    // for (var region in regions) {
+    //   valueArea.add(region.id!);
+    // }
 
     registerHandler() async {
       Loader.show(

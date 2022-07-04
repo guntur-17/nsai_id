@@ -43,6 +43,14 @@ final allItemTaken = <ItemTakenModel>[
       sales_result: 3,
       createdAt: DateTime.parse('2022-07-21T08:41:09.000000Z')),
   ItemTakenModel(
+      id: "2",
+      absent_id: 'A0009',
+      product_id: 'P0001',
+      item_taken: 10000,
+      total_item_sold: 3,
+      sales_result: 7,
+      createdAt: DateTime.parse('2022-07-22T08:41:09.000000Z')),
+  ItemTakenModel(
       id: "1",
       absent_id: 'A0009',
       product_id: 'P0007',

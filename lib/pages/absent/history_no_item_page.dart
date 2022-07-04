@@ -62,7 +62,7 @@ class _HistoryWithoutItemPageState extends State<HistoryWithoutItemPage> {
 
   bool isChecked = false;
 
-  bool isCheckin = true; //harusnya false
+  bool isCheckin = true;
 
   File? imageDistributor;
   File? imageProduct;
@@ -274,7 +274,7 @@ class _HistoryWithoutItemPageState extends State<HistoryWithoutItemPage> {
           colorScheme: ColorScheme.fromSwatch().copyWith(secondary: whiteColor),
         ),
       );
-      if (await attedanceProvider.visitingPhoto(
+      if (await attedanceProvider.absentPhoto(
           id, token, image, image2, listItemTaken)) {
         Loader.hide();
         Navigator.pushAndRemoveUntil(
@@ -554,6 +554,73 @@ class _HistoryWithoutItemPageState extends State<HistoryWithoutItemPage> {
           );
         }
 
+        Widget jumlahDisabled() {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: AbsorbPointer(
+              absorbing: selectedProduct == null,
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Jumlah",
+                      style: trueBlackInterTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: medium,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Container(
+                    foregroundDecoration: BoxDecoration(
+                      color:
+                          selectedProduct != null ? Colors.transparent : grey,
+                      backgroundBlendMode: BlendMode.darken,
+                    ),
+                    child: TextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      keyboardType: TextInputType.number,
+                      onChanged: ((value) {}),
+                      // scrollPadding: EdgeInsets.only(
+                      //     bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4),
+                      focusNode: myFocusNode,
+                      controller: jumlahController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 2.0, horizontal: 10.0),
+
+                        labelStyle: TextStyle(
+                            color: myFocusNode.hasFocus ? primaryBlue : grey),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide(
+                            color: Colors.black26,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide(
+                            color: Colors.black26,
+                            width: 1.0,
+                          ),
+                        ),
+
+                        // errorText: 'Error message',
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
         Widget total() {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
@@ -618,7 +685,7 @@ class _HistoryWithoutItemPageState extends State<HistoryWithoutItemPage> {
                     // distributor(),
                     // produk(),
                     produk2(),
-                    jumlah(),
+                    selectedProduct != null ? jumlah() : jumlahDisabled(),
                     // satuan(),
                     total(),
                   ],

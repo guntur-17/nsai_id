@@ -17,9 +17,11 @@ class AttendanceProvider with ChangeNotifier {
   // AttendanceModel? _attendance;
   List<AttendanceModel> _attendances = [];
   List<AttendanceHistoryModel> _attendancesHistory = [];
+  List<AttendanceHistoryModel> _itemTaken = [];
 
   List<AttendanceModel> get attendances => _attendances;
   List<AttendanceHistoryModel> get attendancesHistory => _attendancesHistory;
+  List<AttendanceHistoryModel> get itemTaken => _itemTaken;
 
   set attendances(List<AttendanceModel> attendances) {
     _attendances = attendances;
@@ -28,6 +30,11 @@ class AttendanceProvider with ChangeNotifier {
 
   set attendancesHistory(List<AttendanceHistoryModel> attendancesHistory) {
     _attendancesHistory = attendancesHistory;
+    notifyListeners();
+  }
+
+  set itemTaken(List<AttendanceHistoryModel> itemTaken) {
+    _itemTaken = itemTaken;
     notifyListeners();
   }
 
@@ -48,6 +55,18 @@ class AttendanceProvider with ChangeNotifier {
       List<AttendanceHistoryModel> attendanceHistory =
           await AttendanceService().getAttendancesHistory(token: token, id: id);
       _attendancesHistory = attendanceHistory;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getItemTaken(String? token, String? id) async {
+    try {
+      List<AttendanceHistoryModel> itemTaken =
+          await AttendanceService().getItemTaken(token: token, id: id);
+      _itemTaken = itemTaken;
       return true;
     } catch (e) {
       print(e);
@@ -97,8 +116,8 @@ class AttendanceProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> visitingPhoto(String? id, String? token, File? image,
-      File? image2, List<Map<String, dynamic>> listItemTaken) async {
+  Future<bool> absentPhoto(String? id, String? token, File? image, File? image2,
+      List<Map<String, dynamic>> listItemTaken) async {
     try {
       if (await AttendanceService()
           .absentPhoto(id, token, image, image2, listItemTaken)) {

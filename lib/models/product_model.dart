@@ -4,7 +4,7 @@ class ProductModel {
   String? id;
   String? distributor_id;
   String? name;
-  int? unit;
+  String? unit;
   int? price;
 
   ProductModel({

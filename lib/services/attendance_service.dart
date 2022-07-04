@@ -159,4 +159,31 @@ class AttendanceService {
       return false;
     }
   }
+
+  Future<List<AttendanceHistoryModel>> getItemTaken(
+      {String? token, String? id}) async {
+    // var token = await.getToken();
+    var url = Uri.parse('$baseUrl/visiting/item/$id');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': token as String
+    };
+
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    print('Item Taken' + response.body);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['data'];
+      List<AttendanceHistoryModel> attendances = [];
+
+      for (var item in data) {
+        attendances.add(AttendanceHistoryModel.fromJson(item));
+      }
+
+      return attendances;
+    } else {
+      throw Exception('Gagal Get attendances');
+    }
+  }
 }

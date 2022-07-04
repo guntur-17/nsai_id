@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nsai_id/pages/visit/v_history_list_page.dart';
 import 'package:nsai_id/pages/visit/visit_list_page.dart';
 
 import '../../models/outlet_model.dart';
@@ -81,9 +82,7 @@ class _VisitTabState extends State<VisitTab> {
             body: TabBarView(
               children: <Widget>[
                 VisitListPage(widget.outlet),
-                Container(
-                  child: Text('1'),
-                )
+                VisitingHistoryList(),
               ],
             ),
           ),

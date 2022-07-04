@@ -14,6 +14,7 @@ import 'package:nsai_id/providers/distributor_provider.dart';
 import 'package:nsai_id/providers/document_provider.dart';
 import 'package:nsai_id/providers/outlet_provider.dart';
 import 'package:nsai_id/providers/region_provider.dart';
+import 'package:nsai_id/providers/visiting_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -89,6 +90,18 @@ class _SplashPageState extends State<SplashPage> {
     // if () setState(() {});
   }
 
+  visitingHistoryHandler(token, id) async {
+    await Provider.of<VisitingProvider>(context, listen: false)
+        .getVisitingHistory(token, id);
+    // if () setState(() {});
+  }
+
+  itemTakenHandler(token, id) async {
+    await Provider.of<AttendanceProvider>(context, listen: false)
+        .getItemTaken(token, id);
+    // if () setState(() {});
+  }
+
   userhandler(token, id) async {
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -99,6 +112,8 @@ class _SplashPageState extends State<SplashPage> {
       await distributorHandler(token);
       await documentHandler(token);
       await attendanceHistoryHandler(token, id);
+      await itemTakenHandler(token, id);
+      await visitingHistoryHandler(token, id);
       Navigator.pushReplacement(context, route);
     } else {
       Timer(

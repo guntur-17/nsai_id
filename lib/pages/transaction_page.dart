@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nsai_id/models/distributor_model.dart';
 import 'package:nsai_id/pages/home_page.dart';
 import 'package:nsai_id/pages/transaction_report_page.dart';
+import 'package:nsai_id/providers/distributor_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../theme.dart';
 
@@ -11,7 +14,7 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> {
-  late String dropdownvalue;
+  late DistributorModel dropdownvalue;
   late String dropdownvalueSell;
 
   // List of items in our dropdown menu
@@ -25,9 +28,6 @@ class _TransactionPageState extends State<TransactionPage> {
 
   DateTime selectedDate = DateTime.now();
   TextEditingController _textEditingController = TextEditingController();
-
-  DateTime selectedDateSell = DateTime.now();
-  TextEditingController _textEditingControllerSell = TextEditingController();
 
   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -51,31 +51,13 @@ class _TransactionPageState extends State<TransactionPage> {
     }
   }
 
-  _selectDateSell(BuildContext context) async {
-    final DateTime? pickedSell = await showDatePicker(
-        context: context,
-        initialDate:
-            selectedDateSell != null ? selectedDateSell : DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2040));
-    if (pickedSell != null && pickedSell != selectedDateSell) {
-      setState(() {
-        selectedDateSell = pickedSell;
-      });
-    }
-
-    if (pickedSell != null) {
-      selectedDateSell = pickedSell;
-      _textEditingControllerSell
-        ..text = DateFormat.yMMMd().format(selectedDateSell)
-        ..selection = TextSelection.fromPosition(TextPosition(
-            offset: _textEditingControllerSell.text.length,
-            affinity: TextAffinity.upstream));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    DistributorProvider distributorProvider =
+        Provider.of<DistributorProvider>(context, listen: false);
+    List<DistributorModel> distributor =
+        distributorProvider.distributors.toList();
+    dropdownvalue = distributor[0];
     Widget body() {
       return Expanded(
         child: Stack(
@@ -110,15 +92,30 @@ class _TransactionPageState extends State<TransactionPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text('Pengambilan',
-                                style: trueBlackInterTextStyle.copyWith(
-                                    fontSize: 16)),
-                          ),
-                        ],
+                      // Center(
+                      //   child: Text(
+                      //     'Riwayat Transaksi',
+                      //     style:
+                      //         trueBlackRobotoTextStyle.copyWith(fontSize: 16),
+                      //   ),
+                      // ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, bottom: 8.0),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.45,
+                              child: Text('Periode',
+                                  style: trueBlackInterTextStyle.copyWith(
+                                      fontSize: 16)),
+                            ),
+                            Container(
+                              child: Text('Distributor',
+                                  style: trueBlackInterTextStyle.copyWith(
+                                      fontSize: 16)),
+                            ),
+                          ],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 12.0),
@@ -184,15 +181,16 @@ class _TransactionPageState extends State<TransactionPage> {
                                 icon: const Icon(Icons.keyboard_arrow_down),
 
                                 // Array list of items
-                                items: items.map((String items) {
+                                items:
+                                    distributor.map((DistributorModel items) {
                                   return DropdownMenuItem(
                                     value: items,
-                                    child: Text(items),
+                                    child: Text(items.name),
                                   );
                                 }).toList(),
                                 // After selecting the desired option,it will
                                 // change button value to selected value
-                                onChanged: (String? newValue) {
+                                onChanged: (DistributorModel? newValue) {
                                   setState(() {
                                     dropdownvalue = newValue!;
                                   });
@@ -202,95 +200,6 @@ class _TransactionPageState extends State<TransactionPage> {
                           ],
                         ),
                       ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text('Penjualan',
-                                style: trueBlackInterTextStyle.copyWith(
-                                    fontSize: 16)),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            height: 40,
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(10, 2, 0, 0),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      width: 1, color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                hintText: 'Tanggal',
-                                hintStyle:
-                                    TextStyle(fontSize: 16.0, color: trueBlack),
-                                suffixIcon: Icon(
-                                  Icons.expand_more,
-                                  color: blackColor,
-                                ),
-                              ),
-                              focusNode: AlwaysDisabledFocusNode(),
-                              controller: _textEditingControllerSell,
-                              onTap: () {
-                                _selectDateSell(context);
-                              },
-                            ),
-                          ),
-                          Container(
-                            height: 40,
-                            width: MediaQuery.of(context).size.width * 0.47,
-                            child: DropdownButtonFormField(
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(10, 2, 0, 0),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      width: 1, color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      width: 1, color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      width: 1, color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                hintText: 'All',
-                                hintStyle:
-                                    TextStyle(fontSize: 16.0, color: trueBlack),
-                              ),
-                              // Initial Value
-                              // value: dropdownvalue,
-                              // Down Arrow Icon
-                              icon: const Icon(Icons.keyboard_arrow_down),
-
-                              // Array list of items
-                              items: items.map((String items) {
-                                return DropdownMenuItem(
-                                  value: items,
-                                  child: Text(items),
-                                );
-                              }).toList(),
-                              // After selecting the desired option,it will
-                              // change button value to selected value
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  dropdownvalueSell = newValue!;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
                       Spacer(),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 32.0),
@@ -299,7 +208,10 @@ class _TransactionPageState extends State<TransactionPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: ((context) => ReportPage())));
+                                    builder: ((context) => ReportPage(
+                                          selectedDate: selectedDate,
+                                          distributor: dropdownvalue.id,
+                                        ))));
                           },
                           child: Container(
                             height: 40,
