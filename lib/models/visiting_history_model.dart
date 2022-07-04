@@ -2,6 +2,7 @@ import 'package:nsai_id/models/distributor_model.dart';
 import 'package:nsai_id/models/item_taken_model.dart';
 import 'package:nsai_id/models/outlet_model.dart';
 import 'package:nsai_id/models/product_model.dart';
+import 'package:nsai_id/models/visiting_sales_model.dart';
 
 class VisitingHistoryModel {
   String? id;
@@ -13,7 +14,7 @@ class VisitingHistoryModel {
   String? item_photo;
   String? outlet_photo;
   String? other_photo;
-  List<ItemTakenModel>? item;
+  List<VisitingSalesModel>? item;
   DateTime? createdAt;
 
   VisitingHistoryModel({
@@ -40,8 +41,8 @@ class VisitingHistoryModel {
     item_photo = json['item_photo'];
     outlet_photo = json['outlet_photo'];
     other_photo = json['other_photo'];
-    item = List<ItemTakenModel>.from(
-        json['item'].map((x) => ItemTakenModel.fromJson(x)));
+    item = List<VisitingSalesModel>.from(
+        json['item'].map((x) => VisitingSalesModel.fromJson(x)));
     createdAt = DateTime.parse(json['created_at']);
   }
 

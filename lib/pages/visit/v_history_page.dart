@@ -21,6 +21,7 @@ import 'package:nsai_id/models/history_attendance_model.dart';
 import 'package:nsai_id/models/item_taken_model.dart';
 import 'package:nsai_id/models/product_model.dart';
 import 'package:nsai_id/models/visiting_history_model.dart';
+import 'package:nsai_id/models/visiting_sales_model.dart';
 import 'package:nsai_id/pages/auth/register_page.dart';
 import 'package:nsai_id/pages/home_page.dart';
 import 'package:nsai_id/pages/test_page.dart';
@@ -61,7 +62,8 @@ class _HistoryVisitingState extends State<HistoryVisiting> {
       builder: (context, height, width, sy, sx) {
         bool? isCheckin = true;
         bool? isLoading = false;
-        List<ItemTakenModel>? product = widget.visitingHistory.item?.toList();
+        List<VisitingSalesModel>? product =
+            widget.visitingHistory.item?.toList();
         // Widget distributor() {
         //   return DropdownButton(
         //     hint: _dropDownValue == null
@@ -170,11 +172,10 @@ class _HistoryVisitingState extends State<HistoryVisiting> {
                                       DataCell(Center(
                                           child: Text(e.product!.name!))),
                                       DataCell(Center(
-                                          child: Text(
-                                              e.total_item_sold.toString()))),
+                                          child: Text(e.item_sold.toString()))),
                                       DataCell(Center(
-                                          child: Text(
-                                              e.product!.price!.toString()))),
+                                          child:
+                                              Text(e.total_sales!.toString()))),
                                     ],
                                   );
                                 }).toList()),

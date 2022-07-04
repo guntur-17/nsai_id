@@ -149,7 +149,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   )),
                                   DataColumn(
                                       label: Text(
-                                    "Jumlah \nHarga",
+                                    "Harga \nSatuan",
                                     style: whiteInterTextStyle.copyWith(
                                         fontWeight: medium, fontSize: 14),
                                     textAlign: TextAlign.center,
@@ -173,7 +173,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                               Text(e.item_taken.toString()))),
                                       DataCell(Center(
                                           child: Text(
-                                              e.product!.price!.toString()))),
+                                              e.total_item_sold.toString()))),
                                     ],
                                   );
                                 }).toList()),
