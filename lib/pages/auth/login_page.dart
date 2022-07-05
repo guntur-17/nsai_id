@@ -72,11 +72,11 @@ class _LoginPageState extends State<LoginPage> {
     //   // if () setState(() {});
     // }
 
-    itemTakenHandler(token, id) async {
-      await Provider.of<AttendanceProvider>(context, listen: false)
-          .getItemTaken(token, id);
-      // if () setState(() {});
-    }
+    // itemTakenHandler(token, id) async {
+    //   await Provider.of<AttendanceProvider>(context, listen: false)
+    //       .getItemTaken(token, id);
+    //   // if () setState(() {});
+    // }
 
     documentHandler(token) async {
       // SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
         await distributorHandler(token);
         await documentHandler(token);
         // await attendanceHistoryHandler(token, id);
-        await itemTakenHandler(token, id);
+        // await itemTakenHandler(token, id);
         // await visitingHistoryHandler(token, id);
 
         // await Provider.of<VisitingAllProvider>(context, listen: false)

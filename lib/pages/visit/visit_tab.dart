@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:nsai_id/pages/visit/v_history_list_page.dart';
 import 'package:nsai_id/pages/visit/visit_list_page.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/outlet_model.dart';
+import '../../providers/attendance_provider.dart';
 import '../list_test_page2.dart';
 
 class VisitTab extends StatefulWidget {
@@ -14,6 +17,29 @@ class VisitTab extends StatefulWidget {
 }
 
 class _VisitTabState extends State<VisitTab> {
+  @override
+  void initState() {
+    // shopListHandler();
+    _handlefunction();
+    super.initState();
+
+    // init();
+  }
+
+  Future _handlefunction() async {
+    await handler();
+    if (!mounted) return;
+  }
+
+  handler() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString('token');
+    var id = prefs.getString('id');
+    await Provider.of<AttendanceProvider>(context, listen: false)
+        .getItemTaken(token, id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

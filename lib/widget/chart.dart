@@ -158,6 +158,22 @@ class _ChartBarState extends State<ChartBar> {
   //   return sumMap;
   // }
 
+  @override
+  void initState() {
+    _handlefunction();
+    super.initState();
+  }
+
+  handler() async {
+    getCurrentMonthData();
+    getPreviousMonthData();
+  }
+
+  Future _handlefunction() async {
+    await handler();
+    if (!mounted) return;
+  }
+
   LineChartBarData get currentMonthData => LineChartBarData(
         spots: getCurrentMonthData(),
         isCurved: false,

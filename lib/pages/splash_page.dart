@@ -96,11 +96,11 @@ class _SplashPageState extends State<SplashPage> {
   //   // if () setState(() {});
   // }
 
-  itemTakenHandler(token, id) async {
-    await Provider.of<AttendanceProvider>(context, listen: false)
-        .getItemTaken(token, id);
-    // if () setState(() {});
-  }
+  // itemTakenHandler(token, id) async {
+  //   await Provider.of<AttendanceProvider>(context, listen: false)
+  //       .getItemTaken(token, id);
+  //   // if () setState(() {});
+  // }
 
   userhandler(token, id) async {
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -112,7 +112,7 @@ class _SplashPageState extends State<SplashPage> {
       await distributorHandler(token);
       await documentHandler(token);
       // await attendanceHistoryHandler(token, id);
-      await itemTakenHandler(token, id);
+      // await itemTakenHandler(token, id);
       // await visitingHistoryHandler(token, id);
       Navigator.pushReplacement(context, route);
     } else {

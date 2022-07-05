@@ -114,6 +114,15 @@ class _RegisterPageState extends State<RegisterPage> {
           region_id: dropdownvalue.id)) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => PreloginPage()));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: greenColor,
+            content: Text(
+              'Registrasi Berhasil',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
         Loader.hide();
       } else {
         Loader.hide();

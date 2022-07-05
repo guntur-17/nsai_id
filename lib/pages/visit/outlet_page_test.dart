@@ -113,21 +113,9 @@ class _VisitPageState extends State<OutletPage2> {
 
   @override
   void initState() {
+    _handlefunction();
     super.initState();
-    AttendanceProvider attendanceProvider =
-        Provider.of<AttendanceProvider>(context, listen: false);
-    List<AttendanceHistoryModel> list = attendanceProvider.itemTaken.toList();
 
-    for (var _item in list) {
-      _itemTaken.addAll(_item.item!);
-    }
-
-    for (var _product in _itemTaken) {
-      _productTaken.add(_product.product!);
-    }
-
-    print(_itemTaken.toList());
-    print(_productTaken.toList());
     // _determinePosition();
 
     // setState(() {});
@@ -178,11 +166,26 @@ class _VisitPageState extends State<OutletPage2> {
     });
   }
 
+  handlerItemTaken() async {
+    AttendanceProvider attendanceProvider =
+        Provider.of<AttendanceProvider>(context, listen: false);
+    List<AttendanceHistoryModel> list = attendanceProvider.itemTaken.toList();
+
+    for (var _item in list) {
+      _itemTaken.addAll(_item.item!);
+    }
+
+    for (var _product in _itemTaken) {
+      _productTaken.add(_product.product!);
+    }
+
+    print(_itemTaken.toList());
+    print(_productTaken.toList());
+  }
+
   Future _handlefunction() async {
-    setState(() {
-      isLoading = true;
-    });
-    await _determinePosition();
+    await handlerItemTaken();
+    if (!mounted) return;
   }
 
   Future<Position?> _determinePosition() async {

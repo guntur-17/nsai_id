@@ -8,6 +8,7 @@ import 'package:nsai_id/widget/visiting_history_card.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../providers/attendance_provider.dart';
 import '../../theme.dart';
 import '../../widget/loading_widget.dart';
 import '../absent/history_no_item_page.dart';
@@ -61,6 +62,8 @@ class _VisitingHistoryListState extends State<VisitingHistoryList>
     var id = prefs.getString('id');
     await Provider.of<VisitingProvider>(context, listen: false)
         .getVisitingHistory(token, id);
+    // await Provider.of<AttendanceProvider>(context, listen: false)
+    //     .getItemTaken(token, id);
   }
 
   @override

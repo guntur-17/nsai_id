@@ -56,7 +56,6 @@ class _VisitListPageState extends State<VisitListPage>
   bool get wantKeepAlive => true;
 
   Future _handlefunction() async {
-    if (!mounted) return;
     setState(() {
       isLoading = true;
     });

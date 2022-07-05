@@ -1036,7 +1036,7 @@ class _VisitPageState extends State<VisitingNoItem> {
                       width: 10,
                     ),
                     Text(
-                      'Absensi & Pengambilan Barang',
+                      'Visit & Penjualan Barang',
                       softWrap: true,
                       style: whiteRobotoTextStyle.copyWith(
                         fontWeight: extraBold,

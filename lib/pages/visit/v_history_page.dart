@@ -348,7 +348,7 @@ class _HistoryVisitingState extends State<HistoryVisiting> {
                       width: 10,
                     ),
                     Text(
-                      'Absensi & Pengambilan Barang',
+                      'Visit & Penjualan Barang',
                       softWrap: true,
                       style: whiteRobotoTextStyle.copyWith(
                         fontWeight: extraBold,
@@ -391,7 +391,7 @@ class _HistoryVisitingState extends State<HistoryVisiting> {
                         child: Container(
                           decoration: const BoxDecoration(
                               image: DecorationImage(
-                                  image: AssetImage('assets/bgatt.png'),
+                                  image: AssetImage('assets/bgvisits.png'),
                                   fit: BoxFit.cover)),
                           child: Column(
                             children: <Widget>[
