@@ -16,6 +16,8 @@ class ChartBar extends StatefulWidget {
 
 class _ChartBarState extends State<ChartBar> {
   List<ItemTakenModel> data = allItemTaken;
+  List<FlSpot> _widgetsCurrent = [];
+  List<FlSpot> _widgetsPrevious = [];
   List months = [
     'Januari',
     'Februari',
@@ -56,35 +58,79 @@ class _ChartBarState extends State<ChartBar> {
 
   getCurrentMonthData() {
     List<FlSpot> widgets = [];
+    List<ItemTakenModel> currentMonth = [];
     var i = 0;
-    for (var item in data) {
-      DateTime current = DateTime.now();
-      String month = current.month.toString();
-      if (item.createdAt!.month.toString() == month) {
-        widgets
-            .add(FlSpot(i.toDouble(), (item.sales_result!.toDouble() / 1.00)));
-        i++;
+    var sumMap = {};
+
+    DateTime current = DateTime.now();
+    String month = current.month.toString();
+    currentMonth = data
+        .where((element) => element.createdAt!.month.toString() == month)
+        .toList();
+
+    for (var element in currentMonth) {
+      String key = element.createdAt!.day.toString();
+      if (sumMap.containsKey(key)) {
+        sumMap[key] += element.sales_result;
+      } else {
+        sumMap[key] = element.sales_result!;
       }
     }
+
+    print(currentMonth);
+    print(sumMap);
+    for (var item in sumMap.values) {
+      widgets.add(FlSpot(i.toDouble(), (item / 1.00)));
+      i++;
+    }
+    _widgetsCurrent = widgets;
+    print(_widgetsCurrent);
     return widgets;
   }
 
   getPreviousMonthData() {
     List<FlSpot> widgets = [];
+    List<ItemTakenModel> previousMonth = [];
     var i = 0;
-    for (var item in data) {
-      DateTime current = DateTime.now();
-      int month = current.month;
-      // print(month);
-      // print(item.createdAt!.month);
-      // print(item.createdAt!.month - month);
-      if (item.createdAt!.month - month == -1) {
-        widgets
-            .add(FlSpot(i.toDouble(), (item.sales_result!.toDouble() / 1.00)));
-        i++;
+    var sumMap = {};
+
+    DateTime current = DateTime.now();
+    int month = current.month;
+    previousMonth = data
+        .where((element) => element.createdAt!.month - month == -1)
+        .toList();
+
+    for (var element in previousMonth) {
+      String key = element.createdAt!.day.toString();
+      if (sumMap.containsKey(key)) {
+        sumMap[key] += element.sales_result;
+      } else {
+        sumMap[key] = element.sales_result!;
       }
     }
+
+    print(previousMonth);
+    print(sumMap);
+    for (var item in sumMap.values) {
+      widgets.add(FlSpot(i.toDouble(), (item / 1.00)));
+      i++;
+    }
+    _widgetsPrevious = widgets;
+    print(_widgetsPrevious);
     return widgets;
+
+    // List<FlSpot> widgets = [];
+    // var i = 0;
+    // for (var item in data) {
+    //   DateTime current = DateTime.now();
+    //   int month = current.month;
+    //   if (item.createdAt!.month - month == -1) {
+    //     widgets
+    //         .add(FlSpot(i.toDouble(), (item.sales_result!.toDouble() / 1.00)));
+    //     i++;
+    //   }
+    // }
+    // return widgets;
   }
 
   maxValue() {
@@ -97,6 +143,20 @@ class _ChartBarState extends State<ChartBar> {
 
     return _maxed.toDouble();
   }
+
+  // listOfSum() {
+  //   var sumMap = {};
+
+  //   for (var product in data) {
+  //     if (sumMap.containsKey(product.createdAt!.day)) {
+  //       sumMap[product.createdAt!.day.toString()] += product.total_item_sold!;
+  //     } else {
+  //       sumMap[product.createdAt!.day.toString()] = product.total_item_sold!;
+  //     }
+  //   }
+  //   print(sumMap);
+  //   return sumMap;
+  // }
 
   LineChartBarData get currentMonthData => LineChartBarData(
         spots: getCurrentMonthData(),
@@ -147,6 +207,11 @@ class _ChartBarState extends State<ChartBar> {
       );
   @override
   Widget build(BuildContext context) {
+    // double revenueSum = 0;
+    // for (var item in data) {
+    //   revenueSum += item.total_item_sold!;
+    // }
+    // listOfSum();
     var now = DateTime.now();
     final monthName = now.month;
 
@@ -176,13 +241,7 @@ class _ChartBarState extends State<ChartBar> {
             show: false,
             border: Border.all(color: const Color(0xff37434d), width: 1)),
         minX: 0,
-        maxX: data
-                    .where((element) =>
-                        element.createdAt!.month.toString() ==
-                        DateTime.now().month.toString())
-                    .length /
-                1.00 -
-            1,
+        maxX: _widgetsCurrent.length / 1.00 - 1,
         minY: 0,
         maxY: maxValue(),
         lineBarsData: [currentMonthData],
@@ -265,12 +324,7 @@ class _ChartBarState extends State<ChartBar> {
             show: false,
             border: Border.all(color: const Color(0xff37434d), width: 1)),
         minX: 0,
-        maxX: data
-                    .where((element) =>
-                        element.createdAt!.month - DateTime.now().month == -1)
-                    .length /
-                1.00 -
-            1,
+        maxX: _widgetsPrevious.length / 1.00 - 1,
         minY: 0,
         maxY: 7,
         lineBarsData: [previousMonthData],

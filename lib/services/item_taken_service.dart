@@ -4,7 +4,7 @@ import 'package:nsai_id/models/product_model.dart';
 final allItemTaken = <ItemTakenModel>[
   ItemTakenModel(
       id: "1",
-      absent_id: 'A0009',
+      absent_id: 'A0002',
       product_id: 'P0007',
       item_taken: 12000,
       total_item_sold: 1,
@@ -12,7 +12,7 @@ final allItemTaken = <ItemTakenModel>[
       createdAt: DateTime.parse('2022-06-22T08:41:09.000000Z')),
   ItemTakenModel(
       id: "2",
-      absent_id: 'A0009',
+      absent_id: 'A0003',
       product_id: 'P0001',
       item_taken: 10000,
       total_item_sold: 3,
@@ -20,15 +20,23 @@ final allItemTaken = <ItemTakenModel>[
       createdAt: DateTime.parse('2022-06-21T08:41:09.000000Z')),
   ItemTakenModel(
       id: "3",
-      absent_id: 'A0009',
+      absent_id: 'A0003',
       product_id: 'P0010',
       item_taken: 5000,
       total_item_sold: 2,
       sales_result: 2,
       createdAt: DateTime.parse('2022-06-20T08:41:09.000000Z')),
   ItemTakenModel(
+      id: "3",
+      absent_id: 'A0003',
+      product_id: 'P0010',
+      item_taken: 5000,
+      total_item_sold: 2,
+      sales_result: 5,
+      createdAt: DateTime.parse('2022-06-20T08:41:09.000000Z')),
+  ItemTakenModel(
       id: "4",
-      absent_id: 'A0009',
+      absent_id: 'A0004',
       product_id: 'P0017',
       item_taken: 2000,
       total_item_sold: 6,
@@ -36,7 +44,7 @@ final allItemTaken = <ItemTakenModel>[
       createdAt: DateTime.parse('2022-06-23T08:41:09.000000Z')),
   ItemTakenModel(
       id: "2",
-      absent_id: 'A0009',
+      absent_id: 'A0004',
       product_id: 'P0001',
       item_taken: 10000,
       total_item_sold: 3,
@@ -44,15 +52,23 @@ final allItemTaken = <ItemTakenModel>[
       createdAt: DateTime.parse('2022-07-21T08:41:09.000000Z')),
   ItemTakenModel(
       id: "2",
-      absent_id: 'A0009',
+      absent_id: 'A0005',
       product_id: 'P0001',
       item_taken: 10000,
       total_item_sold: 3,
       sales_result: 7,
       createdAt: DateTime.parse('2022-07-22T08:41:09.000000Z')),
   ItemTakenModel(
+      id: "2",
+      absent_id: 'A0005',
+      product_id: 'P0001',
+      item_taken: 10000,
+      total_item_sold: 3,
+      sales_result: 4,
+      createdAt: DateTime.parse('2022-07-22T08:41:09.000000Z')),
+  ItemTakenModel(
       id: "1",
-      absent_id: 'A0009',
+      absent_id: 'A0006',
       product_id: 'P0007',
       item_taken: 12000,
       total_item_sold: 1,
@@ -60,7 +76,7 @@ final allItemTaken = <ItemTakenModel>[
       createdAt: DateTime.parse('2022-05-22T08:41:09.000000Z')),
   ItemTakenModel(
       id: "2",
-      absent_id: 'A0009',
+      absent_id: 'A0006',
       product_id: 'P0001',
       item_taken: 10000,
       total_item_sold: 3,
@@ -68,7 +84,7 @@ final allItemTaken = <ItemTakenModel>[
       createdAt: DateTime.parse('2022-05-21T08:41:09.000000Z')),
   ItemTakenModel(
       id: "3",
-      absent_id: 'A0009',
+      absent_id: 'A0006',
       product_id: 'P0010',
       item_taken: 5000,
       total_item_sold: 2,
