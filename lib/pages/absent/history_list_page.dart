@@ -26,31 +26,11 @@ class _AbsentHistoryListState extends State<AbsentHistoryList>
   @override
   void initState() {
     super.initState();
-    _handlefunction();
+    // _handlefunction();
   }
 
   @override
   bool get wantKeepAlive => true;
-
-  Future _handlefunction() async {
-    setState(() {
-      isLoading = true;
-    });
-    await handler();
-    if (!mounted) return;
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  handler() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    var token = prefs.getString('token');
-    var id = prefs.getString('id');
-    await Provider.of<AttendanceProvider>(context, listen: false)
-        .getAttendancesHistory(token, id);
-  }
 
   @override
   Widget build(BuildContext context) {

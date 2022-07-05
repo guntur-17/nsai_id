@@ -106,6 +106,10 @@ class _DocumentPageState extends State<DocumentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final DateTime now = DateTime.now();
+    final DateFormat format = DateFormat('yyyy-MM-dd');
+    final String formatted = format.format(now);
+    print(formatted);
     // List document = documentProvider.documents.reversed.toList();
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
