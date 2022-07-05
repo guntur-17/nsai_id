@@ -10,33 +10,6 @@ import 'package:nsai_id/models/attendance_model.dart';
 
 class AttendanceService {
   String baseUrl = 'http://nsa-api.sakataguna-dev.com/api';
-  // String token = AuthProvider.user.token;
-
-  // Future<List<AttendanceModel>> getAttendances(String? token) async {
-  //   // var token = await.getToken();
-  //   var url = Uri.parse('$baseUrl/user/attendance/history');
-  //   var headers = {
-  //     'Content-Type': 'application/json',
-  //     'Authorization': token as String
-  //   };
-
-  //   var response = await http.get(url, headers: headers);
-  //   print(response.statusCode);
-  //   print(response.body);
-
-  //   if (response.statusCode == 200) {
-  //     List data = jsonDecode(response.body)['data']['attendance'];
-  //     List<AttendanceModel> attendances = [];
-
-  //     for (var item in data) {
-  //       attendances.add(AttendanceModel.fromJson(item));
-  //     }
-
-  //     return attendances;
-  //   } else {
-  //     throw Exception('Gagal Get attendances');
-  //   }
-  // }
 
   Future<List<AttendanceHistoryModel>> getAttendancesHistory(
       {String? token, String? id}) async {
@@ -96,26 +69,27 @@ class AttendanceService {
     }
   }
 
-  Future<bool> attendanceOut(
+  Future<AttendanceModel> attendanceOut({
+    String? id,
     String? token,
     String? time,
-    double? lat,
-    double? long,
-  ) async {
-    var url = Uri.parse('$baseUrl/user/attendance-out');
+  }) async {
+    var url = Uri.parse('$baseUrl/attendance/clock-out/$id');
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': token as String
     };
-    var body = jsonEncode({'time': time, 'lat': lat, 'long': long});
+    var body = jsonEncode({'clock_out': time});
 
-    var response = await http.post(url, headers: headers, body: body);
+    var response = await http.put(url, headers: headers, body: body);
 
     print(response.statusCode);
     print(response.body);
 
     if (response.statusCode == 200) {
-      return true;
+      var dataa = jsonDecode(response.body)['data'];
+      AttendanceModel data = AttendanceModel.fromJson(dataa);
+      return data;
     } else {
       throw Exception('Gagal attendance in ');
     }

@@ -7,10 +7,18 @@ import 'package:nsai_id/services/attendance_service.dart';
 
 class AttendanceProvider with ChangeNotifier {
   AttendanceModel? _data;
+  AttendanceHistoryModel? _dataHistory;
 
   AttendanceModel get data => _data as AttendanceModel;
   set data(AttendanceModel data) {
     _data = data;
+    notifyListeners();
+  }
+
+  AttendanceHistoryModel get dataHistory =>
+      _dataHistory as AttendanceHistoryModel;
+  set dataHistory(AttendanceHistoryModel data) {
+    _dataHistory = data;
     notifyListeners();
   }
 
@@ -98,18 +106,16 @@ class AttendanceProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> attendanceOut(
+  Future<bool> attendanceOut({
+    String? id,
     String? token,
     String? time,
-    double? lat,
-    double? long,
-  ) async {
+  }) async {
     try {
-      if (await AttendanceService().attendanceOut(token, time, lat, long)) {
-        return true;
-      } else {
-        return false;
-      }
+      AttendanceModel data = await AttendanceService()
+          .attendanceOut(time: time, token: token, id: id);
+      // _dataHistory = dataHistory;
+      return true;
     } catch (e) {
       print(e);
       return false;

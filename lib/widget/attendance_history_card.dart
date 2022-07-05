@@ -91,6 +91,7 @@ class AttendanceHistoryCard extends StatelessWidget {
                   style: trueBlackTextStyle.copyWith(
                       fontSize: 18, fontWeight: FontWeight.w500),
                 ),
+                Text(historyDistributor!.id!),
               ],
             ),
           ),

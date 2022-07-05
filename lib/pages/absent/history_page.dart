@@ -45,6 +45,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  dynamic currentTime = DateFormat.Hms().format(DateTime.now());
   @override
   void initState() {
     super.initState();
@@ -56,11 +57,60 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    AttendanceHistoryModel history = widget.attendanceHistory;
+    AttendanceProvider attedanceProvider =
+        Provider.of<AttendanceProvider>(context);
+    handleCheckout() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      Loader.show(
+        context,
+        isSafeAreaOverlay: false,
+        // isBottomBarOverlay: false,
+        // overlayFromBottom: 80,
+        overlayColor: Colors.black26,
+        progressIndicator: CircularProgressIndicator(
+          color: blueBrightColor,
+        ),
+        themeData: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.fromSwatch().copyWith(secondary: whiteColor),
+        ),
+      );
+      if (await AttendanceProvider()
+          .attendanceOut(id: history.id, token: token, time: currentTime)) {
+        Loader.hide();
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+            (route) => false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: greenColor,
+            content: const Text(
+              'berhasil clockin',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      } else {
+        Loader.hide();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: redColor,
+            content: const Text(
+              'gagal clockin',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }
+    }
+
     return RelativeBuilder(
       builder: (context, height, width, sy, sx) {
         bool? isCheckin = true;
         bool? isLoading = false;
-        List<ItemTakenModel>? product = widget.attendanceHistory.item?.toList();
+        List<ItemTakenModel>? product = history.item?.toList();
         // Widget distributor() {
         //   return DropdownButton(
         //     hint: _dropDownValue == null
@@ -118,103 +168,68 @@ class _HistoryPageState extends State<HistoryPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Column(
-                        mainAxisSize: MainAxisSize.min,
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            child: DataTable(
-                                columnSpacing: 40,
-                                border: TableBorder.all(
-                                  width: 1.0,
-                                  color: grey,
-                                ),
-                                headingRowColor: MaterialStateColor.resolveWith(
-                                    (states) => Color(0xff0354A6)),
-                                columns: <DataColumn>[
-                                  DataColumn(
-                                    label: Text(
-                                      "Nama \nBarang",
-                                      style: whiteInterTextStyle.copyWith(
-                                          fontWeight: medium, fontSize: 14),
-                                      textAlign: TextAlign.center,
-                                    ),
+                      mainAxisSize: MainAxisSize.min,
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          child: DataTable(
+                              columnSpacing: 40,
+                              border: TableBorder.all(
+                                width: 1.0,
+                                color: grey,
+                              ),
+                              headingRowColor: MaterialStateColor.resolveWith(
+                                  (states) => Color(0xff0354A6)),
+                              columns: <DataColumn>[
+                                DataColumn(
+                                  label: Text(
+                                    "Nama \nBarang",
+                                    style: whiteInterTextStyle.copyWith(
+                                        fontWeight: medium, fontSize: 14),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  DataColumn(
-                                      label: Text(
-                                    "Jumlah \nBarang",
-                                    style: whiteInterTextStyle.copyWith(
-                                        fontWeight: medium, fontSize: 14),
-                                    textAlign: TextAlign.center,
-                                  )),
-                                  DataColumn(
-                                      label: Text(
-                                    "Harga \nSatuan",
-                                    style: whiteInterTextStyle.copyWith(
-                                        fontWeight: medium, fontSize: 14),
-                                    textAlign: TextAlign.center,
-                                  )),
-                                ],
-                                rows: product!.map((e) {
-                                  var index = product.indexOf(e);
-                                  return DataRow(
-                                    color: MaterialStateProperty.resolveWith<
-                                        Color?>((Set<MaterialState> states) {
-                                      if (index.isEven) {
-                                        return Color(0xffF4F4F5);
-                                      }
-                                      return null; // Use the default value.
-                                    }),
-                                    cells: <DataCell>[
-                                      DataCell(Center(
-                                          child: Text(e.product!.name!))),
-                                      DataCell(Center(
-                                          child:
-                                              Text(e.item_taken.toString()))),
-                                      DataCell(Center(
-                                          child: Text(
-                                              e.product!.price!.toString()))),
-                                    ],
-                                  );
-                                }).toList()),
-                          )
-                        ]
-
-                        // product!
-                        //     .map(
-                        //       (e) => Container(
-                        //         padding: EdgeInsets.only(top: 8),
-                        //         child: Row(
-                        //           mainAxisAlignment:
-                        //               MainAxisAlignment.spaceAround,
-                        //           children: [
-                        //             Text(
-                        //               e.product!.name!,
-                        //               style: trueBlackInterTextStyle.copyWith(
-                        //                 fontSize: 16,
-                        //                 fontWeight: medium,
-                        //               ),
-                        //             ),
-                        //             Text(
-                        //               e.item_taken.toString(),
-                        //               style: trueBlackInterTextStyle.copyWith(
-                        //                 fontSize: 16,
-                        //                 fontWeight: medium,
-                        //               ),
-                        //             ),
-                        //             Text(
-                        //               e.product!.price!.toString(),
-                        //               style: trueBlackInterTextStyle.copyWith(
-                        //                 fontSize: 16,
-                        //                 fontWeight: medium,
-                        //               ),
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     )
-                        //     .toList(),
-                        ),
+                                ),
+                                DataColumn(
+                                    label: Text(
+                                  "Jumlah \nBarang",
+                                  style: whiteInterTextStyle.copyWith(
+                                      fontWeight: medium, fontSize: 14),
+                                  textAlign: TextAlign.center,
+                                )),
+                                DataColumn(
+                                    label: Text(
+                                  "Harga \nSatuan",
+                                  style: whiteInterTextStyle.copyWith(
+                                      fontWeight: medium, fontSize: 14),
+                                  textAlign: TextAlign.center,
+                                )),
+                              ],
+                              rows: product!.map((e) {
+                                var index = product.indexOf(e);
+                                return DataRow(
+                                  color:
+                                      MaterialStateProperty.resolveWith<Color?>(
+                                          (Set<MaterialState> states) {
+                                    if (index.isEven) {
+                                      return Color(0xffF4F4F5);
+                                    }
+                                    return null; // Use the default value.
+                                  }),
+                                  cells: <DataCell>[
+                                    DataCell(
+                                        Center(child: Text(e.product!.name!))),
+                                    DataCell(Center(
+                                        child: Text(e.item_taken.toString()))),
+                                    DataCell(Center(
+                                        child: Text(
+                                            e.product!.price!.toString()))),
+                                  ],
+                                );
+                              }).toList()),
+                        )
+                      ],
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -232,7 +247,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             ),
                             InstaImageViewer(
                               child: Image.network(
-                                widget.attendanceHistory.distributor_photo!,
+                                history.distributor_photo!,
                                 height: 130,
                                 width: 130,
                               ),
@@ -253,7 +268,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             ),
                             InstaImageViewer(
                               child: Image.network(
-                                widget.attendanceHistory.item_photo!,
+                                history.item_photo!,
                                 height: 130,
                                 width: 130,
                               ),
@@ -277,21 +292,69 @@ class _HistoryPageState extends State<HistoryPage> {
               child: Column(
                 children: [
                   Text(
-                    widget.attendanceHistory.distributor!.name,
+                    history.distributor!.name,
                     style: trueBlackRobotTextStyle.copyWith(
                       fontWeight: semiBold,
                       fontSize: 24,
                     ),
                   ),
                   Divider(),
-                  Text(
-                    widget.attendanceHistory.clock_in
-                        .toString()
-                        .substring(0, 5),
-                    style: trueBlackRobotTextStyle.copyWith(
-                      fontWeight: medium,
-                      fontSize: 20,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        history.clock_in!.substring(0, 5),
+                        style: trueBlackRobotTextStyle.copyWith(
+                          fontWeight: medium,
+                          fontSize: 20,
+                        ),
+                      ),
+                      Text(
+                        " - ",
+                        style: trueBlackRobotTextStyle.copyWith(
+                          fontWeight: medium,
+                          fontSize: 20,
+                        ),
+                      ),
+                      history.clock_out == "00:00:00"
+                          ? ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: primaryBlue),
+                              onPressed: () async {
+                                await handleCheckout();
+                                // Navigator.of(context).push
+                                // (MaterialPageRoute(
+                                //     builder: (BuildContext context) => StockListPage()));
+                              },
+                              child: Container(
+                                // width: 137,
+                                // height: 36,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  // color: primaryBlue,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Check Out',
+                                      style: whiteInterTextStyle.copyWith(
+                                          fontSize: 16, fontWeight: medium),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Text(
+                              history.clock_out!.substring(0, 5),
+                              style: trueBlackRobotTextStyle.copyWith(
+                                fontWeight: medium,
+                                fontSize: 20,
+                              ),
+                            ),
+                    ],
                   ),
                 ],
               ),
