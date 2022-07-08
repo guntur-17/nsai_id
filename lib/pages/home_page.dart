@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            user.full_name!,
+                            user.nick_name!,
                             style: whiteRobotoTextStyle.copyWith(
                               fontSize: 20,
                               fontWeight: semiBold,

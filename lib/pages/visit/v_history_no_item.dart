@@ -1160,7 +1160,7 @@ class _VisitPageState extends State<VisitingNoItem> {
 
                                 updateState(() {});
                               },
-                              image: imageProduct!,
+                              image: imageOther!,
                             )
                           else
                             TakePhoto(
