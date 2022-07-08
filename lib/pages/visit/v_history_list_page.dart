@@ -38,33 +38,31 @@ class _VisitingHistoryListState extends State<VisitingHistoryList>
   @override
   void initState() {
     super.initState();
-    _handlefunction();
+    // _handlefunction();
   }
 
   @override
   bool get wantKeepAlive => true;
 
-  Future _handlefunction() async {
-    setState(() {
-      isLoading = true;
-    });
-    await handler();
-    if (!mounted) return;
-    setState(() {
-      isLoading = false;
-    });
-  }
+  // Future _handlefunction() async {
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+  //   await handler();
+  //   if (!mounted) return;
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  // }
 
-  handler() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+  // handler() async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var token = prefs.getString('token');
-    var id = prefs.getString('id');
-    await Provider.of<VisitingProvider>(context, listen: false)
-        .getVisitingHistory(token, id);
-    // await Provider.of<AttendanceProvider>(context, listen: false)
-    //     .getItemTaken(token, id);
-  }
+  //   var token = prefs.getString('token');
+  //   var id = prefs.getString('id');
+  //   await Provider.of<VisitingProvider>(context, listen: false)
+  //       .getVisitingHistory(token, id);
+  // }
 
   @override
   Widget build(BuildContext context) {

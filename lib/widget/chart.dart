@@ -2,10 +2,15 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:nsai_id/models/history_attendance_model.dart';
 import 'package:nsai_id/models/item_taken_model.dart';
 import 'package:nsai_id/services/item_taken_service.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../providers/attendance_provider.dart';
 import '../theme.dart';
+import 'loading_widget.dart';
 
 class ChartBar extends StatefulWidget {
   const ChartBar({Key? key}) : super(key: key);
@@ -15,7 +20,9 @@ class ChartBar extends StatefulWidget {
 }
 
 class _ChartBarState extends State<ChartBar> {
+  bool isLoading = false;
   List<ItemTakenModel> data = allItemTaken;
+  List<ItemTakenModel> _itemTaken = [];
   List<FlSpot> _widgetsCurrent = [];
   List<FlSpot> _widgetsPrevious = [];
   List months = [
@@ -64,7 +71,7 @@ class _ChartBarState extends State<ChartBar> {
 
     DateTime current = DateTime.now();
     String month = current.month.toString();
-    currentMonth = data
+    currentMonth = _itemTaken
         .where((element) => element.createdAt!.month.toString() == month)
         .toList();
 
@@ -77,14 +84,14 @@ class _ChartBarState extends State<ChartBar> {
       }
     }
 
-    print(currentMonth);
-    print(sumMap);
+    // print(currentMonth);
+    // print(sumMap);
     for (var item in sumMap.values) {
-      widgets.add(FlSpot(i.toDouble(), (item / 1.00)));
+      widgets.add(FlSpot(i.toDouble(), (item / 1000000.00)));
       i++;
     }
     _widgetsCurrent = widgets;
-    print(_widgetsCurrent);
+    // print(_widgetsCurrent);
     return widgets;
   }
 
@@ -96,7 +103,7 @@ class _ChartBarState extends State<ChartBar> {
 
     DateTime current = DateTime.now();
     int month = current.month;
-    previousMonth = data
+    previousMonth = _itemTaken
         .where((element) => element.createdAt!.month - month == -1)
         .toList();
 
@@ -109,14 +116,14 @@ class _ChartBarState extends State<ChartBar> {
       }
     }
 
-    print(previousMonth);
-    print(sumMap);
+    // print(previousMonth);
+    // print(sumMap);
     for (var item in sumMap.values) {
-      widgets.add(FlSpot(i.toDouble(), (item / 1.00)));
+      widgets.add(FlSpot(i.toDouble(), (item / 1000000.00)));
       i++;
     }
     _widgetsPrevious = widgets;
-    print(_widgetsPrevious);
+    print('ini' + _widgetsPrevious.toString());
     return widgets;
 
     // List<FlSpot> widgets = [];
@@ -160,18 +167,47 @@ class _ChartBarState extends State<ChartBar> {
 
   @override
   void initState() {
-    _handlefunction();
+    handler();
     super.initState();
   }
 
   handler() async {
-    getCurrentMonthData();
-    getPreviousMonthData();
+    setState(() {
+      isLoading = true;
+    });
+    await _handlefunction();
+
+    if (!mounted) return;
+    await getCurrentMonthData();
+    await getPreviousMonthData();
+    if (!mounted) return;
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  handlerHistory() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString('token');
+    var id = prefs.getString('id');
+    await Provider.of<AttendanceProvider>(context, listen: false)
+        .getAttendancesHistory(token, id);
+    AttendanceProvider attendanceProvider =
+        Provider.of<AttendanceProvider>(context, listen: false);
+    // List distributor = distributorProvider.distributors.toList();
+
+    List<AttendanceHistoryModel> list =
+        attendanceProvider.attendancesHistory.toList();
+    for (var _item in list) {
+      _itemTaken.addAll(_item.item!);
+    }
   }
 
   Future _handlefunction() async {
-    await handler();
+    await handlerHistory();
     if (!mounted) return;
+    print(_itemTaken);
   }
 
   LineChartBarData get currentMonthData => LineChartBarData(
@@ -259,7 +295,7 @@ class _ChartBarState extends State<ChartBar> {
         minX: 0,
         maxX: _widgetsCurrent.length / 1.00 - 1,
         minY: 0,
-        maxY: maxValue(),
+        maxY: 25,
         lineBarsData: [currentMonthData],
       );
     }
@@ -342,7 +378,7 @@ class _ChartBarState extends State<ChartBar> {
         minX: 0,
         maxX: _widgetsPrevious.length / 1.00 - 1,
         minY: 0,
-        maxY: 7,
+        maxY: 25,
         lineBarsData: [previousMonthData],
       );
     }
@@ -423,14 +459,9 @@ class _ChartBarState extends State<ChartBar> {
             show: false,
             border: Border.all(color: const Color(0xff37434d), width: 1)),
         minX: 0,
-        maxX: data
-                    .where((element) =>
-                        element.createdAt!.month - DateTime.now().month == -1)
-                    .length /
-                1.00 -
-            1,
+        maxX: 31,
         minY: 0,
-        maxY: 7,
+        maxY: 25,
         lineBarsData: comparisonData,
       );
     }
@@ -503,18 +534,24 @@ class _ChartBarState extends State<ChartBar> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 12.0, bottom: 14),
-              child: currentMonth(),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 12.0, bottom: 14),
-              child: previousMonth(),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 12.0, bottom: 14),
-              child: comparison(),
-            ),
+            isLoading
+                ? Loading()
+                : Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12.0, bottom: 14),
+                        child: currentMonth(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12.0, bottom: 14),
+                        child: previousMonth(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12.0, bottom: 14),
+                        child: comparison(),
+                      ),
+                    ],
+                  ),
           ],
         ),
       ),

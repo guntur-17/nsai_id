@@ -56,7 +56,7 @@ class DistributorCard extends StatelessWidget {
             var radius = Geolocator.distanceBetween(
                 latUser, longUser, latshop!, longshop!);
             print(radius);
-            if (radius >= 300) {
+            if (radius >= 0) {
               await producthandler(distributor.id);
               Navigator.push(
                 context,

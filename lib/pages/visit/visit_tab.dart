@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:nsai_id/pages/visit/blank_v_page.dart';
 import 'package:nsai_id/pages/visit/v_history_list_page.dart';
 import 'package:nsai_id/pages/visit/visit_list_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../models/history_attendance_model.dart';
+import '../../models/item_taken_model.dart';
 import '../../models/outlet_model.dart';
 import '../../providers/attendance_provider.dart';
+import '../../providers/visiting_provider.dart';
+import '../../widget/loading_widget.dart';
 import '../list_test_page2.dart';
 
 class VisitTab extends StatefulWidget {
@@ -17,18 +22,24 @@ class VisitTab extends StatefulWidget {
 }
 
 class _VisitTabState extends State<VisitTab> {
+  bool isLoading = false;
+  List<ItemTakenModel> _itemTaken = [];
+
   @override
   void initState() {
-    // shopListHandler();
     _handlefunction();
     super.initState();
-
-    // init();
   }
 
   Future _handlefunction() async {
+    setState(() {
+      isLoading = true;
+    });
     await handler();
     if (!mounted) return;
+    setState(() {
+      isLoading = false;
+    });
   }
 
   handler() async {
@@ -38,6 +49,14 @@ class _VisitTabState extends State<VisitTab> {
     var id = prefs.getString('id');
     await Provider.of<AttendanceProvider>(context, listen: false)
         .getItemTaken(token, id);
+    await Provider.of<VisitingProvider>(context, listen: false)
+        .getVisitingHistory(token, id);
+    AttendanceProvider attendanceProvider =
+        Provider.of<AttendanceProvider>(context, listen: false);
+    List<AttendanceHistoryModel> list = attendanceProvider.itemTaken.toList();
+    for (var _item in list) {
+      _itemTaken.addAll(_item.item!);
+    }
   }
 
   @override
@@ -105,12 +124,16 @@ class _VisitTabState extends State<VisitTab> {
                 ),
               ];
             },
-            body: TabBarView(
-              children: <Widget>[
-                VisitListPage(widget.outlet),
-                VisitingHistoryList(),
-              ],
-            ),
+            body: isLoading
+                ? Loading()
+                : TabBarView(
+                    children: <Widget>[
+                      (_itemTaken.isEmpty)
+                          ? BlankVPage()
+                          : VisitListPage(widget.outlet),
+                      VisitingHistoryList(),
+                    ],
+                  ),
           ),
         ),
       ),

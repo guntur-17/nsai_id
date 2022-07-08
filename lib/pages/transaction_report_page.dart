@@ -33,23 +33,12 @@ class ReportPage extends StatefulWidget {
 class _ReportPageState extends State<ReportPage> {
   List<ItemTakenModel> _itemTaken = [];
   List<ItemTakenModel> _itemTakens = [];
+  List<ItemTakenModel> _taken = [];
 
   @override
   initState() {
-    List<ItemTakenModel> itemTaken = allItemTaken;
-    _itemTaken = itemTaken
-        .where((element) => widget.selectedDate.isSameDay(element.createdAt!))
-        .toList();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final _verticalScrollController = ScrollController();
-    final _horizontalScrollController = ScrollController();
     AttendanceProvider attendanceProvider =
         Provider.of<AttendanceProvider>(context, listen: false);
-    // List distributor = distributorProvider.distributors.toList();
 
     List<AttendanceHistoryModel> list = attendanceProvider.attendancesHistory
         .where((element) => element.distributor_id == widget.distributor)
@@ -57,6 +46,19 @@ class _ReportPageState extends State<ReportPage> {
     for (var _item in list) {
       _itemTakens.addAll(_item.item!);
     }
+
+    // List<ItemTakenModel> itemTaken = _itemTakens;
+    _itemTaken = _itemTakens
+        .where((element) => widget.selectedDate.isSameDay(element.createdAt!))
+        .toList();
+    _taken = _itemTaken;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final _verticalScrollController = ScrollController();
+    final _horizontalScrollController = ScrollController();
 
     Widget body() {
       return Expanded(
@@ -95,7 +97,11 @@ class _ReportPageState extends State<ReportPage> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(bottom: 12.0),
-                            child: Text('Periode X s/d Y',
+                            child: Text(
+                                'Periode ' +
+                                    DateFormat("yyyy-MM-dd")
+                                        .format(widget.selectedDate)
+                                        .toString(),
                                 style: trueBlackInterTextStyle.copyWith(
                                     fontSize: 12)),
                           ),
@@ -177,8 +183,8 @@ class _ReportPageState extends State<ReportPage> {
                                         textAlign: TextAlign.center,
                                       )),
                                     ],
-                                    rows: _itemTakens.map((e) {
-                                      var index = _itemTakens.indexOf(e);
+                                    rows: _taken.map((e) {
+                                      var index = _taken.indexOf(e);
                                       return DataRow(
                                         color: MaterialStateProperty
                                             .resolveWith<Color?>(
