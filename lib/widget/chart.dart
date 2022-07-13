@@ -123,7 +123,7 @@ class _ChartBarState extends State<ChartBar> {
       i++;
     }
     _widgetsPrevious = widgets;
-    print('ini' + _widgetsPrevious.toString());
+    // print('ini' + _widgetsPrevious.toString());
     return widgets;
 
     // List<FlSpot> widgets = [];
@@ -187,12 +187,12 @@ class _ChartBarState extends State<ChartBar> {
   }
 
   handlerHistory() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var token = prefs.getString('token');
-    var id = prefs.getString('id');
-    await Provider.of<AttendanceProvider>(context, listen: false)
-        .getAttendancesHistory(token, id);
+    // var token = prefs.getString('token');
+    // var id = prefs.getString('id');
+    // await Provider.of<AttendanceProvider>(context, listen: false)
+    //     .getAttendancesHistory(token, id);
     AttendanceProvider attendanceProvider =
         Provider.of<AttendanceProvider>(context, listen: false);
     // List distributor = distributorProvider.distributors.toList();

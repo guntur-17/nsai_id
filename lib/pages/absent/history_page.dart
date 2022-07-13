@@ -87,7 +87,7 @@ class _HistoryPageState extends State<HistoryPage> {
           SnackBar(
             backgroundColor: greenColor,
             content: const Text(
-              'berhasil clockin',
+              'Berhasil checkout',
               textAlign: TextAlign.center,
             ),
           ),
@@ -98,7 +98,7 @@ class _HistoryPageState extends State<HistoryPage> {
           SnackBar(
             backgroundColor: redColor,
             content: const Text(
-              'gagal clockin',
+              'Gagal checkout',
               textAlign: TextAlign.center,
             ),
           ),

@@ -375,7 +375,7 @@ class _VisitPageState extends State<VisitingNoItem> {
           SnackBar(
             backgroundColor: greenColor,
             content: const Text(
-              'berhasil Upload photo',
+              'Berhasil Visiting',
               textAlign: TextAlign.center,
             ),
           ),
@@ -386,7 +386,7 @@ class _VisitPageState extends State<VisitingNoItem> {
           SnackBar(
             backgroundColor: redColor,
             content: const Text(
-              'gagal Upload Photo',
+              'Gagal, foto tidak lengkap',
               textAlign: TextAlign.center,
             ),
           ),

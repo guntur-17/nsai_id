@@ -332,7 +332,7 @@ class _AttendancePageState extends State<AttendancePage> {
           SnackBar(
             backgroundColor: greenColor,
             content: const Text(
-              'berhasil Upload photo',
+              'Berhasil Attendance',
               textAlign: TextAlign.center,
             ),
           ),
@@ -343,7 +343,7 @@ class _AttendancePageState extends State<AttendancePage> {
           SnackBar(
             backgroundColor: redColor,
             content: const Text(
-              'gagal Upload Photo',
+              'Gagal, foto tidak lengkap',
               textAlign: TextAlign.center,
             ),
           ),

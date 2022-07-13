@@ -62,11 +62,11 @@ class FaqPage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 24.0),
                   child: Column(
                     children: [
-                      FaqMenu('Tujuan', TestPrint()),
-                      FaqMenu('Manfaat', HomePage()),
-                      FaqMenu('Registrasi', HomePage()),
-                      FaqMenu('Lupa Password', HomePage()),
-                      FaqMenu('Penggunaan', GuidePage()),
+                      FaqMenu(title: 'Menu 1'),
+                      FaqMenu(title: 'Menu 2'),
+                      FaqMenu(title: 'Menu 3'),
+                      FaqMenu(title: 'Menu 4'),
+                      FaqMenu(title: 'Menu 5'),
                       Spacer(),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 32.0),
@@ -123,7 +123,7 @@ class FaqPage extends StatelessWidget {
             bottomOpacity: 0.0,
             elevation: 0.0,
             title: Text(
-              'FAQ',
+              'Lainnya',
               style: whiteRobotoTextStyle.copyWith(
                   fontSize: 20, fontWeight: semiBold),
             ),

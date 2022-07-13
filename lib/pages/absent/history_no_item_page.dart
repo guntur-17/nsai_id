@@ -285,7 +285,7 @@ class _HistoryWithoutItemPageState extends State<HistoryWithoutItemPage> {
           SnackBar(
             backgroundColor: greenColor,
             content: const Text(
-              'berhasil Upload photo',
+              'Berhasil Attendance',
               textAlign: TextAlign.center,
             ),
           ),
@@ -296,7 +296,7 @@ class _HistoryWithoutItemPageState extends State<HistoryWithoutItemPage> {
           SnackBar(
             backgroundColor: redColor,
             content: const Text(
-              'gagal Upload Photo',
+              'Gagal, foto tidak lengkap',
               textAlign: TextAlign.center,
             ),
           ),

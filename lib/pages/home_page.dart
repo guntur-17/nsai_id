@@ -25,6 +25,7 @@ import 'package:nsai_id/providers/attendance_provider.dart';
 import 'package:nsai_id/providers/auth_provider.dart';
 import 'package:nsai_id/providers/distributor_provider.dart';
 import 'package:nsai_id/providers/outlet_provider.dart';
+import 'package:nsai_id/widget/attendance_count.dart';
 import 'package:nsai_id/widget/chart.dart';
 import 'package:nsai_id/widget/home_menu.dart';
 import 'package:provider/provider.dart';
@@ -254,73 +255,74 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0xff101828).withOpacity(0.1),
-                              spreadRadius: -4,
-                              blurRadius: 16,
-                              offset:
-                                  Offset(0, 12), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        height: 70,
-                        width: MediaQuery.of(context).size.width * 0.45,
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              top: 8, bottom: 8, right: 16, left: 16),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Text('Kehadiran',
-                                      style: trueBlackRobotoTextStyle.copyWith(
-                                          fontSize: 12, fontWeight: semiBold)),
-                                ],
-                              ),
-                              Divider(
-                                height: 12,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Hadir',
-                                    style: trueBlackRobotoTextStyle.copyWith(
-                                        fontSize: 12),
-                                  ),
-                                  Text(
-                                    'XX',
-                                    style: blueRobotoTextStyle.copyWith(
-                                        fontSize: 12),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Tidak',
-                                    style: trueBlackRobotoTextStyle.copyWith(
-                                        fontSize: 12),
-                                  ),
-                                  Text(
-                                    'XX',
-                                    style: redRobotoTextStyle.copyWith(
-                                        fontSize: 12),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      AttCount()
+                      // Container(
+                      //   decoration: BoxDecoration(
+                      //     color: Colors.white,
+                      //     borderRadius: BorderRadius.all(Radius.circular(8)),
+                      //     boxShadow: [
+                      //       BoxShadow(
+                      //         color: Color(0xff101828).withOpacity(0.1),
+                      //         spreadRadius: -4,
+                      //         blurRadius: 16,
+                      //         offset:
+                      //             Offset(0, 12), // changes position of shadow
+                      //       ),
+                      //     ],
+                      //   ),
+                      //   height: 70,
+                      //   width: MediaQuery.of(context).size.width * 0.45,
+                      //   child: Container(
+                      //     margin: EdgeInsets.only(
+                      //         top: 8, bottom: 8, right: 16, left: 16),
+                      //     child: Column(
+                      //       children: [
+                      //         Row(
+                      //           children: [
+                      //             Text('Kehadiran',
+                      //                 style: trueBlackRobotoTextStyle.copyWith(
+                      //                     fontSize: 12, fontWeight: semiBold)),
+                      //           ],
+                      //         ),
+                      //         Divider(
+                      //           height: 12,
+                      //         ),
+                      //         Row(
+                      //           mainAxisAlignment:
+                      //               MainAxisAlignment.spaceBetween,
+                      //           children: [
+                      //             Text(
+                      //               'Hadir',
+                      //               style: trueBlackRobotoTextStyle.copyWith(
+                      //                   fontSize: 12),
+                      //             ),
+                      //             Text(
+                      //               'XX',
+                      //               style: blueRobotoTextStyle.copyWith(
+                      //                   fontSize: 12),
+                      //             )
+                      //           ],
+                      //         ),
+                      //         Row(
+                      //           mainAxisAlignment:
+                      //               MainAxisAlignment.spaceBetween,
+                      //           children: [
+                      //             Text(
+                      //               'Tidak',
+                      //               style: trueBlackRobotoTextStyle.copyWith(
+                      //                   fontSize: 12),
+                      //             ),
+                      //             Text(
+                      //               'XX',
+                      //               style: redRobotoTextStyle.copyWith(
+                      //                   fontSize: 12),
+                      //             )
+                      //           ],
+                      //         )
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

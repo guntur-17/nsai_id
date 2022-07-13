@@ -15,6 +15,7 @@ import 'package:nsai_id/providers/document_provider.dart';
 import 'package:nsai_id/providers/outlet_provider.dart';
 import 'package:nsai_id/providers/region_provider.dart';
 import 'package:nsai_id/providers/visiting_provider.dart';
+import 'package:nsai_id/widget/loading_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,7 +34,7 @@ class _SplashPageState extends State<SplashPage> {
   Route route = MaterialPageRoute(builder: (context) => const HomePage());
   String currentAddress = 'My Address';
   Position? currentposition;
-  // bool isLoading = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -84,11 +85,11 @@ class _SplashPageState extends State<SplashPage> {
     await Provider.of<OutletProvider>(context, listen: false).getShops(token);
   }
 
-  // attendanceHistoryHandler(token, id) async {
-  //   await Provider.of<AttendanceProvider>(context, listen: false)
-  //       .getAttendancesHistory(token, id);
-  //   // if () setState(() {});
-  // }
+  attendanceHistoryHandler(token, id) async {
+    await Provider.of<AttendanceProvider>(context, listen: false)
+        .getAttendancesHistory(token, id);
+    // if () setState(() {});
+  }
 
   // visitingHistoryHandler(token, id) async {
   //   await Provider.of<VisitingProvider>(context, listen: false)
@@ -108,10 +109,17 @@ class _SplashPageState extends State<SplashPage> {
     // var token = prefs.getString('token');
     if (await Provider.of<AuthProvider>(context, listen: false)
         .getUser(token: token, id: id)) {
+      setState(() {
+        isLoading = true;
+      });
       await outlethandler(token);
       await distributorHandler(token);
       await documentHandler(token);
-      // await attendanceHistoryHandler(token, id);
+      await attendanceHistoryHandler(token, id);
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+      });
       // await itemTakenHandler(token, id);
       // await visitingHistoryHandler(token, id);
       Navigator.pushReplacement(context, route);
@@ -167,11 +175,22 @@ class _SplashPageState extends State<SplashPage> {
                   width: sx(200),
                   height: sy(200),
                 ),
-                Image.asset(
-                  "assets/logo2.png",
-                  width: sx(135),
-                  height: sy(135),
-                ),
+                isLoading
+                    ? Column(
+                        children: [
+                          Image.asset(
+                            "assets/logo2.png",
+                            width: sx(135),
+                            height: sy(135),
+                          ),
+                          Loading(),
+                        ],
+                      )
+                    : Image.asset(
+                        "assets/logo2.png",
+                        width: sx(135),
+                        height: sy(135),
+                      ),
               ],
             ),
           ),

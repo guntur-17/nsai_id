@@ -421,7 +421,7 @@ class _VisitPageState extends State<OutletPage2> {
           SnackBar(
             backgroundColor: greenColor,
             content: const Text(
-              'berhasil Upload photo',
+              'Berhasil Visiting',
               textAlign: TextAlign.center,
             ),
           ),
@@ -432,7 +432,7 @@ class _VisitPageState extends State<OutletPage2> {
           SnackBar(
             backgroundColor: redColor,
             content: const Text(
-              'gagal Upload Photo',
+              'Gagal, foto tidak lengkap',
               textAlign: TextAlign.center,
             ),
           ),
@@ -1113,7 +1113,7 @@ class _VisitPageState extends State<OutletPage2> {
                       width: 10,
                     ),
                     Text(
-                      'Absensi & Pengambilan Barang',
+                      'Visiting & Penjualan Barang',
                       softWrap: true,
                       style: whiteRobotoTextStyle.copyWith(
                         fontWeight: extraBold,

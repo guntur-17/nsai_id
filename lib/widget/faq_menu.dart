@@ -4,18 +4,22 @@ import 'package:nsai_id/pages/home_page.dart';
 class FaqMenu extends StatelessWidget {
   final String? title;
   final route;
-  const FaqMenu(this.title, this.route, {Key? key}) : super(key: key);
+  const FaqMenu({
+    Key? key,
+    this.title,
+    this.route,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (() {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => route,
-            ));
-      }),
+      // onTap: (() {
+      //   Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => route,
+      //       ));
+      // }),
       child: Container(
         child: Padding(
           padding: const EdgeInsets.only(right: 24.0, left: 24.0),
